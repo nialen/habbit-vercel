@@ -18,6 +18,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(advice)
   } catch (error) {
     console.error("AI顾问API错误:", error)
-    return NextResponse.json({ error: "AI顾问服务暂时不可用，请稍后再试" }, { status: 500 })
+    return NextResponse.json({ 
+      error: "AI顾问服务暂时不可用，请稍后再试",
+      analysis: "系统正在处理您的请求，请稍后再试。",
+      suggestions: ["请检查网络连接", "稍后重新提交咨询"],
+      actionItems: ["等待系统恢复", "联系技术支持"]
+    }, { status: 500 })
   }
 }
