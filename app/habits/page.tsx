@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Input } from "@/components/ui/input"
-import { Target, Plus, Star, Award, CheckCircle, MoreHorizontal, Calendar } from 'lucide-react'
+import { Target, Plus, Star, Award, CheckCircle, MoreHorizontal } from "lucide-react"
 import { useApp } from "@/components/providers"
 import { Badge } from "@/components/ui/badge"
 
@@ -104,19 +104,22 @@ export default function HabitsPage() {
         </div>
       </div>
 
-      {/* 今日进度 */}
+      {/* 今日进度条 */}
       <Card className="card-hover mb-8">
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-gray-800">今日进度</h3>
+            <h3 className="font-semibold text-gray-800">今日习惯完成进度</h3>
             <span className="text-sm text-gray-500">
               {completedToday}/{habits.length}
             </span>
           </div>
-          <Progress value={progressPercentage} className="h-3 mb-2" />
-          <p className="text-sm text-gray-600">
-            {progressPercentage === 100 ? "🎉 今天的任务全部完成啦！" : "继续加油，你是最棒的！"}
-          </p>
+          <Progress value={progressPercentage} className="h-4 mb-3" />
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-gray-600">
+              {progressPercentage === 100 ? "🎉 今天的习惯全部完成啦！" : "继续加油，坚持就是胜利！"}
+            </span>
+            <span className="text-indigo-600 font-medium">{Math.round(progressPercentage)}%</span>
+          </div>
         </CardContent>
       </Card>
 
@@ -238,9 +241,7 @@ export default function HabitsPage() {
                 <Button
                   onClick={() => toggleHabit(habit.id)}
                   className={`w-full ${
-                    habit.completedToday 
-                      ? "bg-green-600 hover:bg-green-700" 
-                      : "bg-indigo-600 hover:bg-indigo-700"
+                    habit.completedToday ? "bg-green-600 hover:bg-green-700" : "bg-indigo-600 hover:bg-indigo-700"
                   }`}
                 >
                   {habit.completedToday ? "已完成" : "立即打卡"}

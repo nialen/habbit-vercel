@@ -3,9 +3,7 @@
 import { useApp } from "@/components/providers"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
-import { Badge } from "@/components/ui/badge"
-import { Target, MessageCircle, TrendingUp, Award, Calendar, Bell, ChevronRight, Star, Clock } from 'lucide-react'
+import { Target, MessageCircle, TrendingUp, Award, Calendar, Bell, ChevronRight, Star, Clock } from "lucide-react"
 import Link from "next/link"
 
 export default function Dashboard() {
@@ -17,8 +15,8 @@ export default function Dashboard() {
   const totalStars = habits.reduce((sum, habit) => sum + habit.streak, 0)
 
   // 获取今日待完成的习惯
-  const pendingHabits = habits.filter(h => !h.completedToday).slice(0, 3)
-  
+  const pendingHabits = habits.filter((h) => !h.completedToday).slice(0, 3)
+
   // 获取连续天数最高的习惯
   const topHabits = [...habits].sort((a, b) => b.streak - a.streak).slice(0, 3)
 
@@ -26,9 +24,7 @@ export default function Dashboard() {
     <div className="p-6 md:p-8 pt-20 md:pt-8">
       {/* 欢迎区域 */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">
-          你好，{user?.childName || "小朋友"}！👋
-        </h1>
+        <h1 className="text-2xl font-bold text-gray-800 mb-2">你好，{user?.childName || "小朋友"}！👋</h1>
         <p className="text-gray-600">今天也要做最棒的自己哦</p>
       </div>
 
@@ -79,32 +75,13 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* 今日进度条 */}
-      <Card className="card-hover mb-8">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-gray-800">今日整体进度</h3>
-            <span className="text-sm text-gray-500">
-              {completedToday}/{totalHabits}
-            </span>
-          </div>
-          <Progress value={progressPercentage} className="h-4 mb-3" />
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">
-              {progressPercentage === 100 ? "🎉 今天的任务全部完成啦！" : "继续加油，你是最棒的！"}
-            </span>
-            <span className="text-indigo-600 font-medium">{Math.round(progressPercentage)}%</span>
-          </div>
-        </CardContent>
-      </Card>
-
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* 待完成任务 */}
         <Card className="card-hover">
           <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
               <CardTitle className="text-lg flex items-center gap-2">
-                <Clock className="w-5 h-5 text-orange-500" />
+                <Clock className="w-5 h-5 text-indigo-500" />
                 待完成任务
               </CardTitle>
               <Link href="/habits">
@@ -128,7 +105,7 @@ export default function Dashboard() {
                         <p className="text-xs text-gray-500">连续 {habit.streak} 天</p>
                       </div>
                     </div>
-                    <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-xs">
+                    <Button size="sm" className="bg-indigo-500 hover:bg-indigo-600 text-xs">
                       打卡
                     </Button>
                   </div>
@@ -164,9 +141,11 @@ export default function Dashboard() {
                 {topHabits.map((habit, index) => (
                   <div key={habit.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                     <div className="flex items-center gap-3">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white ${
-                        index === 0 ? 'bg-yellow-500' : index === 1 ? 'bg-gray-400' : 'bg-orange-400'
-                      }`}>
+                      <div
+                        className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white ${
+                          index === 0 ? "bg-yellow-500" : index === 1 ? "bg-gray-400" : "bg-orange-400"
+                        }`}
+                      >
                         {index + 1}
                       </div>
                       <div className="habit-icon w-8 h-8 rounded-lg flex items-center justify-center text-sm">

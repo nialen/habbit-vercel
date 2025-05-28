@@ -71,7 +71,7 @@ export default function NotificationsPage() {
   }
 
   const typeColors = {
-    habit: "bg-orange-100 text-orange-600",
+    habit: "bg-indigo-100 text-indigo-600",
     advisor: "bg-purple-100 text-purple-600",
     activity: "bg-blue-100 text-blue-600",
     system: "bg-green-100 text-green-600",
@@ -101,42 +101,49 @@ export default function NotificationsPage() {
   const unreadCount = notifications.filter((n) => !n.isRead).length
 
   return (
-    <div className="p-4 md:p-8 pt-20 md:pt-8 max-w-4xl mx-auto">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold gradient-text mb-2">通知中心</h1>
-        <p className="text-gray-600 text-lg">及时了解孩子的成长动态 🔔</p>
+    <div className="p-6 md:p-8 pt-20 md:pt-8">
+      {/* 页面标题 */}
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-gray-800 mb-2">通知中心</h1>
+        <p className="text-gray-600">及时了解孩子的成长动态</p>
       </div>
 
       {/* 通知统计 */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <Card className="card-hover bg-gradient-to-br from-blue-100 to-blue-50">
-          <CardContent className="p-6 text-center">
-            <Bell className="mx-auto mb-2 text-blue-500" size={32} />
-            <p className="text-2xl font-bold text-blue-700">{notifications.length}</p>
-            <p className="text-blue-600 text-sm">总通知</p>
-          </CardContent>
-        </Card>
+        <div className="stat-card p-4 rounded-xl">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
+              <Bell className="w-4 h-4 text-blue-600" />
+            </div>
+            <span className="text-sm text-gray-600">总通知</span>
+          </div>
+          <div className="text-2xl font-bold text-gray-800">{notifications.length}</div>
+        </div>
 
-        <Card className="card-hover bg-gradient-to-br from-orange-100 to-orange-50">
-          <CardContent className="p-6 text-center">
-            <Target className="mx-auto mb-2 text-orange-500" size={32} />
-            <p className="text-2xl font-bold text-orange-700">{unreadCount}</p>
-            <p className="text-orange-600 text-sm">未读消息</p>
-          </CardContent>
-        </Card>
+        <div className="stat-card p-4 rounded-xl">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-6 h-6 bg-indigo-100 rounded-lg flex items-center justify-center">
+              <Target className="w-4 h-4 text-indigo-600" />
+            </div>
+            <span className="text-sm text-gray-600">未读消息</span>
+          </div>
+          <div className="text-2xl font-bold text-gray-800">{unreadCount}</div>
+        </div>
 
-        <Card className="card-hover bg-gradient-to-br from-green-100 to-green-50">
-          <CardContent className="p-6 text-center">
-            <Check className="mx-auto mb-2 text-green-500" size={32} />
-            <p className="text-2xl font-bold text-green-700">{notifications.length - unreadCount}</p>
-            <p className="text-green-600 text-sm">已读消息</p>
-          </CardContent>
-        </Card>
+        <div className="stat-card p-4 rounded-xl">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-6 h-6 bg-green-100 rounded-lg flex items-center justify-center">
+              <Check className="w-4 h-4 text-green-600" />
+            </div>
+            <span className="text-sm text-gray-600">已读消息</span>
+          </div>
+          <div className="text-2xl font-bold text-gray-800">{notifications.length - unreadCount}</div>
+        </div>
       </div>
 
       {/* 操作按钮 */}
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold">最新通知</h2>
+        <h2 className="text-lg font-semibold text-gray-800">最新通知</h2>
         <div className="flex gap-2">
           <Button variant="outline" onClick={markAllAsRead} disabled={unreadCount === 0}>
             全部已读
@@ -153,7 +160,7 @@ export default function NotificationsPage() {
           return (
             <Card
               key={notification.id}
-              className={`card-hover ${!notification.isRead ? "border-l-4 border-l-purple-500" : ""}`}
+              className={`card-hover ${!notification.isRead ? "border-l-4 border-l-indigo-500" : ""}`}
             >
               <CardContent className="p-6">
                 <div className="flex items-start gap-4">
@@ -168,14 +175,14 @@ export default function NotificationsPage() {
                         <p className="text-gray-600 text-sm mt-1">{notification.message}</p>
                       </div>
                       <div className="flex items-center gap-2">
-                        {!notification.isRead && <Badge className="bg-purple-500 hover:bg-purple-600">新</Badge>}
+                        {!notification.isRead && <Badge className="bg-indigo-500 hover:bg-indigo-600">新</Badge>}
                         <span className="text-xs text-gray-500">{notification.time}</span>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-2 mt-3">
                       {notification.actionRequired && (
-                        <Button size="sm" className="bg-orange-500 hover:bg-orange-600">
+                        <Button size="sm" className="bg-indigo-500 hover:bg-indigo-600">
                           立即处理
                         </Button>
                       )}
@@ -214,6 +221,7 @@ export default function NotificationsPage() {
               <Switch
                 checked={settings.habitReminders}
                 onCheckedChange={(checked) => setSettings({ ...settings, habitReminders: checked })}
+                className="data-[state=checked]:bg-indigo-600"
               />
             </div>
 
@@ -225,6 +233,7 @@ export default function NotificationsPage() {
               <Switch
                 checked={settings.advisorReplies}
                 onCheckedChange={(checked) => setSettings({ ...settings, advisorReplies: checked })}
+                className="data-[state=checked]:bg-indigo-600"
               />
             </div>
 
@@ -236,6 +245,7 @@ export default function NotificationsPage() {
               <Switch
                 checked={settings.activityUpdates}
                 onCheckedChange={(checked) => setSettings({ ...settings, activityUpdates: checked })}
+                className="data-[state=checked]:bg-indigo-600"
               />
             </div>
 
@@ -247,6 +257,7 @@ export default function NotificationsPage() {
               <Switch
                 checked={settings.systemMessages}
                 onCheckedChange={(checked) => setSettings({ ...settings, systemMessages: checked })}
+                className="data-[state=checked]:bg-indigo-600"
               />
             </div>
 
@@ -260,6 +271,7 @@ export default function NotificationsPage() {
               <Switch
                 checked={settings.emailNotifications}
                 onCheckedChange={(checked) => setSettings({ ...settings, emailNotifications: checked })}
+                className="data-[state=checked]:bg-indigo-600"
               />
             </div>
 
@@ -271,6 +283,7 @@ export default function NotificationsPage() {
               <Switch
                 checked={settings.pushNotifications}
                 onCheckedChange={(checked) => setSettings({ ...settings, pushNotifications: checked })}
+                className="data-[state=checked]:bg-indigo-600"
               />
             </div>
           </div>
