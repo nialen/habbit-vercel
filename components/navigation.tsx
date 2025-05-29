@@ -10,6 +10,8 @@ const navItems = [
   { href: "/habits", label: "习惯管理", icon: "star" },
   { href: "/advisor", label: "AI顾问", icon: "psychology" },
   { href: "/activities", label: "亲子活动", icon: "event" },
+  { href: "/statistics", label: "数据统计", icon: "analytics" },
+  { href: "/rewards", label: "奖励兑换", icon: "redeem" },
   { href: "/salon", label: "线下沙龙", icon: "groups" },
   { href: "/notifications", label: "通知中心", icon: "notifications" },
 ]
@@ -32,13 +34,13 @@ export function Navigation() {
           </p>
         </div>
 
-        <nav className="flex-grow">
+        <nav className="flex-grow overflow-y-auto">
           <ul>
             {navItems.map((item) => {
               const isActive = pathname === item.href
 
               return (
-                <li key={item.href} className="mb-4">
+                <li key={item.href} className="mb-3">
                   <Link
                     href={item.href}
                     className={`flex items-center p-3 rounded-lg transition-all duration-200 relative ${
@@ -47,10 +49,10 @@ export function Navigation() {
                         : "text-blue-700 hover:bg-blue-200 hover:text-blue-900"
                     }`}
                   >
-                    <span className={`material-icons mr-3 ${isActive ? "text-blue-900" : "text-blue-600"}`}>
+                    <span className={`material-icons mr-3 text-lg ${isActive ? "text-blue-900" : "text-blue-600"}`}>
                       {item.icon}
                     </span>
-                    <span className="font-medium">{item.label}</span>
+                    <span className="font-medium text-sm">{item.label}</span>
                     {isActive && <span className="material-icons ml-auto text-blue-600 text-sm">chevron_right</span>}
                   </Link>
                 </li>
@@ -97,7 +99,7 @@ export function Navigation() {
 
         {/* 移动端菜单 */}
         {isMobileMenuOpen && (
-          <div className="absolute top-full left-0 right-0 bg-white shadow-md p-4">
+          <div className="absolute top-full left-0 right-0 bg-white shadow-md p-4 max-h-96 overflow-y-auto">
             <div className="space-y-1">
               {navItems.map((item) => {
                 const isActive = pathname === item.href
@@ -134,11 +136,11 @@ export function Navigation() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-all duration-200 ${
+                className={`flex flex-col items-center gap-1 px-2 py-2 rounded-lg transition-all duration-200 ${
                   isActive ? "text-blue-600 bg-blue-50 transform scale-105" : "text-gray-400 hover:text-blue-500"
                 }`}
               >
-                <span className="material-icons">{item.icon}</span>
+                <span className="material-icons text-lg">{item.icon}</span>
                 <span className="text-xs font-medium">{item.label}</span>
                 {isActive && <div className="w-1 h-1 bg-blue-600 rounded-full"></div>}
               </Link>
