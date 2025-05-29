@@ -60,7 +60,7 @@ export function Navigation() {
         </nav>
 
         <div className="mt-auto">
-          <div className="p-4 bg-white/40 rounded-xl border border-white/20 mb-4">
+          <div className="p-4 bg-white/40 rounded-xl border border-white/20">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center">
                 <span className="text-white text-sm">👶</span>
@@ -71,11 +71,6 @@ export function Navigation() {
               </div>
             </div>
           </div>
-
-          <a className="flex items-center p-3 rounded-lg text-blue-700 hover:bg-blue-200 transition-colors" href="#">
-            <span className="material-icons mr-3">logout</span>
-            安全退出登录
-          </a>
         </div>
       </aside>
 
