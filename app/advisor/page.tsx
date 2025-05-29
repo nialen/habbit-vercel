@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
-import { MessageCircle, Lightbulb, CheckCircle, Send, Sparkles } from "lucide-react"
 import { useApp } from "@/components/providers"
 import { LoadingSpinner } from "@/components/loading-spinner"
 
@@ -90,16 +89,16 @@ export default function AdvisorPage() {
   return (
     <div className="p-4 md:p-8 pt-20 md:pt-8 max-w-4xl mx-auto">
       <div className="text-center mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold gradient-text mb-2">AI 烦恼顾问</h1>
-        <p className="text-gray-600 text-lg">专业的育儿建议，温暖的陪伴支持 💝</p>
+        <h1 className="text-3xl md:text-4xl font-bold text-sky-900 mb-2">AI 烦恼顾问</h1>
+        <p className="text-sky-700 text-lg">专业的育儿建议，温暖的陪伴支持 💝</p>
       </div>
 
       {/* 快速提问 */}
       {chatHistory.length === 0 && (
-        <Card className="card-hover mb-6 bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
+        <Card className="card-hover mb-6 bg-gradient-to-r from-sky-50 to-blue-50 border-sky-200">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Sparkles className="text-purple-500" />
+              <span className="material-icons text-sky-500">auto_awesome</span>
               常见问题
             </CardTitle>
           </CardHeader>
@@ -109,7 +108,7 @@ export default function AdvisorPage() {
                 <button
                   key={index}
                   onClick={() => handleQuickQuestion(question)}
-                  className="p-3 text-left bg-white rounded-xl border border-purple-200 hover:border-purple-400 hover:bg-purple-50 transition-all"
+                  className="p-3 text-left bg-white rounded-xl border border-sky-200 hover:border-sky-400 hover:bg-sky-50 transition-all"
                 >
                   <span className="text-sm text-gray-700">{question}</span>
                 </button>
@@ -123,7 +122,7 @@ export default function AdvisorPage() {
       <Card className="card-hover mb-6">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <MessageCircle className="text-purple-500" />
+            <span className="material-icons text-sky-500">chat</span>
             描述您的困惑
           </CardTitle>
         </CardHeader>
@@ -133,7 +132,7 @@ export default function AdvisorPage() {
               placeholder="请描述您在育儿过程中遇到的困惑或挑战，比如：孩子不愿意刷牙、总是发脾气、不爱收拾玩具等..."
               value={concern}
               onChange={(e) => setConcern(e.target.value)}
-              className="min-h-[120px] resize-none border-2 border-gray-200 focus:border-purple-400 rounded-2xl"
+              className="min-h-[120px] resize-none border-2 border-gray-200 focus:border-sky-400 rounded-2xl"
               maxLength={300}
               disabled={isLoading}
             />
@@ -142,7 +141,7 @@ export default function AdvisorPage() {
               <Button
                 onClick={handleSubmit}
                 disabled={!concern.trim() || isLoading}
-                className="bg-purple-500 hover:bg-purple-600"
+                className="bg-sky-500 hover:bg-sky-600 text-white"
               >
                 {isLoading ? (
                   <>
@@ -151,7 +150,7 @@ export default function AdvisorPage() {
                   </>
                 ) : (
                   <>
-                    <Send className="mr-2 h-4 w-4" />
+                    <span className="material-icons mr-2 text-sm">send</span>
                     获取建议
                   </>
                 )}
@@ -164,10 +163,10 @@ export default function AdvisorPage() {
       {/* AI回复区域 */}
       {response && (
         <div className="space-y-6">
-          <Card className="card-hover bg-gradient-to-br from-blue-50 to-purple-50 border-blue-200">
+          <Card className="card-hover bg-gradient-to-br from-blue-50 to-sky-50 border-blue-200">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Lightbulb className="text-blue-500" />
+                <span className="material-icons text-blue-500">lightbulb</span>
                 原因分析
               </CardTitle>
             </CardHeader>
@@ -179,7 +178,7 @@ export default function AdvisorPage() {
           <Card className="card-hover bg-gradient-to-br from-green-50 to-blue-50 border-green-200">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <MessageCircle className="text-green-500" />
+                <span className="material-icons text-green-500">tips_and_updates</span>
                 分龄建议
               </CardTitle>
             </CardHeader>
@@ -195,10 +194,10 @@ export default function AdvisorPage() {
             </CardContent>
           </Card>
 
-          <Card className="card-hover bg-gradient-to-br from-orange-50 to-pink-50 border-orange-200">
+          <Card className="card-hover bg-gradient-to-br from-orange-50 to-yellow-50 border-orange-200">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <CheckCircle className="text-orange-500" />
+                <span className="material-icons text-orange-500">checklist</span>
                 可操作清单
               </CardTitle>
             </CardHeader>
@@ -230,7 +229,7 @@ export default function AdvisorPage() {
                 <div key={index} className={`flex ${message.type === "user" ? "justify-end" : "justify-start"}`}>
                   <div
                     className={`max-w-[80%] p-3 rounded-2xl ${
-                      message.type === "user" ? "bg-purple-500 text-white" : "bg-gray-100 text-gray-800"
+                      message.type === "user" ? "bg-sky-500 text-white" : "bg-gray-100 text-gray-800"
                     }`}
                   >
                     <p className="whitespace-pre-wrap">{message.content}</p>
