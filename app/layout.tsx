@@ -12,7 +12,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "小星星习惯园 - 儿童成长伙伴",
+  title: "星航成长营 StarVoyage - 儿童成长伙伴",
   description: "帮助孩子养成好习惯，促进亲子互动的专业平台",
   generator: "v0.dev",
 }

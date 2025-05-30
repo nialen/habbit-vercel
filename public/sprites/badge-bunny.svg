@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+  <!-- Badge circle -->
+  <circle cx="12" cy="12" r="10" fill="#fef3c7" stroke="currentColor" stroke-width="1"/>
+  <circle cx="12" cy="12" r="8" fill="#fbbf24" opacity="0.3"/>
+  
+  <!-- Bunny head -->
+  <ellipse cx="12" cy="13" rx="4" ry="3.5" fill="#f3f4f6"/>
+  
+  <!-- Ears -->
+  <ellipse cx="10" cy="8" rx="1" ry="2.5" fill="#f3f4f6"/>
+  <ellipse cx="14" cy="8" rx="1" ry="2.5" fill="#f3f4f6"/>
+  <ellipse cx="10" cy="8.5" rx="0.5" ry="1.5" fill="#fca5a5"/>
+  <ellipse cx="14" cy="8.5" rx="0.5" ry="1.5" fill="#fca5a5"/>
+  
+  <!-- Face -->
+  <circle cx="10.5" cy="12.5" r="0.5" fill="currentColor"/>
+  <circle cx="13.5" cy="12.5" r="0.5" fill="currentColor"/>
+  <path d="M12 13.5l-0.5 0.5 0.5 0.5 0.5-0.5z" fill="#fca5a5"/>
+  
+  <!-- Cheeks -->
+  <circle cx="9" cy="13.5" r="0.8" fill="#fca5a5" opacity="0.5"/>
+  <circle cx="15" cy="13.5" r="0.8" fill="#fca5a5" opacity="0.5"/>
+  
+  <!-- Star decorations -->
+  <path d="M6 6l0.5 1 1 0 -0.5 0.5 0 1 -1 -0.5 -1 0.5 0 -1 -0.5 -0.5 1 0z" fill="#fbbf24"/>
+  <path d="M18 6l0.5 1 1 0 -0.5 0.5 0 1 -1 -0.5 -1 0.5 0 -1 -0.5 -0.5 1 0z" fill="#fbbf24"/>
+</svg> 

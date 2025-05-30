@@ -4,17 +4,18 @@ import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import { NavIconImg } from "@/components/nav-icon"
 
 const navItems = [
-  { href: "/", label: "首页", icon: "home" },
-  { href: "/habits", label: "习惯管理", icon: "star" },
-  { href: "/advisor", label: "AI顾问", icon: "psychology" },
-  { href: "/activities", label: "亲子活动", icon: "event" },
-  { href: "/statistics", label: "数据统计", icon: "analytics" },
-  { href: "/rewards", label: "奖励兑换", icon: "redeem" },
-  { href: "/salon", label: "线下沙龙", icon: "groups" },
-  { href: "/notifications", label: "通知中心", icon: "notifications" },
-]
+  { href: "/", label: "首页", icon: "rocket" },
+  { href: "/habits", label: "习惯管理", icon: "badge-bunny" },
+  { href: "/advisor", label: "AI顾问", icon: "ai-orb" },
+  { href: "/activities", label: "亲子活动", icon: "panda-run" },
+  { href: "/statistics", label: "数据统计", icon: "chart-koala" },
+  { href: "/rewards", label: "奖励兑换", icon: "gift-astrocat" },
+  { href: "/salon", label: "线下沙龙", icon: "salon-group" },
+  { href: "/notifications", label: "通知中心", icon: "bell-star" },
+] as const
 
 export function Navigation() {
   const pathname = usePathname()
@@ -25,7 +26,9 @@ export function Navigation() {
       {/* 桌面端侧边栏 */}
       <aside className="hidden md:flex fixed left-0 top-0 h-full w-64 bg-blue-100 text-blue-800 flex-col p-4 z-50">
         <div className="mb-6">
-          <h1 className="text-xl font-bold text-blue-600">小星星习惯园</h1>
+          <div className="flex items-center gap-3 mb-2">
+            <img src="/logo.svg" alt="StarVoyage Logo" className="h-10 w-auto" />
+          </div>
           <p className="text-xs text-blue-700 flex items-center gap-1">
             <span>和孩子一起成长</span>
             <span className="text-xs">🌱💕✨</span>
@@ -47,9 +50,10 @@ export function Navigation() {
                         : "text-blue-700 hover:bg-blue-200 hover:text-blue-900"
                     }`}
                   >
-                    <span className={`material-icons mr-2.5 text-lg ${isActive ? "text-blue-900" : "text-blue-600"}`}>
-                      {item.icon}
-                    </span>
+                    <NavIconImg 
+                      name={item.icon} 
+                      className={`mr-2.5 w-5 h-5 ${isActive ? "text-blue-900" : "text-blue-600"}`}
+                    />
                     <span className="font-medium text-sm">{item.label}</span>
                     {isActive && <span className="material-icons ml-auto text-blue-600 text-sm">chevron_right</span>}
                   </Link>
@@ -78,16 +82,7 @@ export function Navigation() {
       <div className="md:hidden fixed top-0 left-0 right-0 bg-white shadow-md px-4 py-3 z-50">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-              <span className="text-white text-sm font-bold">⭐</span>
-            </div>
-            <div>
-              <h1 className="text-lg font-bold text-blue-800">小星星习惯园</h1>
-              <p className="text-xs text-blue-600 flex items-center gap-1">
-                <span>和孩子一起成长</span>
-                <span className="text-xs">🌱💕</span>
-              </p>
-            </div>
+            <img src="/logo.svg" alt="StarVoyage Logo" className="h-8 w-auto" />
           </div>
 
           <Button variant="ghost" size="sm" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
@@ -113,7 +108,7 @@ export function Navigation() {
                         : "text-gray-600 hover:bg-blue-50"
                     }`}
                   >
-                    <span className="material-icons">{item.icon}</span>
+                    <NavIconImg name={item.icon} className="w-5 h-5" />
                     <span>{item.label}</span>
                     {isActive && <span className="material-icons ml-auto text-blue-600 text-sm">chevron_right</span>}
                   </Link>
@@ -138,7 +133,7 @@ export function Navigation() {
                   isActive ? "text-blue-600 bg-blue-50 transform scale-105" : "text-gray-400 hover:text-blue-500"
                 }`}
               >
-                <span className="material-icons text-lg">{item.icon}</span>
+                <NavIconImg name={item.icon} className="w-5 h-5" />
                 <span className="text-xs font-medium">{item.label}</span>
                 {isActive && <div className="w-1 h-1 bg-blue-600 rounded-full"></div>}
               </Link>

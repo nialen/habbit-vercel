@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+  <defs>
+    <linearGradient id="giftGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fbbf24"/>
+      <stop offset="100%" style="stop-color:#f59e0b"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Gift box -->
+  <rect x="6" y="12" width="12" height="8" rx="1" fill="url(#giftGrad)" stroke="currentColor" stroke-width="1"/>
+  <rect x="6" y="10" width="12" height="2" fill="#ef4444"/>
+  
+  <!-- Gift ribbon -->
+  <rect x="11.5" y="10" width="1" height="10" fill="#dc2626"/>
+  <rect x="6" y="13.5" width="12" height="1" fill="#dc2626"/>
+  
+  <!-- Bow -->
+  <path d="M10 10 Q12 8 14 10 Q12 9 10 10" fill="#dc2626"/>
+  <circle cx="12" cy="9.5" r="0.5" fill="#ef4444"/>
+  
+  <!-- Astro cat head (small, positioned above gift) -->
+  <circle cx="12" cy="5" r="3" fill="#f3f4f6"/>
+  
+  <!-- Space helmet -->
+  <circle cx="12" cy="5" r="3.5" fill="none" stroke="#60a5fa" stroke-width="1" opacity="0.6"/>
+  <circle cx="12" cy="5" r="3.2" fill="#dbeafe" opacity="0.3"/>
+  
+  <!-- Cat ears inside helmet -->
+  <path d="M10 3 L10.5 2 L11 3 Z" fill="#9ca3af"/>
+  <path d="M13 3 L13.5 2 L14 3 Z" fill="#9ca3af"/>
+  
+  <!-- Cat face -->
+  <circle cx="11" cy="4.5" r="0.4" fill="currentColor"/>
+  <circle cx="13" cy="4.5" r="0.4" fill="currentColor"/>
+  <path d="M11.5 5.5 L12 6 L12.5 5.5" stroke="currentColor" stroke-width="0.5" fill="none"/>
+  <ellipse cx="12" cy="5.8" rx="0.3" ry="0.2" fill="#fca5a5"/>
+  
+  <!-- Whiskers -->
+  <path d="M10 5 L9 5M14 5 L15 5" stroke="currentColor" stroke-width="0.3"/>
+  
+  <!-- Stars around -->
+  <path d="M4 8l0.5 0.5 0.5 0 -0.5 0.5 0 0.5 -0.5 -0.5 -0.5 0.5 0 -0.5 -0.5 -0.5 0.5 0z" fill="#fbbf24"/>
+  <path d="M20 6l0.5 0.5 0.5 0 -0.5 0.5 0 0.5 -0.5 -0.5 -0.5 0.5 0 -0.5 -0.5 -0.5 0.5 0z" fill="#fbbf24"/>
+  <circle cx="8" cy="3" r="0.3" fill="#60a5fa"/>
+  <circle cx="18" cy="12" r="0.3" fill="#60a5fa"/>
+</svg> 
