@@ -219,7 +219,11 @@ export default function RewardsPage() {
             key={category}
             variant={selectedCategory === category ? "default" : "outline"}
             onClick={() => setSelectedCategory(category)}
-            className={selectedCategory === category ? "bg-blue-500 hover:bg-blue-600" : ""}
+            className={
+              selectedCategory === category
+                ? "bg-blue-500 hover:bg-blue-600 text-white"
+                : "border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400"
+            }
           >
             {category}
           </Button>
@@ -265,8 +269,8 @@ export default function RewardsPage() {
                   disabled={currentPoints < reward.points || reward.stock === 0}
                   className={`w-full ${
                     currentPoints >= reward.points && reward.stock > 0
-                      ? "bg-blue-500 hover:bg-blue-600"
-                      : "bg-gray-300 cursor-not-allowed"
+                      ? "bg-blue-500 hover:bg-blue-600 text-white"
+                      : "bg-gray-300 hover:bg-gray-300 cursor-not-allowed text-gray-500"
                   }`}
                 >
                   {currentPoints >= reward.points ? "立即兑换" : "积分不足"}

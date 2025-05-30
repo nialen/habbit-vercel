@@ -235,9 +235,13 @@ export default function ActivitiesPage() {
               "bg-green-100 text-green-700",
               "bg-purple-100 text-purple-700",
             ]
+            const hoverColors = ["hover:bg-orange-100", "hover:bg-green-100", "hover:bg-purple-100"]
 
             return (
-              <div key={activity.id} className={`${bgColors[index]} rounded-2xl p-6 border border-gray-100`}>
+              <div
+                key={activity.id}
+                className={`${bgColors[index]} ${hoverColors[index]} rounded-2xl p-6 border border-gray-100 transition-colors cursor-pointer`}
+              >
                 <div className="flex items-center gap-3 mb-3">
                   <span className="text-2xl">{index === 0 ? "🎨" : index === 1 ? "🌳" : "🔬"}</span>
                   <h3 className="font-bold text-gray-800">{activity.title}</h3>
@@ -245,7 +249,13 @@ export default function ActivitiesPage() {
                 <p className="text-gray-600 text-sm mb-4">{activity.description}</p>
                 <div className="flex items-center justify-between">
                   <Badge className={badgeColors[index]}>{activity.category}</Badge>
-                  <Button size="sm" className={`${textColors[index]} hover:bg-white/50`} variant="ghost">
+                  <Button
+                    size="sm"
+                    className={`${textColors[index]} ${
+                      index === 0 ? "hover:bg-orange-100" : index === 1 ? "hover:bg-green-100" : "hover:bg-purple-100"
+                    }`}
+                    variant="ghost"
+                  >
                     查看详情 →
                   </Button>
                 </div>

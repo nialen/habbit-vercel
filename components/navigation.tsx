@@ -23,33 +23,31 @@ export function Navigation() {
   return (
     <>
       {/* 桌面端侧边栏 */}
-      <aside className="hidden md:flex fixed left-0 top-0 h-full w-64 bg-blue-100 text-blue-800 flex-col p-6 z-50">
-        <div className="mb-10">
-          <h1 className="text-2xl font-bold text-blue-600">小星星习惯园</h1>
-          <p className="text-sm text-blue-700 flex items-center gap-1">
+      <aside className="hidden md:flex fixed left-0 top-0 h-full w-64 bg-blue-100 text-blue-800 flex-col p-4 z-50">
+        <div className="mb-6">
+          <h1 className="text-xl font-bold text-blue-600">小星星习惯园</h1>
+          <p className="text-xs text-blue-700 flex items-center gap-1">
             <span>和孩子一起成长</span>
-            <span className="text-xs">🌱</span>
-            <span className="text-xs">💕</span>
-            <span className="text-xs">✨</span>
+            <span className="text-xs">🌱💕✨</span>
           </p>
         </div>
 
-        <nav className="flex-grow overflow-y-auto">
-          <ul>
+        <nav className="flex-1 min-h-0">
+          <ul className="space-y-1">
             {navItems.map((item) => {
               const isActive = pathname === item.href
 
               return (
-                <li key={item.href} className="mb-3">
+                <li key={item.href}>
                   <Link
                     href={item.href}
-                    className={`flex items-center p-3 rounded-lg transition-all duration-200 relative ${
+                    className={`flex items-center p-2.5 rounded-lg transition-all duration-200 relative ${
                       isActive
                         ? "bg-blue-200 text-blue-900 shadow-md border-l-4 border-blue-600 transform translate-x-1"
                         : "text-blue-700 hover:bg-blue-200 hover:text-blue-900"
                     }`}
                   >
-                    <span className={`material-icons mr-3 text-lg ${isActive ? "text-blue-900" : "text-blue-600"}`}>
+                    <span className={`material-icons mr-2.5 text-lg ${isActive ? "text-blue-900" : "text-blue-600"}`}>
                       {item.icon}
                     </span>
                     <span className="font-medium text-sm">{item.label}</span>
@@ -61,14 +59,14 @@ export function Navigation() {
           </ul>
         </nav>
 
-        <div className="mt-auto">
-          <div className="p-4 bg-white/40 rounded-xl border border-white/20">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center">
-                <span className="text-white text-sm">👶</span>
+        <div className="mt-4">
+          <div className="p-3 bg-white/40 rounded-xl border border-white/20">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center">
+                <span className="text-white text-xs">👶</span>
               </div>
               <div>
-                <p className="font-medium text-blue-800">小明</p>
+                <p className="font-medium text-blue-800 text-sm">小明</p>
                 <p className="text-xs text-blue-600">6岁 · 已坚持15天</p>
               </div>
             </div>

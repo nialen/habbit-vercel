@@ -141,7 +141,7 @@ export default function AdvisorPage() {
               <Button
                 onClick={handleSubmit}
                 disabled={!concern.trim() || isLoading}
-                className="bg-sky-500 hover:bg-sky-600 text-white"
+                className="bg-blue-500 hover:bg-blue-600 text-white disabled:bg-gray-300 disabled:hover:bg-gray-300"
               >
                 {isLoading ? (
                   <>

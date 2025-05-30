@@ -117,7 +117,7 @@ export default function HabitsPage() {
           <h3 className="text-xl font-semibold text-sky-600">⭐ 我的习惯</h3>
           <Button
             onClick={() => setShowAddForm(!showAddForm)}
-            className="bg-sky-500 hover:bg-sky-600 text-white font-semibold py-2 px-4 rounded-lg flex items-center transition-colors"
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg flex items-center transition-colors"
           >
             <span className="material-icons mr-2">add</span>
             添加习惯
@@ -179,13 +179,13 @@ export default function HabitsPage() {
                 </div>
 
                 <div className="flex gap-2">
-                  <Button onClick={addHabit} className="bg-sky-500 hover:bg-sky-600 text-white">
+                  <Button onClick={addHabit} className="bg-blue-500 hover:bg-blue-600 text-white">
                     添加习惯
                   </Button>
                   <Button
                     variant="outline"
                     onClick={() => setShowAddForm(false)}
-                    className="border-sky-300 text-sky-700"
+                    className="border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400"
                   >
                     取消
                   </Button>
@@ -258,7 +258,7 @@ export default function HabitsPage() {
                 <Button
                   onClick={() => toggleHabit(habit.id)}
                   className={`${
-                    habit.completedToday ? "bg-green-500 hover:bg-green-600" : "bg-sky-500 hover:bg-sky-600"
+                    habit.completedToday ? "bg-green-500 hover:bg-green-600" : "bg-blue-500 hover:bg-blue-600"
                   } text-white px-4 py-2 rounded-lg`}
                 >
                   {habit.completedToday ? (
@@ -283,7 +283,7 @@ export default function HabitsPage() {
             <span className="material-icons text-5xl text-gray-400 mb-4">military_tech</span>
             <h3 className="text-xl font-semibold text-gray-600 mb-2">还没有添加习惯</h3>
             <p className="text-gray-500 mb-4">点击"添加习惯"开始你的成长之旅吧！</p>
-            <Button onClick={() => setShowAddForm(true)} className="bg-sky-500 hover:bg-sky-600 text-white">
+            <Button onClick={() => setShowAddForm(true)} className="bg-blue-500 hover:bg-blue-600 text-white">
               <span className="material-icons text-sm mr-2">add</span>
               添加第一个习惯
             </Button>

@@ -120,7 +120,10 @@ export default function SalonPage() {
       {/* 创建活动按钮 */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-bold">近期活动</h2>
-        <Button onClick={() => setShowCreateForm(!showCreateForm)} className="bg-purple-500 hover:bg-purple-600">
+        <Button
+          onClick={() => setShowCreateForm(!showCreateForm)}
+          className="bg-purple-500 hover:bg-purple-600 text-white"
+        >
           <Plus size={16} className="mr-2" />
           发起活动
         </Button>
@@ -211,10 +214,14 @@ export default function SalonPage() {
               </div>
 
               <div className="flex gap-2">
-                <Button onClick={createEvent} className="bg-purple-500 hover:bg-purple-600">
+                <Button onClick={createEvent} className="bg-purple-500 hover:bg-purple-600 text-white">
                   发布活动
                 </Button>
-                <Button variant="outline" onClick={() => setShowCreateForm(false)}>
+                <Button
+                  variant="outline"
+                  onClick={() => setShowCreateForm(false)}
+                  className="border-purple-300 text-purple-700 hover:bg-purple-50 hover:border-purple-400"
+                >
                   取消
                 </Button>
               </div>
@@ -284,7 +291,9 @@ export default function SalonPage() {
                       <Button
                         onClick={() => toggleRegistration(event.id)}
                         className={
-                          event.isRegistered ? "bg-gray-500 hover:bg-gray-600" : "bg-purple-500 hover:bg-purple-600"
+                          event.isRegistered
+                            ? "bg-gray-500 hover:bg-gray-600 text-white"
+                            : "bg-purple-500 hover:bg-purple-600 text-white"
                         }
                         disabled={!event.isRegistered && event.participants >= event.maxParticipants}
                       >

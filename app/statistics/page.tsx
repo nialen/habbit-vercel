@@ -70,7 +70,11 @@ export default function StatisticsPage() {
             key={range.key}
             variant={timeRange === range.key ? "default" : "outline"}
             onClick={() => setTimeRange(range.key as any)}
-            className={timeRange === range.key ? "bg-blue-500 hover:bg-blue-600" : ""}
+            className={
+              timeRange === range.key
+                ? "bg-blue-500 hover:bg-blue-600 text-white"
+                : "border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400"
+            }
           >
             {range.label}
           </Button>

@@ -145,7 +145,12 @@ export default function NotificationsPage() {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-lg font-semibold text-gray-800">最新通知</h2>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={markAllAsRead} disabled={unreadCount === 0}>
+          <Button
+            variant="outline"
+            onClick={markAllAsRead}
+            disabled={unreadCount === 0}
+            className="border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400 disabled:hover:bg-white disabled:hover:border-gray-300"
+          >
             全部已读
           </Button>
         </div>
@@ -182,12 +187,17 @@ export default function NotificationsPage() {
 
                     <div className="flex items-center gap-2 mt-3">
                       {notification.actionRequired && (
-                        <Button size="sm" className="bg-indigo-500 hover:bg-indigo-600">
+                        <Button size="sm" className="bg-blue-500 hover:bg-blue-600 text-white">
                           立即处理
                         </Button>
                       )}
                       {!notification.isRead && (
-                        <Button variant="outline" size="sm" onClick={() => markAsRead(notification.id)}>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => markAsRead(notification.id)}
+                          className="border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400"
+                        >
                           标记已读
                         </Button>
                       )}
