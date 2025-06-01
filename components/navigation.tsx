@@ -13,7 +13,7 @@ const navItems = [
   { href: "/activities", label: "亲子活动", icon: "panda-run" },
   { href: "/statistics", label: "数据统计", icon: "chart-koala" },
   { href: "/rewards", label: "奖励兑换", icon: "gift-astrocat" },
-  { href: "/salon", label: "线下沙龙", icon: "salon-group" },
+  { href: "/community", label: "家长讨论区", icon: "salon-group" },
   { href: "/notifications", label: "通知中心", icon: "bell-star" },
 ] as const
 

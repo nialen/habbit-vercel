@@ -1,48 +1,51 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
-  <!-- Table/gathering surface -->
-  <ellipse cx="12" cy="16" rx="8" ry="2" fill="#fef3c7" stroke="currentColor" stroke-width="1"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景圆圈 -->
+  <circle cx="12" cy="12" r="10" fill="currentColor"/>
   
-  <!-- Person 1 (left) -->
-  <circle cx="8" cy="10" r="2.5" fill="#fce7f3"/>
-  <circle cx="8" cy="8" r="1.5" fill="#f3f4f6"/>
-  <circle cx="7.5" cy="7.5" r="0.3" fill="currentColor"/>
-  <circle cx="8.5" cy="7.5" r="0.3" fill="currentColor"/>
-  <path d="M7.5 8.5 Q8 9 8.5 8.5" stroke="currentColor" stroke-width="0.3" fill="none"/>
+  <!-- 左侧家长头像 -->
+  <circle cx="8" cy="9" r="2.5" fill="white"/>
+  <circle cx="8" cy="8.5" r="1.2" fill="currentColor" opacity="0.1"/>
+  <circle cx="7.5" cy="8" r="0.3" fill="currentColor"/>
+  <circle cx="8.5" cy="8" r="0.3" fill="currentColor"/>
+  <path d="M7.5 8.8 Q8 9.2 8.5 8.8" stroke="currentColor" stroke-width="0.4" fill="none"/>
   
-  <!-- Person 2 (center) -->
-  <circle cx="12" cy="9" r="2.8" fill="#dbeafe"/>
-  <circle cx="12" cy="7" r="1.8" fill="#f3f4f6"/>
-  <circle cx="11.5" cy="6.5" r="0.3" fill="currentColor"/>
-  <circle cx="12.5" cy="6.5" r="0.3" fill="currentColor"/>
-  <path d="M11.5 7.5 Q12 8 12.5 7.5" stroke="currentColor" stroke-width="0.3" fill="none"/>
+  <!-- 右侧家长头像 -->
+  <circle cx="16" cy="9" r="2.5" fill="white"/>
+  <circle cx="16" cy="8.5" r="1.2" fill="currentColor" opacity="0.1"/>
+  <circle cx="15.5" cy="8" r="0.3" fill="currentColor"/>
+  <circle cx="16.5" cy="8" r="0.3" fill="currentColor"/>
+  <path d="M15.5 8.8 Q16 9.2 16.5 8.8" stroke="currentColor" stroke-width="0.4" fill="none"/>
   
-  <!-- Person 3 (right) -->
-  <circle cx="16" cy="10" r="2.5" fill="#ecfdf5"/>
-  <circle cx="16" cy="8" r="1.5" fill="#f3f4f6"/>
-  <circle cx="15.5" cy="7.5" r="0.3" fill="currentColor"/>
-  <circle cx="16.5" cy="7.5" r="0.3" fill="currentColor"/>
-  <path d="M15.5 8.5 Q16 9 16.5 8.5" stroke="currentColor" stroke-width="0.3" fill="none"/>
+  <!-- 对话气泡1 -->
+  <ellipse cx="10" cy="5" rx="2" ry="1.5" fill="white" opacity="0.9"/>
+  <path d="M9 6.2 L8.5 7.5" stroke="white" stroke-width="0.8" fill="none"/>
+  <circle cx="9.5" cy="5" r="0.2" fill="currentColor"/>
+  <circle cx="10" cy="5" r="0.2" fill="currentColor"/>
+  <circle cx="10.5" cy="5" r="0.2" fill="currentColor"/>
   
-  <!-- Arms reaching toward center (showing interaction) -->
-  <ellipse cx="9.5" cy="12" rx="0.5" ry="1.2" fill="#fce7f3" transform="rotate(20 9.5 12)"/>
-  <ellipse cx="14.5" cy="12" rx="0.5" ry="1.2" fill="#ecfdf5" transform="rotate(-20 14.5 12)"/>
-  <ellipse cx="12" cy="13" rx="0.5" ry="1.2" fill="#dbeafe"/>
+  <!-- 对话气泡2 -->
+  <ellipse cx="14" cy="4.5" rx="1.8" ry="1.3" fill="white" opacity="0.9"/>
+  <path d="M15 5.5 L15.5 7" stroke="white" stroke-width="0.8" fill="none"/>
+  <path d="M13.2 4.5 Q14 4 14.8 4.5" stroke="currentColor" stroke-width="0.3" fill="none"/>
   
-  <!-- Speech bubbles/communication -->
-  <circle cx="6" cy="5" r="1.2" fill="#fef9c3" stroke="currentColor" stroke-width="0.5"/>
-  <path d="M6.8 5.8 L7.5 7" stroke="currentColor" stroke-width="0.5"/>
-  <circle cx="6" cy="5" r="0.3" fill="#fbbf24"/>
+  <!-- 讨论桌面/平台 -->
+  <ellipse cx="12" cy="15" rx="6" ry="2" fill="white" opacity="0.8"/>
   
-  <ellipse cx="18" cy="6" rx="1" ry="0.8" fill="#fef9c3" stroke="currentColor" stroke-width="0.5"/>
-  <path d="M17.2 6.5 L16.8 7.5" stroke="currentColor" stroke-width="0.5"/>
-  <circle cx="18" cy="6" r="0.2" fill="#fbbf24"/>
-  <circle cx="17.7" cy="6.3" r="0.2" fill="#fbbf24"/>
+  <!-- 交流箭头 -->
+  <path d="M10.5 11 L13.5 11" stroke="white" stroke-width="1.2" marker-end="url(#arrowhead)"/>
+  <path d="M13.5 12.5 L10.5 12.5" stroke="white" stroke-width="1.2" marker-end="url(#arrowhead2)"/>
   
-  <!-- Hearts/connection symbols -->
-  <path d="M10 4 Q10.5 3.5 11 4 Q11.5 3.5 12 4 Q11.5 4.5 11 5 Q10.5 4.5 10 4" fill="#fca5a5"/>
-  <path d="M13 12 Q13.3 11.7 13.6 12 Q13.9 11.7 14.2 12 Q13.9 12.3 13.6 12.6 Q13.3 12.3 13 12" fill="#fca5a5"/>
+  <!-- 箭头标记定义 -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="white"/>
+    </marker>
+    <marker id="arrowhead2" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="white"/>
+    </marker>
+  </defs>
   
-  <!-- Stars indicating positive energy -->
-  <path d="M4 8 L4.3 8.5 L4.8 8.5 L4.5 8.8 L4.6 9.3 L4 9 L3.4 9.3 L3.5 8.8 L3.2 8.5 L3.7 8.5 Z" fill="#fbbf24"/>
-  <path d="M20 10 L20.3 10.5 L20.8 10.5 L20.5 10.8 L20.6 11.3 L20 11 L19.4 11.3 L19.5 10.8 L19.2 10.5 L19.7 10.5 Z" fill="#fbbf24"/>
+  <!-- 小爱心表示友好交流 -->
+  <path d="M12 17 Q11.5 16.5 11 17 Q11.5 17.5 12 18 Q12.5 17.5 13 17 Q12.5 16.5 12 17" fill="white" opacity="0.8"/>
 </svg> 
