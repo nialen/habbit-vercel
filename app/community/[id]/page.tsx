@@ -186,7 +186,7 @@ export default function PostDetailPage() {
   const categoryInfo = getCategoryInfo(mockPost.category)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 md:ml-64 pt-16 md:pt-0">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 ">
       <div className="max-w-4xl mx-auto px-4 py-6">
         {/* 返回按钮 */}
         <div className="mb-4">

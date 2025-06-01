@@ -192,7 +192,7 @@ export default function CommunityPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* 主内容区域 */}
-      <div className="md:ml-64 pt-16 md:pt-0">
+      <div className="p-4 md:p-8 pt-20 md:pt-8 max-w-4xl mx-auto">
         <div className="min-h-screen flex items-start justify-center">
           <div className="w-full max-w-4xl px-6 py-8">
             {/* 页面标题 */}
