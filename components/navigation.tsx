@@ -27,9 +27,9 @@ export function Navigation() {
       <aside className="hidden md:flex fixed left-0 top-0 h-full w-64 bg-blue-100 text-blue-800 flex-col p-4 z-50">
         <div className="mb-6">
           <div className="flex items-center gap-3 mb-2">
-            <img src="/logo.svg" alt="StarVoyage Logo" className="h-10 w-auto" />
+            <img src="/logo.svg" alt="StarVoyage Logo" className="h-15 w-auto" />
           </div>
-          <p className="text-xs text-blue-700 flex items-center gap-1">
+          <p className="text-xs text-blue-700 flex items-center gap-1 ml-4" style={{ marginTop: '-15px' }}>
             <span>和孩子一起成长</span>
             <span className="text-xs">🌱💕✨</span>
           </p>
