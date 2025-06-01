@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils"
 
 interface NavIconProps {
-  name: "rocket" | "badge-bunny" | "ai-orb" | "panda-run" | "chart-koala" | "gift-astrocat" | "bell-star" | "salon-group"
+  name: "rocket" | "badge-bunny" | "ai-orb" | "panda-run" | "chart-koala" | "gift-astrocat" | "bell-star" | "salon-group" | "community-chat"
   className?: string
 }
 

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- 暖色渐变定义 -->
+    <linearGradient id="warmGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f97316;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ea580c;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- 背景圆圈 - 使用暖色渐变 -->
+  <circle cx="12" cy="12" r="10" fill="url(#warmGradient)"/>
+  
+  <!-- 主要对话气泡 -->
+  <ellipse cx="10" cy="8" rx="4" ry="3" fill="white"/>
+  <path d="M7 10.5 L6 12" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+  
+  <!-- 次要对话气泡 -->
+  <ellipse cx="16" cy="13" rx="3" ry="2.5" fill="white" opacity="0.9"/>
+  <path d="M18 15 L19 16.5" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+  
+  <!-- 对话内容点 -->
+  <circle cx="8.5" cy="8" r="0.4" fill="#ea580c"/>
+  <circle cx="10" cy="8" r="0.4" fill="#ea580c"/>
+  <circle cx="11.5" cy="8" r="0.4" fill="#ea580c"/>
+  
+  <circle cx="15" cy="13" r="0.3" fill="#ea580c"/>
+  <circle cx="16.5" cy="13" r="0.3" fill="#ea580c"/>
+  
+  <!-- 人物头像1 -->
+  <circle cx="6" cy="15" r="2" fill="white"/>
+  <circle cx="6" cy="14.5" r="1" fill="#f97316" opacity="0.2"/>
+  <circle cx="5.5" cy="14.2" r="0.2" fill="#ea580c"/>
+  <circle cx="6.5" cy="14.2" r="0.2" fill="#ea580c"/>
+  <path d="M5.5 14.8 Q6 15 6.5 14.8" stroke="#ea580c" stroke-width="0.3" fill="none"/>
+  
+  <!-- 人物头像2 -->
+  <circle cx="18" cy="6" r="1.8" fill="white"/>
+  <circle cx="18" cy="5.6" r="0.9" fill="#f97316" opacity="0.2"/>
+  <circle cx="17.6" cy="5.4" r="0.18" fill="#ea580c"/>
+  <circle cx="18.4" cy="5.4" r="0.18" fill="#ea580c"/>
+  <path d="M17.6 6 Q18 6.2 18.4 6" stroke="#ea580c" stroke-width="0.25" fill="none"/>
+  
+  <!-- 连接线表示交流 -->
+  <path d="M8 15 Q12 12 16 10" stroke="white" stroke-width="1" fill="none" opacity="0.6" stroke-dasharray="2,1"/>
+</svg> 
