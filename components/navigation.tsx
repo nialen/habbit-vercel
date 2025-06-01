@@ -5,6 +5,8 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { NavIconImg } from "@/components/nav-icon"
+import { useAuth } from "@/components/auth-provider"
+import { LogOut } from "lucide-react"
 
 const navItems = [
   { href: "/", label: "首页", icon: "rocket" },
@@ -20,6 +22,12 @@ const navItems = [
 export function Navigation() {
   const pathname = usePathname()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const { user, userProfile, signOut } = useAuth()
+
+  // 如果用户未登录，不显示导航栏
+  if (!user || !userProfile) {
+    return null
+  }
 
   return (
     <>
@@ -63,18 +71,28 @@ export function Navigation() {
           </ul>
         </nav>
 
-        <div className="mt-4">
+        <div className="mt-4 space-y-3">
           <div className="p-3 bg-white/40 rounded-xl border border-white/20">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center">
                 <span className="text-white text-xs">👶</span>
               </div>
               <div>
-                <p className="font-medium text-blue-800 text-sm">小明</p>
-                <p className="text-xs text-blue-600">6岁 · 已坚持15天</p>
+                <p className="font-medium text-blue-800 text-sm">{userProfile.child_name}</p>
+                <p className="text-xs text-blue-600">{userProfile.child_age}岁 · 已坚持15天</p>
               </div>
             </div>
           </div>
+
+          <Button
+            onClick={signOut}
+            variant="ghost"
+            size="sm"
+            className="w-full justify-start text-blue-700 hover:bg-blue-200 hover:text-blue-900"
+          >
+            <LogOut className="w-4 h-4 mr-2" />
+            退出登录
+          </Button>
         </div>
       </aside>
 
@@ -114,6 +132,17 @@ export function Navigation() {
                   </Link>
                 )
               })}
+
+              <button
+                onClick={() => {
+                  signOut()
+                  setIsMobileMenuOpen(false)
+                }}
+                className="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-all text-red-600 hover:bg-red-50 w-full"
+              >
+                <LogOut className="w-5 h-5" />
+                <span>退出登录</span>
+              </button>
             </div>
           </div>
         )}

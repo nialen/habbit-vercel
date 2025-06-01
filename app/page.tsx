@@ -1,5 +1,8 @@
 "use client"
 
+import { useAuth } from "@/components/auth-provider"
+import { WelcomeScreen } from "@/components/auth/welcome-screen"
+import { LoadingSpinner } from "@/components/loading-spinner"
 import { useApp } from "@/components/providers"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -7,7 +10,24 @@ import { Target, MessageCircle, TrendingUp, Award, Calendar, Bell, ChevronRight,
 import Link from "next/link"
 
 export default function Dashboard() {
-  const { user, habits } = useApp()
+  const { user, userProfile, loading } = useAuth()
+  const { habits } = useApp()
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    )
+  }
+
+  if (!user || !userProfile) {
+    return (
+      <div className="fixed inset-0 z-50">
+        <WelcomeScreen />
+      </div>
+    )
+  }
 
   const completedToday = habits.filter((h) => h.completedToday).length
   const totalHabits = habits.length
@@ -24,7 +44,7 @@ export default function Dashboard() {
     <div className="p-6 md:p-8 pt-20 md:pt-8">
       {/* 欢迎区域 */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">你好，{user?.childName || "小朋友"}！👋</h1>
+        <h1 className="text-2xl font-bold text-gray-800 mb-2">你好，{userProfile.child_name || "小朋友"}！👋</h1>
         <p className="text-gray-600">今天也要做最棒的自己哦</p>
       </div>
 

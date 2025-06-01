@@ -4,6 +4,7 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import { Navigation } from "@/components/navigation"
 import { Providers } from "@/components/providers"
+import { AuthProvider } from "@/components/auth-provider"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,12 +29,14 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
       </head>
       <body className={inter.className}>
-        <Providers>
-          <div className="min-h-screen">
-            <Navigation />
-            <main className="pb-20 md:pb-0 md:ml-64">{children}</main>
-          </div>
-        </Providers>
+        <AuthProvider>
+          <Providers>
+            <div className="min-h-screen">
+              <Navigation />
+              <main className="pb-20 md:pb-0 md:ml-64">{children}</main>
+            </div>
+          </Providers>
+        </AuthProvider>
       </body>
     </html>
   )
