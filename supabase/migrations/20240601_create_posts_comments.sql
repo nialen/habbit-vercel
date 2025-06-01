@@ -43,4 +43,4 @@ create policy "Users can update their own comments" on public.comments
   for update using (auth.uid() = author);
 
 create policy "Users can delete their own comments" on public.comments
-  for delete using (auth.uid() = author); 
+  for delete using (auth.uid() = author);

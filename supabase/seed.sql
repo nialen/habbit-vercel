@@ -21,4 +21,4 @@ SELECT
     THEN 'd0fc7e7c-6d7c-4b2a-9035-3437c8e3c47e'::uuid
     ELSE 'b6a9c0e9-8f0a-4e6a-9c5b-8d1a3c2e1f4d'::uuid
   END
-FROM public.posts; 
+FROM public.posts;

@@ -27,4 +27,4 @@ export function NavIconImg({ name, className }: NavIconProps) {
       className={cn("inline-block", className)}
     />
   )
-} 
+}

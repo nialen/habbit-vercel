@@ -13,7 +13,7 @@ const navItems = [
   { href: "/activities", label: "亲子活动", icon: "panda-run" },
   { href: "/statistics", label: "数据统计", icon: "chart-koala" },
   { href: "/rewards", label: "奖励兑换", icon: "gift-astrocat" },
-  { href: "/community", label: "家长讨论区", icon: "salon-group" },
+  { href: "/community", label: "家长讨论区", icon: "community-chat" },
   { href: "/notifications", label: "通知中心", icon: "bell-star" },
 ] as const
 
@@ -29,7 +29,7 @@ export function Navigation() {
           <div className="flex items-center gap-3 mb-2">
             <img src="/logo.svg" alt="StarVoyage Logo" className="h-15 w-auto" />
           </div>
-          <p className="text-xs text-blue-700 flex items-center gap-1 ml-4" style={{ marginTop: '-15px' }}>
+          <p className="text-xs text-blue-700 flex items-center gap-1 ml-4" style={{ marginTop: "-15px" }}>
             <span>和孩子一起成长</span>
             <span className="text-xs">🌱💕✨</span>
           </p>
@@ -50,8 +50,8 @@ export function Navigation() {
                         : "text-blue-700 hover:bg-blue-200 hover:text-blue-900"
                     }`}
                   >
-                    <NavIconImg 
-                      name={item.icon} 
+                    <NavIconImg
+                      name={item.icon}
                       className={`mr-2.5 w-5 h-5 ${isActive ? "text-blue-900" : "text-blue-600"}`}
                     />
                     <span className="font-medium text-sm">{item.label}</span>
