@@ -2,17 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
 
-interface User {
-  id: string
-  name: string
-  email: string
-  childName: string
-  childAge: number
-}
-
 interface AppContextType {
-  user: User | null
-  setUser: (user: User | null) => void
   habits: Habit[]
   setHabits: (habits: Habit[]) => void
   activities: Activity[]
@@ -50,7 +40,6 @@ export function useApp() {
 }
 
 export function Providers({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
   const [habits, setHabits] = useState<Habit[]>([])
   const [activities, setActivities] = useState<Activity[]>([])
 
@@ -84,6 +73,24 @@ export function Providers({ children }: { children: ReactNode }) {
         category: "整理",
         createdAt: new Date().toISOString(),
       },
+      {
+        id: "4",
+        name: "阅读绘本",
+        icon: "📚",
+        streak: 7,
+        completedToday: true,
+        category: "学习",
+        createdAt: new Date().toISOString(),
+      },
+      {
+        id: "5",
+        name: "喝水记录",
+        icon: "💧",
+        streak: 4,
+        completedToday: false,
+        category: "健康",
+        createdAt: new Date().toISOString(),
+      },
     ]
 
     const defaultActivities: Activity[] = [
@@ -105,26 +112,33 @@ export function Providers({ children }: { children: ReactNode }) {
         description: "在公园或小区寻找指定物品",
         educationalValue: "锻炼观察力和体能",
       },
+      {
+        id: "3",
+        title: "亲子烘焙",
+        category: "生活",
+        difficulty: 4,
+        duration: "90分钟",
+        description: "一起制作简单的饼干或蛋糕",
+        educationalValue: "学习数学概念和培养耐心",
+      },
+      {
+        id: "4",
+        title: "科学小实验",
+        category: "学习",
+        difficulty: 3,
+        duration: "45分钟",
+        description: "进行安全有趣的科学小实验",
+        educationalValue: "激发好奇心和探索精神",
+      },
     ]
 
     setHabits(defaultHabits)
     setActivities(defaultActivities)
-
-    // 模拟用户登录
-    setUser({
-      id: "1",
-      name: "小明妈妈",
-      email: "mom@example.com",
-      childName: "小明",
-      childAge: 6,
-    })
   }, [])
 
   return (
     <AppContext.Provider
       value={{
-        user,
-        setUser,
         habits,
         setHabits,
         activities,
