@@ -2,6 +2,7 @@ import type React from "react"
 import "./globals.css"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
+import Script from "next/script"
 import { Navigation } from "@/components/navigation"
 import { Providers } from "@/components/providers"
 import { AuthProvider } from "@/components/auth-provider"
@@ -18,6 +19,10 @@ export const metadata: Metadata = {
   generator: "v0.dev",
 }
 
+// Plausible Analytics 配置
+const PLAUSIBLE_DOMAIN = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN || "habitkids.online"
+const IS_PRODUCTION = process.env.NODE_ENV === "production"
+
 export default function RootLayout({
   children,
 }: {
@@ -27,19 +32,27 @@ export default function RootLayout({
     <html lang="zh-CN">
       <head>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-        {/* Plausible Analytics */}
-        <script 
-          defer 
-          data-domain="habitkids.online" 
-          src="https://plausible.io/js/script.file-downloads.hash.outbound-links.pageview-props.revenue.tagged-events.js"
-        />
-        <script 
-          dangerouslySetInnerHTML={{
-            __html: `window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }`
-          }}
-        />
       </head>
       <body className={inter.className}>
+        {/* Plausible Analytics - 仅在生产环境加载 */}
+        {IS_PRODUCTION && (
+          <>
+            <Script
+              defer
+              data-domain={PLAUSIBLE_DOMAIN}
+              src="https://plausible.io/js/script.file-downloads.hash.outbound-links.pageview-props.revenue.tagged-events.js"
+              strategy="afterInteractive"
+            />
+            <Script
+              id="plausible-init"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }`
+              }}
+            />
+          </>
+        )}
+        
         <AuthProvider>
           <Providers>
             <div className="min-h-screen">
