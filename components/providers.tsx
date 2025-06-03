@@ -1,12 +1,16 @@
 "use client"
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
+import { useAuth } from "@/components/auth-provider"
+import { isDemoMode } from "@/lib/app-mode"
+import { getHabits } from "@/lib/database"
 
 interface AppContextType {
   habits: Habit[]
   setHabits: (habits: Habit[]) => void
   activities: Activity[]
   setActivities: (activities: Activity[]) => void
+  loadingHabits: boolean
 }
 
 interface Habit {
@@ -42,57 +46,13 @@ export function useApp() {
 export function Providers({ children }: { children: ReactNode }) {
   const [habits, setHabits] = useState<Habit[]>([])
   const [activities, setActivities] = useState<Activity[]>([])
+  const [loadingHabits, setLoadingHabits] = useState(true)
+  
+  const { user, isAuthenticated } = useAuth()
+  const demoMode = isDemoMode()
 
   useEffect(() => {
-    // 初始化默认数据
-    const defaultHabits: Habit[] = [
-      {
-        id: "1",
-        name: "早睡早起",
-        icon: "🌙",
-        streak: 5,
-        completedToday: false,
-        category: "健康",
-        createdAt: new Date().toISOString(),
-      },
-      {
-        id: "2",
-        name: "刷牙洗脸",
-        icon: "🦷",
-        streak: 3,
-        completedToday: true,
-        category: "卫生",
-        createdAt: new Date().toISOString(),
-      },
-      {
-        id: "3",
-        name: "整理玩具",
-        icon: "🧸",
-        streak: 2,
-        completedToday: false,
-        category: "整理",
-        createdAt: new Date().toISOString(),
-      },
-      {
-        id: "4",
-        name: "阅读绘本",
-        icon: "📚",
-        streak: 7,
-        completedToday: true,
-        category: "学习",
-        createdAt: new Date().toISOString(),
-      },
-      {
-        id: "5",
-        name: "喝水记录",
-        icon: "💧",
-        streak: 4,
-        completedToday: false,
-        category: "健康",
-        createdAt: new Date().toISOString(),
-      },
-    ]
-
+    // 初始化活动数据（在任何模式下都可用）
     const defaultActivities: Activity[] = [
       {
         id: "1",
@@ -132,9 +92,97 @@ export function Providers({ children }: { children: ReactNode }) {
       },
     ]
 
-    setHabits(defaultHabits)
     setActivities(defaultActivities)
   }, [])
+
+  useEffect(() => {
+    async function loadHabits() {
+      setLoadingHabits(true)
+      
+      if (demoMode) {
+        // 演示模式：使用模拟习惯数据
+        console.log('🎭 加载演示习惯数据')
+        const demoHabits: Habit[] = [
+          {
+            id: "1",
+            name: "早睡早起",
+            icon: "🌙",
+            streak: 5,
+            completedToday: false,
+            category: "健康",
+            createdAt: new Date().toISOString(),
+          },
+          {
+            id: "2",
+            name: "刷牙洗脸",
+            icon: "🦷",
+            streak: 3,
+            completedToday: true,
+            category: "卫生",
+            createdAt: new Date().toISOString(),
+          },
+          {
+            id: "3",
+            name: "整理玩具",
+            icon: "🧸",
+            streak: 2,
+            completedToday: false,
+            category: "整理",
+            createdAt: new Date().toISOString(),
+          },
+          {
+            id: "4",
+            name: "阅读绘本",
+            icon: "📚",
+            streak: 7,
+            completedToday: true,
+            category: "学习",
+            createdAt: new Date().toISOString(),
+          },
+          {
+            id: "5",
+            name: "喝水记录",
+            icon: "💧",
+            streak: 4,
+            completedToday: false,
+            category: "健康",
+            createdAt: new Date().toISOString(),
+          },
+        ]
+        setHabits(demoHabits)
+      } else {
+        // 完整模式：从数据库加载或显示空数据
+        if (isAuthenticated && user) {
+          console.log('🔐 从数据库加载习惯数据')
+          try {
+            const dbHabits = await getHabits(user.id)
+            // 转换数据库格式到前端格式
+            const formattedHabits: Habit[] = dbHabits.map(habit => ({
+              id: habit.id,
+              name: habit.name,
+              icon: habit.icon,
+              streak: 0, // TODO: 计算连续天数
+              completedToday: false, // TODO: 检查今日是否完成
+              category: habit.category,
+              createdAt: habit.created_at,
+            }))
+            setHabits(formattedHabits)
+          } catch (error) {
+            console.error('加载习惯数据失败:', error)
+            setHabits([])
+          }
+        } else {
+          // 未登录时显示空数据
+          console.log('👤 用户未登录，显示空数据')
+          setHabits([])
+        }
+      }
+      
+      setLoadingHabits(false)
+    }
+
+    loadHabits()
+  }, [demoMode, isAuthenticated, user])
 
   return (
     <AppContext.Provider
@@ -143,6 +191,7 @@ export function Providers({ children }: { children: ReactNode }) {
         setHabits,
         activities,
         setActivities,
+        loadingHabits,
       }}
     >
       {children}

@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
 import type { User } from "@supabase/supabase-js"
 import { supabase, isSupabaseConfigured } from "@/lib/supabase"
+import { isDemoMode, isCompleteMode, isCompleteModeConfigured } from "@/lib/app-mode"
 
 interface AuthContextType {
   user: User | null
@@ -12,6 +13,8 @@ interface AuthContextType {
   signUp: (email: string, password: string, userData: Partial<UserProfile>) => Promise<{ error: any }>
   signOut: () => Promise<void>
   updateProfile: (data: Partial<UserProfile>) => Promise<{ error: any }>
+  isAuthenticated: boolean
+  isDemoMode: boolean
 }
 
 interface UserProfile {
@@ -35,7 +38,7 @@ export function useAuth() {
   return context
 }
 
-// 模拟用户数据（当Supabase未配置时使用）
+// 模拟用户数据（演示模式使用）
 const mockUserProfile: UserProfile = {
   id: "mock-user-123",
   email: "demo@example.com",
@@ -52,10 +55,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
 
+  const demoMode = isDemoMode()
+  const completeMode = isCompleteMode()
+  const isAuthenticated = demoMode ? true : !!user
+
   useEffect(() => {
-    if (!isSupabaseConfigured) {
-      // 如果Supabase未配置，使用模拟数据
-      console.log('使用模拟认证数据')
+    if (demoMode) {
+      // 演示模式：自动使用模拟数据
+      console.log('🎭 使用演示模式认证数据')
       setUserProfile(mockUserProfile)
       setUser({
         id: mockUserProfile.id,
@@ -71,36 +78,48 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return
     }
 
-    if (!supabase) {
-      setLoading(false)
-      return
+    if (completeMode) {
+      // 完整模式：检查 Supabase 配置
+      if (!isCompleteModeConfigured()) {
+        console.error('❌ 完整模式需要配置 Supabase，请查看 COMPLETE_MODE_SETUP.md')
+        setLoading(false)
+        return
+      }
+
+      if (!supabase) {
+        console.error('❌ Supabase 客户端初始化失败')
+        setLoading(false)
+        return
+      }
+
+      console.log('🔐 使用完整模式认证')
+
+      // 获取初始会话
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        setUser(session?.user ?? null)
+        if (session?.user) {
+          fetchUserProfile(session.user.id)
+        } else {
+          setLoading(false)
+        }
+      })
+
+      // 监听认证状态变化
+      const {
+        data: { subscription },
+      } = supabase.auth.onAuthStateChange(async (event, session) => {
+        setUser(session?.user ?? null)
+        if (session?.user) {
+          await fetchUserProfile(session.user.id)
+        } else {
+          setUserProfile(null)
+          setLoading(false)
+        }
+      })
+
+      return () => subscription.unsubscribe()
     }
-
-    // 获取初始会话
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null)
-      if (session?.user) {
-        fetchUserProfile(session.user.id)
-      } else {
-        setLoading(false)
-      }
-    })
-
-    // 监听认证状态变化
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      setUser(session?.user ?? null)
-      if (session?.user) {
-        await fetchUserProfile(session.user.id)
-      } else {
-        setUserProfile(null)
-        setLoading(false)
-      }
-    })
-
-    return () => subscription.unsubscribe()
-  }, [])
+  }, [demoMode, completeMode])
 
   const fetchUserProfile = async (userId: string) => {
     if (!supabase) return
@@ -121,9 +140,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const signIn = async (email: string, password: string) => {
-    if (!isSupabaseConfigured || !supabase) {
-      // 模拟登录成功
+    if (demoMode) {
+      // 演示模式：模拟登录成功
       return { error: null }
+    }
+
+    if (!isSupabaseConfigured || !supabase) {
+      return { error: new Error('Supabase 未正确配置') }
     }
 
     const { error } = await supabase.auth.signInWithPassword({
@@ -134,9 +157,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const signUp = async (email: string, password: string, userData: Partial<UserProfile>) => {
-    if (!isSupabaseConfigured || !supabase) {
-      // 模拟注册成功
+    if (demoMode) {
+      // 演示模式：模拟注册成功
       return { error: null }
+    }
+
+    if (!isSupabaseConfigured || !supabase) {
+      return { error: new Error('Supabase 未正确配置') }
     }
 
     const { data, error } = await supabase.auth.signUp({
@@ -166,8 +193,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const signOut = async () => {
+    if (demoMode) {
+      // 演示模式：无需实际登出
+      return
+    }
+
     if (!isSupabaseConfigured || !supabase) {
-      // 模拟登出
       return
     }
     await supabase.auth.signOut()
@@ -176,10 +207,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const updateProfile = async (data: Partial<UserProfile>) => {
     if (!user) return { error: new Error("No user logged in") }
 
-    if (!isSupabaseConfigured || !supabase) {
-      // 模拟更新成功
+    if (demoMode) {
+      // 演示模式：模拟更新成功
       setUserProfile(prev => prev ? { ...prev, ...data } : null)
       return { error: null }
+    }
+
+    if (!isSupabaseConfigured || !supabase) {
+      return { error: new Error('Supabase 未正确配置') }
     }
 
     const { error } = await supabase
@@ -207,6 +242,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         signUp,
         signOut,
         updateProfile,
+        isAuthenticated,
+        isDemoMode: demoMode,
       }}
     >
       {children}

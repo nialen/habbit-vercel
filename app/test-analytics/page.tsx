@@ -240,6 +240,10 @@ export default function TestAnalyticsPage() {
               <h4 className="font-semibold mb-2">📊 查看数据</h4>
               <p>访问 <a href="https://plausible.io/habitkids.online" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Plausible Dashboard</a> 查看实时数据。</p>
             </div>
+            <div>
+              <h4 className="font-semibold mb-2">🎨 其他测试</h4>
+              <p>还可以测试AI功能：<a href="/test-image" className="text-purple-600 hover:underline">图片生成测试页面</a></p>
+            </div>
           </div>
         </CardContent>
       </Card>
