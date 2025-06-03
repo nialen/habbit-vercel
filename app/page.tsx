@@ -8,10 +8,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Target, MessageCircle, TrendingUp, Award, Calendar, Bell, ChevronRight, Star, Clock } from "lucide-react"
 import Link from "next/link"
+import { isDemoMode } from "@/lib/app-mode"
 
 export default function Dashboard() {
   const { user, userProfile, loading } = useAuth()
   const { habits } = useApp()
+  const demoMode = isDemoMode()
 
   if (loading) {
     return (
@@ -21,10 +23,25 @@ export default function Dashboard() {
     )
   }
 
-  if (!user || !userProfile) {
+  // 在完整模式下，如果未登录则显示欢迎页面
+  if (!demoMode && (!user || !userProfile)) {
     return (
       <div className="fixed inset-0 z-50">
         <WelcomeScreen />
+      </div>
+    )
+  }
+
+  // 在演示模式下，即使未登录也显示仪表盘
+  if (demoMode && (!user || !userProfile)) {
+    console.log('🎭 演示模式：继续显示仪表盘')
+  }
+
+  // 确保 userProfile 存在
+  if (!userProfile) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <LoadingSpinner />
       </div>
     )
   }
