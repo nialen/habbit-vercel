@@ -27,6 +27,17 @@ export default function RootLayout({
     <html lang="zh-CN">
       <head>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+        {/* Plausible Analytics */}
+        <script 
+          defer 
+          data-domain="habitkids.online" 
+          src="https://plausible.io/js/script.file-downloads.hash.outbound-links.pageview-props.revenue.tagged-events.js"
+        />
+        <script 
+          dangerouslySetInnerHTML={{
+            __html: `window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }`
+          }}
+        />
       </head>
       <body className={inter.className}>
         <AuthProvider>

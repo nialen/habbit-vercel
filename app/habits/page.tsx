@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Input } from "@/components/ui/input"
 import { useApp } from "@/components/providers"
+import { analytics } from "@/lib/analytics"
 
 export default function HabitsPage() {
   const { habits, setHabits } = useApp()
@@ -16,6 +17,18 @@ export default function HabitsPage() {
   const habitIcons = ["⭐", "🌙", "🦷", "🧸", "📚", "🏃", "🥗", "💧", "🧘", "🎨"]
 
   const toggleHabit = (habitId: string) => {
+    const habit = habits.find(h => h.id === habitId)
+    if (habit) {
+      // 追踪习惯完成事件
+      if (!habit.completedToday) {
+        analytics.habit.completed(habit.name)
+        // 如果达到了新的连续记录，也追踪连续天数
+        if (habit.streak + 1 > 0) {
+          analytics.habit.streak(habit.streak + 1)
+        }
+      }
+    }
+
     setHabits(
       habits.map((habit) =>
         habit.id === habitId
@@ -31,6 +44,9 @@ export default function HabitsPage() {
 
   const addHabit = () => {
     if (!newHabit.name.trim()) return
+
+    // 追踪新习惯创建事件
+    analytics.habit.created(newHabit.name)
 
     const habit = {
       id: Date.now().toString(),

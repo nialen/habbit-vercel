@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { NavIconImg } from "@/components/nav-icon"
 import { useAuth } from "@/components/auth-provider"
 import { LogOut } from "lucide-react"
+import { analytics } from "@/lib/analytics"
 
 const navItems = [
   { href: "/", label: "首页", icon: "rocket" },
@@ -27,6 +28,14 @@ export function Navigation() {
   // 如果用户未登录，不显示导航栏
   if (!user || !userProfile) {
     return null
+  }
+
+  // 处理导航点击事件追踪
+  const handleNavClick = (href: string, label: string) => {
+    analytics.track('Navigation Click', { 
+      page: href, 
+      section: label 
+    })
   }
 
   return (
@@ -52,6 +61,7 @@ export function Navigation() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
+                    onClick={() => handleNavClick(item.href, item.label)}
                     className={`flex items-center p-2.5 rounded-lg transition-all duration-200 relative ${
                       isActive
                         ? "bg-blue-200 text-blue-900 shadow-md border-l-4 border-blue-600 transform translate-x-1"
@@ -85,7 +95,10 @@ export function Navigation() {
           </div>
 
           <Button
-            onClick={signOut}
+            onClick={() => {
+              analytics.user.login('logout')
+              signOut()
+            }}
             variant="ghost"
             size="sm"
             className="w-full justify-start text-blue-700 hover:bg-blue-200 hover:text-blue-900"
@@ -119,7 +132,10 @@ export function Navigation() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={() => {
+                      handleNavClick(item.href, item.label)
+                      setIsMobileMenuOpen(false)
+                    }}
                     className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-all ${
                       isActive
                         ? "bg-blue-100 text-blue-800 border-l-4 border-blue-600"
@@ -135,6 +151,7 @@ export function Navigation() {
 
               <button
                 onClick={() => {
+                  analytics.user.login('logout')
                   signOut()
                   setIsMobileMenuOpen(false)
                 }}
@@ -158,6 +175,7 @@ export function Navigation() {
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={() => handleNavClick(item.href, item.label)}
                 className={`flex flex-col items-center gap-1 px-2 py-2 rounded-lg transition-all duration-200 ${
                   isActive ? "text-blue-600 bg-blue-50 transform scale-105" : "text-gray-400 hover:text-blue-500"
                 }`}
