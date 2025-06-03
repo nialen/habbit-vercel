@@ -47,7 +47,7 @@ export function Navigation() {
             <img src="/logo.svg" alt="StarVoyage Logo" className="h-15 w-auto" />
           </div>
           <p className="text-xs text-blue-700 flex items-center gap-1 ml-4" style={{ marginTop: "-15px" }}>
-            <span>家长和孩子一起成长</span>
+            <span>家长和孩子一起成长....</span>
             <span className="text-xs">🌱💕✨</span>
           </p>
         </div>
