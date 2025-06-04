@@ -78,47 +78,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return
     }
 
-    if (completeMode) {
-      // 完整模式：检查 Supabase 配置
-      if (!isCompleteModeConfigured()) {
-        console.error('❌ 完整模式需要配置 Supabase，请查看 COMPLETE_MODE_SETUP.md')
-        setLoading(false)
-        return
-      }
+    // 完整模式或默认模式：使用真实认证
+    console.log('🔐 使用完整模式认证 - 需要登录')
 
-      if (!supabase) {
-        console.error('❌ Supabase 客户端初始化失败')
-        setLoading(false)
-        return
-      }
-
-      console.log('🔐 使用完整模式认证')
-
-      // 获取初始会话
-      supabase.auth.getSession().then(({ data: { session } }) => {
-        setUser(session?.user ?? null)
-        if (session?.user) {
-          fetchUserProfile(session.user.id)
-        } else {
-          setLoading(false)
-        }
-      })
-
-      // 监听认证状态变化
-      const {
-        data: { subscription },
-      } = supabase.auth.onAuthStateChange(async (event, session) => {
-        setUser(session?.user ?? null)
-        if (session?.user) {
-          await fetchUserProfile(session.user.id)
-        } else {
-          setUserProfile(null)
-          setLoading(false)
-        }
-      })
-
-      return () => subscription.unsubscribe()
+    if (!isSupabaseConfigured || !supabase) {
+      console.warn('⚠️ Supabase 未配置，显示登录页面')
+      setLoading(false)
+      return
     }
+
+    // 获取初始会话
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null)
+      if (session?.user) {
+        fetchUserProfile(session.user.id)
+      } else {
+        setLoading(false)
+      }
+    })
+
+    // 监听认证状态变化
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      setUser(session?.user ?? null)
+      if (session?.user) {
+        await fetchUserProfile(session.user.id)
+      } else {
+        setUserProfile(null)
+        setLoading(false)
+      }
+    })
+
+    return () => subscription.unsubscribe()
   }, [demoMode, completeMode])
 
   const fetchUserProfile = async (userId: string) => {
@@ -146,7 +138,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     if (!isSupabaseConfigured || !supabase) {
-      return { error: new Error('Supabase 未正确配置') }
+      return { error: new Error('数据库连接未配置，请联系管理员') }
     }
 
     const { error } = await supabase.auth.signInWithPassword({
@@ -163,12 +155,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     if (!isSupabaseConfigured || !supabase) {
-      return { error: new Error('Supabase 未正确配置') }
+      return { error: new Error('数据库连接未配置，请联系管理员') }
     }
 
+    // 由于邮箱验证已经在组件中完成，这里直接进行用户注册
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        emailRedirectTo: undefined, // 不需要邮箱确认链接，因为已经通过OTP验证
+      }
     })
 
     if (error) return { error }

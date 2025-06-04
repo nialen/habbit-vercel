@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { LoginForm } from "./login-form"
-import { RegisterForm } from "./register-form"
+import { RegisterFormWithVerification } from "./register-form-with-verification"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Star, Target, Users, Heart, Sparkles } from "lucide-react"
@@ -18,7 +18,7 @@ export function WelcomeScreen() {
           {authMode === "login" ? (
             <LoginForm onSwitchToRegister={() => setAuthMode("register")} />
           ) : (
-            <RegisterForm onSwitchToLogin={() => setAuthMode("login")} />
+            <RegisterFormWithVerification onSwitchToLogin={() => setAuthMode("login")} />
           )}
           <div className="text-center mt-4">
             <button onClick={() => setShowAuth(false)} className="text-gray-500 hover:text-gray-700 text-sm">

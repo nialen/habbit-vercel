@@ -2,10 +2,7 @@
   "version": 2,
   "name": "habbit-vercel",
   "framework": "nextjs",
-  "buildCommand": "npm run build:complete",
-  "outputDirectory": ".next",
   "installCommand": "npm install --legacy-peer-deps",
-  "devCommand": "npm run dev",
   "regions": ["hkg1"],
   "functions": {
     "app/**": {
@@ -44,10 +41,9 @@
       ]
     }
   ],
-  "rewrites": [
-    {
-      "source": "/sprites/(.*)",
-      "destination": "/public/sprites/$1"
+  "build": {
+    "env": {
+      "NPM_CONFIG_LEGACY_PEER_DEPS": "true"
     }
-  ]
+  }
 } 

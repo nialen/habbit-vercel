@@ -1,7 +1,6 @@
 "use client"
 
 import { useAuth } from "@/components/auth-provider"
-import { WelcomeScreen } from "@/components/auth/welcome-screen"
 import { LoadingSpinner } from "@/components/loading-spinner"
 import { useApp } from "@/components/providers"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -10,7 +9,7 @@ import { Target, MessageCircle, TrendingUp, Award, Calendar, Bell, ChevronRight,
 import Link from "next/link"
 
 export default function Dashboard() {
-  const { user, userProfile, loading } = useAuth()
+  const { user, userProfile, loading, isAuthenticated } = useAuth()
   const { habits } = useApp()
 
   if (loading) {
@@ -21,12 +20,9 @@ export default function Dashboard() {
     )
   }
 
-  if (!user || !userProfile) {
-    return (
-      <div className="fixed inset-0 z-50">
-        <WelcomeScreen />
-      </div>
-    )
+  // 如果没有认证，AuthGuard会处理，这里直接返回null
+  if (!isAuthenticated) {
+    return null
   }
 
   const completedToday = habits.filter((h) => h.completedToday).length
@@ -44,7 +40,7 @@ export default function Dashboard() {
     <div className="p-6 md:p-8 pt-20 md:pt-8">
       {/* 欢迎区域 */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">你好，{userProfile.child_name || "小朋友"}！👋</h1>
+        <h1 className="text-2xl font-bold text-gray-800 mb-2">你好，{userProfile?.child_name || "小朋友"}！👋</h1>
         <p className="text-gray-600">今天也要做最棒的自己哦</p>
       </div>
 
@@ -199,31 +195,13 @@ export default function Dashboard() {
           <Card className="card-hover cursor-pointer group">
             <CardContent className="p-6">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Target className="text-indigo-600" size={24} />
+                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+                  <Target className="w-6 h-6 text-blue-600" />
                 </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-gray-800 mb-1">习惯管理</h3>
-                  <p className="text-gray-600 text-sm">管理和打卡习惯</p>
+                <div>
+                  <h3 className="font-semibold text-gray-800">习惯管理</h3>
+                  <p className="text-sm text-gray-600">记录和管理日常习惯</p>
                 </div>
-                <ChevronRight className="text-gray-400 group-hover:text-gray-600" size={20} />
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-
-        <Link href="/advisor">
-          <Card className="card-hover cursor-pointer group">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <MessageCircle className="text-purple-600" size={24} />
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-gray-800 mb-1">AI 顾问</h3>
-                  <p className="text-gray-600 text-sm">专业育儿建议</p>
-                </div>
-                <ChevronRight className="text-gray-400 group-hover:text-gray-600" size={20} />
               </div>
             </CardContent>
           </Card>
@@ -233,67 +211,88 @@ export default function Dashboard() {
           <Card className="card-hover cursor-pointer group">
             <CardContent className="p-6">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Calendar className="text-green-600" size={24} />
+                <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center group-hover:bg-green-200 transition-colors">
+                  <Calendar className="w-6 h-6 text-green-600" />
                 </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-gray-800 mb-1">亲子活动</h3>
-                  <p className="text-gray-600 text-sm">精彩活动推荐</p>
+                <div>
+                  <h3 className="font-semibold text-gray-800">亲子活动</h3>
+                  <p className="text-sm text-gray-600">发现有趣的家庭活动</p>
                 </div>
-                <ChevronRight className="text-gray-400 group-hover:text-gray-600" size={20} />
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link href="/community">
+          <Card className="card-hover cursor-pointer group">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center group-hover:bg-purple-200 transition-colors">
+                  <MessageCircle className="w-6 h-6 text-purple-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-800">家长交流</h3>
+                  <p className="text-sm text-gray-600">与其他家长分享经验</p>
+                </div>
               </div>
             </CardContent>
           </Card>
         </Link>
       </div>
 
-      {/* 最近动态 */}
-      <Card className="card-hover">
+      {/* 通知提醒 */}
+      <Card className="mb-8">
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Bell className="w-5 h-5 text-orange-500" />
+            今日提醒
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
+              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              <p className="text-sm text-gray-700">记得在晚上8点前完成"早睡早起"的准备工作</p>
+            </div>
+            <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <p className="text-sm text-gray-700">今天是周末，可以尝试新的亲子活动哦</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* 成长足迹 */}
+      <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg flex items-center gap-2">
-              <Bell className="w-5 h-5 text-blue-500" />
-              最近动态
+              <TrendingUp className="w-5 h-5 text-green-500" />
+              成长足迹
             </CardTitle>
-            <Link href="/notifications">
+            <Link href="/statistics">
               <Button variant="ghost" size="sm">
-                查看全部 <ChevronRight size={16} />
+                查看详情 <ChevronRight size={16} />
               </Button>
             </Link>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
-              <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                <span className="text-green-600 text-sm">✓</span>
+          <div className="grid grid-cols-7 gap-1 mb-4">
+            {Array.from({ length: 7 }, (_, i) => (
+              <div key={i} className="text-center">
+                <div className="text-xs text-gray-500 mb-1">
+                  {new Date(Date.now() - (6 - i) * 24 * 60 * 60 * 1000).toLocaleDateString("zh", { weekday: "short" })}
+                </div>
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs ${
+                  Math.random() > 0.3 ? "bg-green-100 text-green-600" : "bg-gray-100 text-gray-400"
+                }`}>
+                  {Math.random() > 0.3 ? "✓" : "-"}
+                </div>
               </div>
-              <div className="flex-1">
-                <p className="text-sm font-medium text-gray-800">完成了"刷牙洗脸"习惯</p>
-                <p className="text-xs text-gray-500">2小时前</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3 p-3 bg-yellow-50 rounded-lg">
-              <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
-                <Star className="w-4 h-4 text-yellow-600" />
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-medium text-gray-800">"早睡早起"习惯已坚持5天</p>
-                <p className="text-xs text-gray-500">昨天</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
-              <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                <Award className="w-4 h-4 text-blue-600" />
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-medium text-gray-800">获得了"坚持之星"徽章</p>
-                <p className="text-xs text-gray-500">3天前</p>
-              </div>
-            </div>
+            ))}
           </div>
+          <p className="text-sm text-gray-600">本周完成率：{Math.round(Math.random() * 30 + 70)}%，继续保持！</p>
         </CardContent>
       </Card>
     </div>

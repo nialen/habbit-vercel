@@ -6,6 +6,7 @@ import Script from "next/script"
 import { Navigation } from "@/components/navigation"
 import { Providers } from "@/components/providers"
 import { AuthProvider } from "@/components/auth-provider"
+import { AuthGuard } from "@/components/auth-guard"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -55,10 +56,12 @@ export default function RootLayout({
         
         <AuthProvider>
           <Providers>
-            <div className="min-h-screen">
-              <Navigation />
-              <main className="pb-20 md:pb-0 md:ml-64">{children}</main>
-            </div>
+            <AuthGuard>
+              <div className="min-h-screen">
+                <Navigation />
+                <main className="pb-20 md:pb-0 md:ml-64">{children}</main>
+              </div>
+            </AuthGuard>
           </Providers>
         </AuthProvider>
       </body>
