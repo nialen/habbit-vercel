@@ -5,7 +5,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { NavIconImg } from "@/components/nav-icon"
-import { useAuth } from "@/components/auth-provider"
+import { useAuth } from "@/contexts/auth"
 import { LogOut } from "lucide-react"
 import { analytics } from "@/lib/analytics"
 
@@ -23,10 +23,10 @@ const navItems = [
 export function Navigation() {
   const pathname = usePathname()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const { user, userProfile, signOut } = useAuth()
+  const { user, signOut } = useAuth()
 
   // 如果用户未登录，不显示导航栏
-  if (!user || !userProfile) {
+  if (!user) {
     return null
   }
 
@@ -88,8 +88,8 @@ export function Navigation() {
                 <span className="text-white text-xs">👶</span>
               </div>
               <div>
-                <p className="font-medium text-blue-800 text-sm">{userProfile.child_name}</p>
-                <p className="text-xs text-blue-600">{userProfile.child_age}岁 · 已坚持15天</p>
+                <p className="font-medium text-blue-800 text-sm">小朋友</p>
+                <p className="text-xs text-blue-600">6岁 · 已坚持15天</p>
               </div>
             </div>
           </div>

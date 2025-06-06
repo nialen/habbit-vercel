@@ -1,7 +1,7 @@
 "use client"
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
-import { useAuth } from "@/components/auth-provider"
+import { useAuth } from "@/contexts/auth"
 import { isDemoMode } from "@/lib/app-mode"
 import { getHabits } from "@/lib/database"
 
@@ -11,6 +11,7 @@ interface AppContextType {
   activities: Activity[]
   setActivities: (activities: Activity[]) => void
   loadingHabits: boolean
+  user: any
 }
 
 interface Habit {
@@ -48,8 +49,9 @@ export function Providers({ children }: { children: ReactNode }) {
   const [activities, setActivities] = useState<Activity[]>([])
   const [loadingHabits, setLoadingHabits] = useState(true)
   
-  const { user, isAuthenticated } = useAuth()
+  const { user } = useAuth()
   const demoMode = isDemoMode()
+  const isAuthenticated = !!user
 
   useEffect(() => {
     // 初始化活动数据（在任何模式下都可用）
@@ -192,6 +194,7 @@ export function Providers({ children }: { children: ReactNode }) {
         activities,
         setActivities,
         loadingHabits,
+        user,
       }}
     >
       {children}

@@ -5,7 +5,7 @@ import { Inter } from "next/font/google"
 import Script from "next/script"
 import { Navigation } from "@/components/navigation"
 import { Providers } from "@/components/providers"
-import { AuthProvider } from "@/components/auth-provider"
+import { AuthProvider } from "@/contexts/auth"
 import { AuthGuard } from "@/components/auth-guard"
 
 const inter = Inter({
