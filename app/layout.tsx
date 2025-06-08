@@ -2,11 +2,11 @@ import type React from "react"
 import "./globals.css"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
-import Script from "next/script"
-import { Navigation } from "@/components/navigation"
 import { Providers } from "@/components/providers"
-import { AuthProvider } from "@/contexts/auth"
+import { AuthProvider } from "@/components/auth-provider"
 import { AuthGuard } from "@/components/auth-guard"
+import { SimpleNavigation } from "@/components/simple-navigation"
+// import { AuthDebug } from "@/components/auth-debug"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -15,56 +15,42 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "星航成长营 StarVoyage - 儿童成长伙伴",
-  description: "帮助孩子养成好习惯，促进亲子互动的专业平台",
+  title: "星航成长营 - 习惯养成助手",
+  description: "帮助孩子养成好习惯的专业应用",
   generator: "v0.dev",
 }
 
-// Plausible Analytics 配置
-const PLAUSIBLE_DOMAIN = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN || "habitkids.online"
-const IS_PRODUCTION = process.env.NODE_ENV === "production"
-
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode
-}) {
+}>) {
   return (
-    <html lang="zh-CN">
-      <head>
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-      </head>
+    <html lang="zh-CN" suppressHydrationWarning>
       <body className={inter.className}>
-        {/* Plausible Analytics - 仅在生产环境加载 */}
-        {IS_PRODUCTION && (
-          <>
-            <Script
-              defer
-              data-domain={PLAUSIBLE_DOMAIN}
-              src="https://plausible.io/js/script.file-downloads.hash.outbound-links.pageview-props.revenue.tagged-events.js"
-              strategy="afterInteractive"
-            />
-            <Script
-              id="plausible-init"
-              strategy="afterInteractive"
-              dangerouslySetInnerHTML={{
-                __html: `window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }`
-              }}
-            />
-          </>
-        )}
-        
-        <AuthProvider>
-          <Providers>
+        <Providers>
+          <AuthProvider>
             <AuthGuard>
-              <div className="min-h-screen">
-                <Navigation />
-                <main className="pb-20 md:pb-0 md:ml-64">{children}</main>
-              </div>
+              <ConditionalNavigation />
+              {children}
             </AuthGuard>
-          </Providers>
-        </AuthProvider>
+            {/* <AuthDebug /> */}
+          </AuthProvider>
+        </Providers>
       </body>
     </html>
   )
+}
+
+// 条件性导航组件
+function ConditionalNavigation() {
+  if (typeof window !== 'undefined') {
+    const pathname = window.location.pathname
+    // 在认证相关页面不显示导航
+    if (pathname.startsWith('/auth') || pathname === '/login') {
+      return null
+    }
+  }
+  
+  return <SimpleNavigation />
 }

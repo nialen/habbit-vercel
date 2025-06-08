@@ -92,3 +92,25 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* 导航栏额外样式 */
+@layer components {
+  .stat-card {
+    @apply bg-white border border-gray-200 shadow-sm;
+  }
+  
+  .card-hover {
+    @apply transition-all duration-200 hover:shadow-md;
+  }
+  
+  .habit-icon {
+    @apply bg-gradient-to-br from-blue-400 to-indigo-500 text-white;
+  }
+  
+  /* 确保侧边栏在大屏幕上正确显示 */
+  @media (min-width: 768px) {
+    .sidebar-layout {
+      padding-left: 16rem; /* 256px / 16 = 16rem */
+    }
+  }
+}

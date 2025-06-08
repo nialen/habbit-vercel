@@ -7,6 +7,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { useApp } from "@/components/providers"
 import { LoadingSpinner } from "@/components/loading-spinner"
+import { SimpleNavigation } from "@/components/simple-navigation"
+import { Sparkles, MessageCircle, Send, Lightbulb, CheckSquare, Zap } from "lucide-react"
 
 interface AdvisorResponse {
   analysis: string
@@ -15,7 +17,7 @@ interface AdvisorResponse {
 }
 
 export default function AdvisorPage() {
-  const { user } = useApp()
+  const { } = useApp() // userProfile 在需要时可以从 useAuth 获取
   const [concern, setConcern] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [response, setResponse] = useState<AdvisorResponse | null>(null)
@@ -59,7 +61,7 @@ export default function AdvisorPage() {
         },
         body: JSON.stringify({
           concern,
-          childAge: user?.childAge || 6,
+          childAge: 6, // 默认年龄，可以从 userProfile 获取
         }),
       })
 
@@ -87,7 +89,10 @@ export default function AdvisorPage() {
   }
 
   return (
-    <div className="p-4 md:p-8 pt-20 md:pt-8 max-w-4xl mx-auto">
+    <div className="min-h-screen">
+      <SimpleNavigation />
+      <main className="pb-20 md:pb-0 md:ml-64">
+        <div className="p-4 md:p-8 pt-20 md:pt-8 max-w-4xl mx-auto">
       <div className="text-center mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-sky-900 mb-2">AI 烦恼顾问</h1>
         <p className="text-sky-700 text-lg">专业的育儿建议，温暖的陪伴支持 💝</p>
@@ -98,7 +103,7 @@ export default function AdvisorPage() {
         <Card className="card-hover mb-6 bg-gradient-to-r from-sky-50 to-blue-50 border-sky-200">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <span className="material-icons text-sky-500">auto_awesome</span>
+              <Sparkles className="w-5 h-5 text-sky-500" />
               常见问题
             </CardTitle>
           </CardHeader>
@@ -122,7 +127,7 @@ export default function AdvisorPage() {
       <Card className="card-hover mb-6">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <span className="material-icons text-sky-500">chat</span>
+            <MessageCircle className="w-5 h-5 text-sky-500" />
             描述您的困惑
           </CardTitle>
         </CardHeader>
@@ -150,7 +155,7 @@ export default function AdvisorPage() {
                   </>
                 ) : (
                   <>
-                    <span className="material-icons mr-2 text-sm">send</span>
+                    <Send className="w-4 h-4 mr-2" />
                     获取建议
                   </>
                 )}
@@ -166,7 +171,7 @@ export default function AdvisorPage() {
           <Card className="card-hover bg-gradient-to-br from-blue-50 to-sky-50 border-blue-200">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <span className="material-icons text-blue-500">lightbulb</span>
+                <Lightbulb className="w-5 h-5 text-blue-500" />
                 原因分析
               </CardTitle>
             </CardHeader>
@@ -178,7 +183,7 @@ export default function AdvisorPage() {
           <Card className="card-hover bg-gradient-to-br from-green-50 to-blue-50 border-green-200">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <span className="material-icons text-green-500">tips_and_updates</span>
+                <Zap className="w-5 h-5 text-green-500" />
                 分龄建议
               </CardTitle>
             </CardHeader>
@@ -197,7 +202,7 @@ export default function AdvisorPage() {
           <Card className="card-hover bg-gradient-to-br from-orange-50 to-yellow-50 border-orange-200">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <span className="material-icons text-orange-500">checklist</span>
+                <CheckSquare className="w-5 h-5 text-orange-500" />
                 可操作清单
               </CardTitle>
             </CardHeader>
@@ -259,6 +264,8 @@ export default function AdvisorPage() {
           </div>
         </CardContent>
       </Card>
+        </div>
+      </main>
     </div>
   )
 }

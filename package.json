@@ -5,18 +5,11 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development next dev",
     "dev:prod": "cross-env NODE_ENV=production next dev",
-    "dev:demo": "cp .env.demo .env.local && next dev",
-    "dev:complete": "cp .env.complete .env.local && next dev",
     "build": "next build",
     "build:dev": "cross-env NODE_ENV=development next build",
     "build:prod": "cross-env NODE_ENV=production next build",
-    "build:demo": "cp .env.demo .env.local && next build",
-    "build:complete": "if [ \"$VERCEL\" = \"1\" ]; then next build; else cp .env.complete .env.local && next build; fi",
-    "start": "next start",
     "start:dev": "cross-env NODE_ENV=development next start",
     "start:prod": "cross-env NODE_ENV=production next start",
-    "start:demo": "cp .env.demo .env.local && next start",
-    "start:complete": "cp .env.complete .env.local && next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "clean": "rimraf .next out",
@@ -59,6 +52,8 @@
     "@radix-ui/react-toggle": "1.1.1",
     "@radix-ui/react-toggle-group": "1.1.1",
     "@radix-ui/react-tooltip": "1.1.6",
+    "@supabase/auth-ui-react": "^0.4.7",
+    "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "latest",
     "autoprefixer": "^10.4.20",
@@ -66,6 +61,7 @@
     "clsx": "^2.1.1",
     "cmdk": "1.0.4",
     "date-fns": "latest",
+    "dotenv": "^16.5.0",
     "embla-carousel-react": "8.5.1",
     "input-otp": "1.4.1",
     "lucide-react": "^0.454.0",
@@ -86,6 +82,7 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^15.3.3",
     "@types/node": "^22",
     "@types/react": "^18",
     "@types/react-dom": "^18",
@@ -93,6 +90,7 @@
     "postcss": "^8",
     "rimraf": "^6.0.1",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5"
+    "typescript": "^5",
+    "webpack-bundle-analyzer": "^4.10.2"
   }
 }

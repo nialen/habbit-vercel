@@ -1,193 +1,165 @@
 "use client"
 
-import { useState } from "react"
+import { useAuth } from "@/components/auth-provider"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { NavIconImg } from "@/components/nav-icon"
-import { useAuth } from "@/contexts/auth"
-import { LogOut } from "lucide-react"
-import { analytics } from "@/lib/analytics"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import {
+  Home,
+  Target,
+  Bot,
+  Heart,
+  BarChart2,
+  Award,
+  Users,
+  Bell,
+  LogOut,
+  Sparkles,
+  AlertTriangle,
+} from "lucide-react"
 
-const navItems = [
-  { href: "/", label: "首页", icon: "rocket" },
-  { href: "/habits", label: "习惯管理", icon: "badge-bunny" },
-  { href: "/advisor", label: "AI顾问", icon: "ai-orb" },
-  { href: "/activities", label: "亲子活动", icon: "panda-run" },
-  { href: "/statistics", label: "数据统计", icon: "chart-koala" },
-  { href: "/rewards", label: "奖励兑换", icon: "gift-astrocat" },
-  { href: "/community", label: "家长讨论区", icon: "community-chat" },
-  { href: "/notifications", label: "通知中心", icon: "bell-star" },
-] as const
+// 定义导航项
+const navigationItems = [
+  { name: "首页", href: "/", icon: Home },
+  { name: "习惯管理", href: "/habits", icon: Target },
+  { name: "AI 顾问", href: "/advisor", icon: Bot },
+  { name: "亲子活动", href: "/activities", icon: Heart },
+  { name: "数据统计", href: "/statistics", icon: BarChart2 },
+  { name: "奖励兑换", href: "/rewards", icon: Award },
+  { name: "家长社区", href: "/community", icon: Users },
+  { name: "通知中心", href: "/notifications", icon: Bell },
+]
 
 export function Navigation() {
+  const { user, userProfile, signOut, loading, error } = useAuth()
   const pathname = usePathname()
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const { user, signOut } = useAuth()
 
-  // 如果用户未登录，不显示导航栏
-  if (!user) {
-    return null
-  }
-
-  // 处理导航点击事件追踪
-  const handleNavClick = (href: string, label: string) => {
-    analytics.track('Navigation Click', { 
-      page: href, 
-      section: label 
-    })
-  }
-
-  return (
-    <>
-      {/* 桌面端侧边栏 */}
-      <aside className="hidden md:flex fixed left-0 top-0 h-full w-64 bg-blue-100 text-blue-800 flex-col p-4 z-50">
-        <div className="mb-6">
-          <div className="flex items-center gap-3 mb-2">
-            <img src="/logo.svg" alt="StarVoyage Logo" className="h-15 w-auto" />
+  // 状态 1: 初始加载或正在认证
+  // loading 为 true 时，显示骨架屏
+  if (loading) {
+    return (
+      <aside className="hidden md:flex md:flex-col md:fixed md:inset-y-0 md:left-0 md:w-64 md:bg-gray-50 md:border-r">
+        <div className="flex flex-col flex-1 p-4">
+          <div className="h-10 bg-gray-200 rounded-md w-3/4 mb-8 animate-pulse"></div>
+          <div className="space-y-4">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="h-8 bg-gray-200 rounded-md w-full animate-pulse"></div>
+            ))}
           </div>
-          <p className="text-xs text-blue-700 flex items-center gap-1 ml-4" style={{ marginTop: "-15px" }}>
-            <span>家长和孩子一起成长....</span>
-            <span className="text-xs">🌱💕✨</span>
+          <div className="mt-auto h-16 bg-gray-200 rounded-md w-full animate-pulse"></div>
+        </div>
+      </aside>
+    )
+  }
+
+  // 状态 2: 加载完成，但出现错误
+  // error 不为 null 时，显示错误状态
+  if (error) {
+    return (
+      <aside className="hidden md:flex md:flex-col md:fixed md:inset-y-0 md:left-0 md:w-64 md:bg-gray-50 md:border-r">
+        <div className="flex flex-col flex-1 p-4 text-center items-center justify-center">
+          <AlertTriangle className="h-12 w-12 text-red-400 mb-4" />
+          <h3 className="font-semibold text-red-600 mb-2">加载失败</h3>
+          <p className="text-xs text-gray-500 mb-4">无法加载您的用户资料，请检查网络连接后刷新页面。</p>
+          <p className="text-[10px] text-gray-400 bg-gray-100 p-2 rounded-md overflow-hidden">
+            错误: {error.message}
           </p>
+          <Button
+            variant="ghost"
+            onClick={signOut}
+            className="w-full justify-center text-gray-500 hover:text-red-500 hover:bg-red-50 mt-6"
+          >
+            <LogOut className="w-4 h-4 mr-2" />
+            尝试退出
+          </Button>
+        </div>
+      </aside>
+    )
+  }
+  
+  // 状态 3: 加载完成，但没有用户资料（不太可能发生，但作为保险）
+  // userProfile 为 null 时，显示骨架屏
+  if (!userProfile) {
+    return (
+      <aside className="hidden md:flex md:flex-col md:fixed md:inset-y-0 md:left-0 md:w-64 md:bg-gray-50 md:border-r">
+        <div className="flex flex-col flex-1 p-4">
+          <div className="h-10 bg-gray-200 rounded-md w-3/4 mb-8 animate-pulse"></div>
+          <div className="space-y-4">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="h-8 bg-gray-200 rounded-md w-full animate-pulse"></div>
+            ))}
+          </div>
+          <div className="mt-auto h-16 bg-gray-200 rounded-md w-full animate-pulse"></div>
+        </div>
+      </aside>
+    )
+  }
+
+  // 状态 4: 成功加载，正常显示导航
+  return (
+    <aside className="hidden md:flex md:flex-col md:fixed md:inset-y-0 md:left-0 md:w-64 md:bg-gray-50 md:border-r">
+      <div className="flex flex-col flex-1">
+        {/* Logo */}
+        <div className="flex items-center gap-3 px-6 h-20 border-b">
+          <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-xl">
+            <Sparkles className="text-white" />
+          </div>
+          <div>
+            <h1 className="font-bold text-lg text-gray-800">星航成长营</h1>
+            <p className="text-xs text-gray-500">和孩子一起成长 ✨</p>
+          </div>
         </div>
 
-        <nav className="flex-1 min-h-0">
-          <ul className="space-y-1">
-            {navItems.map((item) => {
-              const isActive = pathname === item.href
-
-              return (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    onClick={() => handleNavClick(item.href, item.label)}
-                    className={`flex items-center p-2.5 rounded-lg transition-all duration-200 relative ${
-                      isActive
-                        ? "bg-blue-200 text-blue-900 shadow-md border-l-4 border-blue-600 transform translate-x-1"
-                        : "text-blue-700 hover:bg-blue-200 hover:text-blue-900"
-                    }`}
-                  >
-                    <NavIconImg
-                      name={item.icon}
-                      className={`mr-2.5 w-5 h-5 ${isActive ? "text-blue-900" : "text-blue-600"}`}
-                    />
-                    <span className="font-medium text-sm">{item.label}</span>
-                    {isActive && <span className="material-icons ml-auto text-blue-600 text-sm">chevron_right</span>}
-                  </Link>
-                </li>
-              )
-            })}
-          </ul>
+        {/* 导航菜单 */}
+        <nav className="flex-1 px-4 py-6 space-y-2">
+          {navigationItems.map((item) => {
+            const Icon = item.icon
+            const isActive = pathname === item.href
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  isActive
+                    ? "bg-blue-500 text-white shadow-md"
+                    : "text-gray-600 hover:bg-gray-200 hover:text-gray-900"
+                }`}
+              >
+                <Icon className="w-5 h-5" />
+                <span>{item.name}</span>
+                {isActive && (
+                  <span className="ml-auto w-2 h-2 bg-white rounded-full"></span>
+                )}
+              </Link>
+            )
+          })}
         </nav>
 
-        <div className="mt-4 space-y-3">
-          <div className="p-3 bg-white/40 rounded-xl border border-white/20">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center">
-                <span className="text-white text-xs">👶</span>
-              </div>
-              <div>
-                <p className="font-medium text-blue-800 text-sm">小朋友</p>
-                <p className="text-xs text-blue-600">6岁 · 已坚持15天</p>
-              </div>
+        {/* 用户信息和退出 */}
+        <div className="px-4 py-4 mt-auto border-t">
+          <div className="p-3 bg-white rounded-lg flex items-center gap-3 mb-2">
+            <Avatar className="w-10 h-10">
+              <AvatarImage src={userProfile.avatar_url} alt={userProfile.child_name} />
+              <AvatarFallback className="bg-indigo-100 text-indigo-500 font-bold">
+                {userProfile.child_name?.charAt(0)}
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="font-semibold text-sm text-gray-800">{userProfile.child_name}</p>
+              <p className="text-xs text-gray-500">{userProfile.child_age}岁 · 已坚持15天</p>
             </div>
           </div>
-
           <Button
-            onClick={() => {
-              analytics.user.login('logout')
-              signOut()
-            }}
             variant="ghost"
-            size="sm"
-            className="w-full justify-start text-blue-700 hover:bg-blue-200 hover:text-blue-900"
+            onClick={signOut}
+            className="w-full justify-center text-gray-500 hover:text-red-500 hover:bg-red-50"
           >
             <LogOut className="w-4 h-4 mr-2" />
             退出登录
           </Button>
         </div>
-      </aside>
-
-      {/* 移动端顶部栏 */}
-      <div className="md:hidden fixed top-0 left-0 right-0 bg-white shadow-md px-4 py-3 z-50">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img src="/logo.svg" alt="StarVoyage Logo" className="h-8 w-auto" />
-          </div>
-
-          <Button variant="ghost" size="sm" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-            <span className="material-icons">{isMobileMenuOpen ? "close" : "menu"}</span>
-          </Button>
-        </div>
-
-        {/* 移动端菜单 */}
-        {isMobileMenuOpen && (
-          <div className="absolute top-full left-0 right-0 bg-white shadow-md p-4 max-h-96 overflow-y-auto">
-            <div className="space-y-1">
-              {navItems.map((item) => {
-                const isActive = pathname === item.href
-
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => {
-                      handleNavClick(item.href, item.label)
-                      setIsMobileMenuOpen(false)
-                    }}
-                    className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-all ${
-                      isActive
-                        ? "bg-blue-100 text-blue-800 border-l-4 border-blue-600"
-                        : "text-gray-600 hover:bg-blue-50"
-                    }`}
-                  >
-                    <NavIconImg name={item.icon} className="w-5 h-5" />
-                    <span>{item.label}</span>
-                    {isActive && <span className="material-icons ml-auto text-blue-600 text-sm">chevron_right</span>}
-                  </Link>
-                )
-              })}
-
-              <button
-                onClick={() => {
-                  analytics.user.login('logout')
-                  signOut()
-                  setIsMobileMenuOpen(false)
-                }}
-                className="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-all text-red-600 hover:bg-red-50 w-full"
-              >
-                <LogOut className="w-5 h-5" />
-                <span>退出登录</span>
-              </button>
-            </div>
-          </div>
-        )}
       </div>
-
-      {/* 移动端底部导航 */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-md px-2 py-2 z-50">
-        <div className="flex justify-around">
-          {navItems.slice(0, 5).map((item) => {
-            const isActive = pathname === item.href
-
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => handleNavClick(item.href, item.label)}
-                className={`flex flex-col items-center gap-1 px-2 py-2 rounded-lg transition-all duration-200 ${
-                  isActive ? "text-blue-600 bg-blue-50 transform scale-105" : "text-gray-400 hover:text-blue-500"
-                }`}
-              >
-                <NavIconImg name={item.icon} className="w-5 h-5" />
-                <span className="text-xs font-medium">{item.label}</span>
-                {isActive && <div className="w-1 h-1 bg-blue-600 rounded-full"></div>}
-              </Link>
-            )
-          })}
-        </div>
-      </nav>
-    </>
+    </aside>
   )
 }

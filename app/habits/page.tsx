@@ -7,6 +7,8 @@ import { Progress } from "@/components/ui/progress"
 import { Input } from "@/components/ui/input"
 import { useApp } from "@/components/providers"
 import { analytics } from "@/lib/analytics"
+import { PageLayout } from "@/components/page-layout"
+import { Target, CheckCircle, TrendingUp, Star, Plus, MoreHorizontal, Check } from "lucide-react"
 
 export default function HabitsPage() {
   const { habits, setHabits } = useApp()
@@ -68,7 +70,7 @@ export default function HabitsPage() {
   const progressPercentage = habits.length > 0 ? (completedToday / habits.length) * 100 : 0
 
   return (
-    <div className="p-8 pt-20 md:pt-8">
+    <PageLayout>
       {/* 页面标题 */}
       <header className="mb-8">
         <h2 className="text-3xl font-semibold text-sky-900">习惯管理</h2>
@@ -78,7 +80,7 @@ export default function HabitsPage() {
       {/* 统计概览 */}
       <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div className="bg-sky-100 p-6 rounded-xl shadow-lg flex items-center space-x-4">
-          <span className="material-icons text-3xl text-sky-500">military_tech</span>
+          <Target className="w-8 h-8 text-sky-500" />
           <div>
             <p className="text-sky-800 text-sm">进行中习惯</p>
             <p className="text-2xl font-bold text-sky-900">{habits.length}</p>
@@ -86,7 +88,7 @@ export default function HabitsPage() {
         </div>
 
         <div className="bg-green-100 p-6 rounded-xl shadow-lg flex items-center space-x-4">
-          <span className="material-icons text-3xl text-green-500">check_circle</span>
+          <CheckCircle className="w-8 h-8 text-green-500" />
           <div>
             <p className="text-green-800 text-sm">今日完成</p>
             <p className="text-2xl font-bold text-green-900">{completedToday}</p>
@@ -94,7 +96,7 @@ export default function HabitsPage() {
         </div>
 
         <div className="bg-purple-100 p-6 rounded-xl shadow-lg flex items-center space-x-4">
-          <span className="material-icons text-3xl text-purple-500">trending_up</span>
+          <TrendingUp className="w-8 h-8 text-purple-500" />
           <div>
             <p className="text-purple-800 text-sm">累计星星</p>
             <p className="text-2xl font-bold text-purple-900">{totalStars}</p>
@@ -102,7 +104,7 @@ export default function HabitsPage() {
         </div>
 
         <div className="bg-pink-100 p-6 rounded-xl shadow-lg flex items-center space-x-4">
-          <span className="material-icons text-3xl text-pink-500">star_border</span>
+          <Star className="w-8 h-8 text-pink-500" />
           <div>
             <p className="text-pink-800 text-sm">完成率</p>
             <p className="text-2xl font-bold text-pink-900">{Math.round(progressPercentage)}%</p>
@@ -135,7 +137,7 @@ export default function HabitsPage() {
             onClick={() => setShowAddForm(!showAddForm)}
             className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg flex items-center transition-colors"
           >
-            <span className="material-icons mr-2">add</span>
+            <Plus className="w-4 h-4 mr-2" />
             添加习惯
           </Button>
         </div>
@@ -218,7 +220,7 @@ export default function HabitsPage() {
               <div className="flex justify-between items-start mb-3">
                 <h4 className="text-lg font-semibold text-sky-900">{habit.name}</h4>
                 <button className="text-sky-600 hover:text-sky-800">
-                  <span className="material-icons">more_horiz</span>
+                  <MoreHorizontal className="w-5 h-5" />
                 </button>
               </div>
               <p className="text-sm text-sky-700 mb-3">每天坚持{habit.name}，养成好习惯</p>
@@ -279,12 +281,12 @@ export default function HabitsPage() {
                 >
                   {habit.completedToday ? (
                     <>
-                      <span className="material-icons text-sm mr-1">check</span>
+                      <Check className="w-4 h-4 mr-1" />
                       已完成
                     </>
                   ) : (
                     <>
-                      <span className="material-icons text-sm mr-1">add</span>
+                      <Plus className="w-4 h-4 mr-1" />
                       打卡
                     </>
                   )}
@@ -296,16 +298,16 @@ export default function HabitsPage() {
 
         {habits.length === 0 && (
           <div className="text-center py-12 bg-white rounded-lg shadow-md">
-            <span className="material-icons text-5xl text-gray-400 mb-4">military_tech</span>
+            <Target className="w-12 h-12 text-gray-400 mb-4 mx-auto" />
             <h3 className="text-xl font-semibold text-gray-600 mb-2">还没有添加习惯</h3>
             <p className="text-gray-500 mb-4">点击"添加习惯"开始你的成长之旅吧！</p>
             <Button onClick={() => setShowAddForm(true)} className="bg-blue-500 hover:bg-blue-600 text-white">
-              <span className="material-icons text-sm mr-2">add</span>
+              <Plus className="w-4 h-4 mr-2" />
               添加第一个习惯
             </Button>
           </div>
         )}
       </section>
-    </div>
+    </PageLayout>
   )
 }

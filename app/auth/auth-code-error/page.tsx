@@ -18,7 +18,7 @@ export default function AuthCodeError() {
         </CardHeader>
         <CardContent className="text-center">
           <Button asChild>
-            <Link href="/login">返回登录</Link>
+            <Link href="/auth">返回登录</Link>
           </Button>
         </CardContent>
       </Card>

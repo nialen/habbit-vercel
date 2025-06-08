@@ -69,7 +69,8 @@ export type AppMode = 'demo' | 'complete'
  */
 export function getAppMode(): AppMode {
   const mode = process.env.NEXT_PUBLIC_APP_MODE as AppMode
-  return mode === 'complete' ? 'complete' : 'demo' // 默认为演示模式
+  const result = mode === 'complete' ? 'complete' : 'demo' // 默认为演示模式
+  return result
 }
 
 /**

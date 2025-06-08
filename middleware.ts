@@ -35,14 +35,18 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // 定义不需要认证的路由
-  const publicPaths = ['/login', '/auth/callback', '/auth/auth-code-error']
-  const isPublicPath = publicPaths.some(path => request.nextUrl.pathname.startsWith(path))
+  // 定义不需要认证的路由（包括首页）
+  const publicPaths = ['/', '/auth', '/auth/callback', '/auth/auth-code-error']
+  const isPublicPath = publicPaths.some(path => request.nextUrl.pathname === path || request.nextUrl.pathname.startsWith(path))
   
-  if (!user && !isPublicPath) {
-    // no user, potentially respond by redirecting the user to the login page
+  // 定义需要强制认证的路由
+  const protectedPaths = ['/habits', '/advisor', '/activities', '/statistics', '/rewards', '/community', '/notifications']
+  const isProtectedPath = protectedPaths.some(path => request.nextUrl.pathname.startsWith(path))
+  
+  // 只有访问受保护的路由且未登录时，才重定向到首页（首页会显示 WelcomeScreen）
+  if (!user && isProtectedPath) {
     const url = request.nextUrl.clone()
-    url.pathname = '/login'
+    url.pathname = '/'
     return NextResponse.redirect(url)
   }
 

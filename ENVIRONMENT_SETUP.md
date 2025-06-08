@@ -7,8 +7,6 @@
 ## 📁 环境文件结构
 
 ```
-├── .env.development.example    # 开发环境配置模板
-├── .env.production.example     # 生产环境配置模板
 ├── .env.development           # 开发环境实际配置 (不进入版本控制)
 ├── .env.production            # 生产环境实际配置 (不进入版本控制)
 └── .env.example               # 通用配置模板
