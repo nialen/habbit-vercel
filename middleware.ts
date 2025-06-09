@@ -1,53 +1,75 @@
-import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
-import { isDemoMode } from '@/lib/app-mode'
-
-const PUBLIC_ROUTES = [
-  '/',
-  '/login',
-  '/register',
-  '/auth/callback',
-  '/auth/confirm',
-  '/auth/reset-password',
-]
+import { createServerClient } from '@supabase/ssr'
+import { NextResponse, type NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
-  const res = NextResponse.next()
-  
-  // 演示模式：允许所有访问
-  if (isDemoMode()) {
-    return res
-  }
+  let supabaseResponse = NextResponse.next({
+    request,
+  })
 
-  // 完整模式：需要认证
-  const supabase = createMiddlewareClient({ req: request, res })
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll()
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
+          supabaseResponse = NextResponse.next({
+            request,
+          })
+          cookiesToSet.forEach(({ name, value, options }) =>
+            supabaseResponse.cookies.set(name, value, options)
+          )
+        },
+      },
+    }
+  )
 
-  // 检查当前会话
+  // IMPORTANT: Avoid writing any logic between createServerClient and
+  // supabase.auth.getUser(). A simple mistake could make it very hard to debug
+  // issues with users being randomly logged out.
+
   const {
-    data: { session },
-  } = await supabase.auth.getSession()
+    data: { user },
+  } = await supabase.auth.getUser()
 
-  // 获取当前路径
-  const path = new URL(request.url).pathname
-
-  if (!session && !PUBLIC_ROUTES.includes(path)) {
-    // 重定向到首页（包含登录界面）
-    return NextResponse.redirect(new URL('/', request.url))
+  // 定义不需要认证的路由（包括首页）
+  const publicPaths = ['/', '/auth', '/auth/callback', '/auth/auth-code-error']
+  const isPublicPath = publicPaths.some(path => request.nextUrl.pathname === path || request.nextUrl.pathname.startsWith(path))
+  
+  // 定义需要强制认证的路由
+  const protectedPaths = ['/habits', '/advisor', '/activities', '/statistics', '/rewards', '/community', '/notifications']
+  const isProtectedPath = protectedPaths.some(path => request.nextUrl.pathname.startsWith(path))
+  
+  // 只有访问受保护的路由且未登录时，才重定向到首页（首页会显示 WelcomeScreen）
+  if (!user && isProtectedPath) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/'
+    return NextResponse.redirect(url)
   }
 
-  return res
+  // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're
+  // creating a new response object with NextResponse.next() make sure to:
+  // 1. Pass the request in it, like so:
+  //    const myNewResponse = NextResponse.next({ request })
+  // 2. Copy over the cookies, like so:
+  //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
+  // 3. Change the myNewResponse object instead of the supabaseResponse object
+
+  return supabaseResponse
 }
 
-// 配置需要运行中间件的路由
 export const config = {
   matcher: [
     /*
-     * 匹配所有路径，除了：
-     * - api 路由
-     * - _next 系统文件
-     * - 静态文件 (public 文件夹)
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * Feel free to modify this pattern to include more paths.
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|logo.svg|avatars/|images/).*)',
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 } 

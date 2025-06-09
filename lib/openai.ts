@@ -1,117 +1,125 @@
-// 模拟AI顾问响应的函数
+import OpenAI from "openai"
+
+// AI顾问响应接口
 export interface AdvisorResponse {
   analysis: string
   suggestions: string[]
   actionItems: string[]
 }
 
+// 初始化OpenAI客户端（仅在服务端使用）
+function createOpenAIClient() {
+  const apiKey = process.env.HABIT_WORDS_KEY
+  if (!apiKey) {
+    throw new Error("HABIT_WORDS_KEY environment variable is not set")
+  }
+
+  return new OpenAI({
+    baseURL: "https://openrouter.ai/api/v1",
+    apiKey,
+  })
+}
+
+// 获取育儿建议（服务端函数）
 export async function getParentingAdvice(concern: string, childAge: number): Promise<AdvisorResponse> {
-  // 模拟API延迟
-  await new Promise(resolve => setTimeout(resolve, 1500))
+  try {
+    const client = createOpenAIClient()
+    
+    const prompt = `你是一位专业的儿童教育专家和育儿顾问。请针对以下情况提供专业建议：
 
-  // 根据不同的关键词提供不同的建议
-  const responses = {
-    刷牙: {
-      analysis: `${childAge}岁的孩子正处于习惯养成的关键期。不愿意刷牙通常是因为觉得刷牙无聊、不理解刷牙的重要性，或者对牙刷、牙膏的感觉不适应。这个年龄段的孩子更容易通过游戏和故事来学习新习惯。`,
+孩子年龄：${childAge}岁
+家长困惑：${concern}
+
+请按照以下格式回答，用JSON格式返回：
+{
+  "analysis": "深入分析这个年龄段孩子的心理特点和行为原因（150字以内）",
+  "suggestions": ["建议1", "建议2", "建议3", "建议4", "建议5"],
+  "actionItems": ["具体行动1", "具体行动2", "具体行动3", "具体行动4", "具体行动5"]
+}
+
+要求：
+1. 分析要基于儿童发展心理学
+2. 建议要实用且易于执行
+3. 行动项要具体明确，可立即实施
+4. 语言要温和、积极、富有同理心
+5. 必须返回有效的JSON格式`
+
+    const completion = await client.chat.completions.create({
+      model: "google/gemini-2.5-pro-preview",
+      messages: [
+        {
+          role: "user",
+          content: prompt
+        }
+      ],
+      temperature: 0.7,
+      max_tokens: 1500
+    }, {
+      headers: {
+        "HTTP-Referer": process.env.NEXT_PUBLIC_SITE_URL || "https://habitkids.online",
+        "X-Title": "星航成长营 StarVoyage"
+      }
+    })
+
+    const responseText = completion.choices[0]?.message?.content
+    if (!responseText) {
+      throw new Error("No response from AI")
+    }
+
+    // 尝试解析JSON响应
+    try {
+      const jsonMatch = responseText.match(/\{[\s\S]*\}/)
+      if (jsonMatch) {
+        const response = JSON.parse(jsonMatch[0])
+        return {
+          analysis: response.analysis || "AI正在分析您的问题...",
+          suggestions: Array.isArray(response.suggestions) ? response.suggestions : ["请稍后再试"],
+          actionItems: Array.isArray(response.actionItems) ? response.actionItems : ["请联系技术支持"]
+        }
+      }
+    } catch (parseError) {
+      console.error("JSON解析错误:", parseError)
+    }
+
+    // 如果JSON解析失败，返回基础响应
+    return {
+      analysis: "感谢您的咨询，这是一个很常见但重要的育儿问题。每个孩子都有自己的特点和成长节奏。",
       suggestions: [
-        "将刷牙变成有趣的游戏，比如'打败细菌怪兽'",
-        "让孩子选择自己喜欢的牙刷和牙膏口味",
-        "制作刷牙时间表，完成后给予小贴纸奖励",
-        "和孩子一起刷牙，做好榜样示范",
-        "讲述关于牙齿健康的有趣故事"
+        "保持耐心和一致性",
+        "观察孩子的具体需求和反应",
+        "创造积极的环境氛围",
+        "适当给予鼓励和奖励",
+        "如有必要寻求专业建议"
       ],
       actionItems: [
-        "今天就让孩子挑选一把喜欢的儿童牙刷",
-        "设定固定的刷牙时间，建立日常规律",
-        "准备一个刷牙奖励贴纸表",
-        "下载一些关于刷牙的儿童歌曲或视频",
-        "每次刷牙后都要给予积极的鼓励和表扬"
+        "今天就开始实施一个小改变",
+        "记录孩子的行为模式",
+        "与孩子进行开放的沟通",
+        "制定适合的日常规律",
+        "保持积极的家庭氛围"
       ]
-    },
-    阅读: {
-      analysis: `培养${childAge}岁孩子的阅读习惯需要循序渐进。这个年龄段的孩子注意力集中时间有限，更喜欢有趣的图画和简单的故事。关键是要让孩子觉得阅读是一件快乐的事情，而不是任务。`,
+    }
+
+  } catch (error) {
+    console.error("AI顾问API错误:", error)
+    
+    // 返回友好的错误响应
+    return {
+      analysis: "很抱歉，AI顾问暂时无法处理您的请求。但请不要担心，育儿路上遇到困惑是很正常的。",
       suggestions: [
-        "选择适合年龄的绘本，图画丰富、文字简单",
-        "设定固定的亲子阅读时间，比如睡前故事",
-        "让孩子参与选书，培养自主性",
-        "阅读时使用不同的声音和表情，增加趣味性",
-        "阅读后和孩子讨论故事内容，加深理解"
+        "尝试与其他有经验的家长交流",
+        "查阅相关的育儿书籍或资料",
+        "观察孩子的行为模式，寻找规律",
+        "保持耐心，给孩子和自己时间",
+        "必要时咨询专业的儿童心理医生"
       ],
       actionItems: [
-        "建立家庭小图书角，营造阅读氛围",
-        "每周带孩子去一次图书馆或书店",
-        "制作阅读记录卡，记录读过的书",
-        "准备一些互动性强的立体书或有声书",
-        "邀请其他家庭一起进行阅读分享活动"
-      ]
-    },
-    发脾气: {
-      analysis: `${childAge}岁孩子发脾气是正常的情绪表达方式。这个年龄段的孩子语言表达能力还在发展中，当需求得不到满足或感到挫折时，容易通过发脾气来表达。重要的是教会孩子更好的情绪管理方法。`,
-      suggestions: [
-        "保持冷静，不要用发脾气回应孩子的发脾气",
-        "帮助孩子识别和命名自己的情绪",
-        "教孩子深呼吸等简单的情绪调节技巧",
-        "给孩子足够的关注和理解，但不妥协原则",
-        "事后和孩子讨论更好的表达方式"
-      ],
-      actionItems: [
-        "制作情绪识别卡片，帮助孩子认识不同情绪",
-        "建立家庭情绪管理规则，全家一起遵守",
-        "准备一个'冷静角'，让孩子情绪激动时可以去平静",
-        "教孩子用'我觉得...'的句式表达感受",
-        "当孩子情绪稳定时，给予更多的关注和表扬"
-      ]
-    },
-    收拾玩具: {
-      analysis: `让${childAge}岁的孩子主动收拾玩具需要培养责任感和整理习惯。这个年龄的孩子开始能够理解物品归位的概念，但需要明确的指导和持续的鼓励。关键是让收拾变成有趣的活动而不是负担。`,
-      suggestions: [
-        "将收拾玩具变成游戏，比如'玩具回家'比赛",
-        "为每种玩具设定固定的'家'，用标签或图片标识",
-        "和孩子一起制定收拾玩具的规则",
-        "给予及时的表扬和奖励，强化积极行为",
-        "家长以身作则，展示整理的重要性"
-      ],
-      actionItems: [
-        "购买适合的收纳盒，让孩子参与选择",
-        "制作玩具分类标签，用图片和文字标识",
-        "设定'收拾时间'，比如睡前或换活动前",
-        "建立收拾玩具的奖励制度",
-        "每周进行一次'玩具大扫除'，全家一起参与"
+        "记录具体的问题情况和时间",
+        "尝试一种新的沟通方式",
+        "创造更多亲子互动时间",
+        "建立稳定的日常作息",
+        "寻求家人或朋友的支持"
       ]
     }
   }
-
-  // 根据关键词匹配响应
-  let response = responses.刷牙 // 默认响应
-
-  if (concern.includes('刷牙') || concern.includes('牙齿')) {
-    response = responses.刷牙
-  } else if (concern.includes('阅读') || concern.includes('看书') || concern.includes('读书')) {
-    response = responses.阅读
-  } else if (concern.includes('发脾气') || concern.includes('生气') || concern.includes('哭闹')) {
-    response = responses.发脾气
-  } else if (concern.includes('收拾') || concern.includes('玩具') || concern.includes('整理')) {
-    response = responses.收拾玩具
-  } else {
-    // 通用响应
-    response = {
-      analysis: `${childAge}岁的孩子正处于快速成长期，行为习惯的养成需要耐心和正确的引导方法。每个孩子都有自己的特点和节奏，重要的是找到适合孩子的方式，并保持一致性和耐心。`,
-      suggestions: [
-        "观察孩子的行为模式，找出问题出现的规律",
-        "设定清晰、一致的规则和期望",
-        "使用正面强化，及时表扬好的行为",
-        "保持耐心，给孩子足够的时间适应",
-        "寻求其他家长或专业人士的建议"
-      ],
-      actionItems: [
-        "记录孩子的行为表现，寻找改进的机会",
-        "制定适合孩子年龄的行为规则",
-        "建立奖励制度，鼓励积极行为",
-        "每天安排专门的亲子互动时间",
-        "定期评估和调整教育方法"
-      ]
-    }
-  }
-
-  return response
 }

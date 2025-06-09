@@ -1,46 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
   <defs>
-    <!-- 暖色渐变定义 -->
-    <linearGradient id="warmGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#f97316;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#ea580c;stop-opacity:1" />
+    <linearGradient id="chatGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#60a5fa"/>
+      <stop offset="100%" style="stop-color:#3b82f6"/>
     </linearGradient>
   </defs>
   
-  <!-- 背景圆圈 - 使用暖色渐变 -->
-  <circle cx="12" cy="12" r="10" fill="url(#warmGradient)"/>
+  <!-- 主聊天气泡 -->
+  <rect x="4" y="8" width="12" height="8" rx="4" fill="url(#chatGrad)" stroke="currentColor" stroke-width="1"/>
+  <path d="M8 16 L6 18 L8 18 Z" fill="url(#chatGrad)"/>
   
-  <!-- 主要对话气泡 -->
-  <ellipse cx="10" cy="8" rx="4" ry="3" fill="white"/>
-  <path d="M7 10.5 L6 12" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- 聊天内容（对话线条） -->
+  <line x1="7" y1="11" x2="13" y2="11" stroke="white" stroke-width="1" stroke-linecap="round"/>
+  <line x1="7" y1="13" x2="11" y2="13" stroke="white" stroke-width="1" stroke-linecap="round"/>
   
-  <!-- 次要对话气泡 -->
-  <ellipse cx="16" cy="13" rx="3" ry="2.5" fill="white" opacity="0.9"/>
-  <path d="M18 15 L19 16.5" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+  <!-- 第二个聊天气泡 -->
+  <rect x="8" y="4" width="12" height="8" rx="4" fill="#a78bfa" stroke="currentColor" stroke-width="1"/>
+  <path d="M16 12 L18 14 L16 14 Z" fill="#a78bfa"/>
   
-  <!-- 对话内容点 -->
-  <circle cx="8.5" cy="8" r="0.4" fill="#ea580c"/>
-  <circle cx="10" cy="8" r="0.4" fill="#ea580c"/>
-  <circle cx="11.5" cy="8" r="0.4" fill="#ea580c"/>
+  <!-- 第二个聊天内容 -->
+  <line x1="11" y1="7" x2="17" y2="7" stroke="white" stroke-width="1" stroke-linecap="round"/>
+  <line x1="11" y1="9" x2="15" y2="9" stroke="white" stroke-width="1" stroke-linecap="round"/>
   
-  <circle cx="15" cy="13" r="0.3" fill="#ea580c"/>
-  <circle cx="16.5" cy="13" r="0.3" fill="#ea580c"/>
+  <!-- 用户头像指示器 -->
+  <circle cx="3" cy="15" r="1.5" fill="#fbbf24"/>
+  <circle cx="3" cy="15" r="1" fill="white" opacity="0.8"/>
+  <circle cx="2.7" cy="14.7" r="0.2" fill="currentColor"/>
+  <circle cx="3.3" cy="14.7" r="0.2" fill="currentColor"/>
   
-  <!-- 人物头像1 -->
-  <circle cx="6" cy="15" r="2" fill="white"/>
-  <circle cx="6" cy="14.5" r="1" fill="#f97316" opacity="0.2"/>
-  <circle cx="5.5" cy="14.2" r="0.2" fill="#ea580c"/>
-  <circle cx="6.5" cy="14.2" r="0.2" fill="#ea580c"/>
-  <path d="M5.5 14.8 Q6 15 6.5 14.8" stroke="#ea580c" stroke-width="0.3" fill="none"/>
+  <circle cx="21" cy="6" r="1.5" fill="#34d399"/>
+  <circle cx="21" cy="6" r="1" fill="white" opacity="0.8"/>
+  <circle cx="20.7" cy="5.7" r="0.2" fill="currentColor"/>
+  <circle cx="21.3" cy="5.7" r="0.2" fill="currentColor"/>
   
-  <!-- 人物头像2 -->
-  <circle cx="18" cy="6" r="1.8" fill="white"/>
-  <circle cx="18" cy="5.6" r="0.9" fill="#f97316" opacity="0.2"/>
-  <circle cx="17.6" cy="5.4" r="0.18" fill="#ea580c"/>
-  <circle cx="18.4" cy="5.4" r="0.18" fill="#ea580c"/>
-  <path d="M17.6 6 Q18 6.2 18.4 6" stroke="#ea580c" stroke-width="0.25" fill="none"/>
+  <!-- 新消息指示器 -->
+  <circle cx="18" cy="4" r="2" fill="#ef4444">
+    <animate attributeName="r" values="2;2.5;2" dur="1.5s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="18" cy="4" r="1.2" fill="#fee2e2"/>
+  <text x="18" y="5" text-anchor="middle" font-size="8" fill="white" font-weight="bold">3</text>
   
-  <!-- 连接线表示交流 -->
-  <path d="M8 15 Q12 12 16 10" stroke="white" stroke-width="1" fill="none" opacity="0.6" stroke-dasharray="2,1"/>
+  <!-- 讨论主题标签 -->
+  <rect x="1" y="19" width="8" height="3" rx="1.5" fill="#fef3c7" stroke="currentColor" stroke-width="0.5"/>
+  <text x="5" y="21" text-anchor="middle" font-size="6" fill="currentColor">讨论</text>
+  
+  <rect x="15" y="19" width="8" height="3" rx="1.5" fill="#dcfce7" stroke="currentColor" stroke-width="0.5"/>
+  <text x="19" y="21" text-anchor="middle" font-size="6" fill="currentColor">分享</text>
+  
+  <!-- 连接线表示互动 -->
+  <path d="M4.5 15 Q12 18 19.5 6" stroke="currentColor" stroke-width="0.5" opacity="0.4" fill="none"/>
 </svg> 
