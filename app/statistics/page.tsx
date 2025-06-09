@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { useApp } from "@/components/providers"
+import { PageLayout } from "@/components/page-layout"
 
 export default function StatisticsPage() {
-  const { habits, user } = useApp()
+  const { habits } = useApp()
   const [timeRange, setTimeRange] = useState<"week" | "month" | "year">("week")
 
   // 模拟统计数据
@@ -52,7 +53,7 @@ export default function StatisticsPage() {
   ]
 
   return (
-    <div className="p-8 pt-20 md:pt-8">
+    <PageLayout>
       {/* 页面标题 */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-2">数据统计</h1>
@@ -202,9 +203,9 @@ export default function StatisticsPage() {
                   </h3>
                   <p className="text-sm text-gray-500">{milestone.date}</p>
                 </div>
-                <Badge className={milestone.achieved ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}>
-                  {milestone.achieved ? "已达成" : "未达成"}
-                </Badge>
+                {milestone.achieved && (
+                  <Badge className="bg-green-100 text-green-800">已达成</Badge>
+                )}
               </div>
             ))}
           </div>
@@ -248,6 +249,6 @@ export default function StatisticsPage() {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </PageLayout>
   )
 }

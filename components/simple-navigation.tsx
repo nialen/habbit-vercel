@@ -30,12 +30,19 @@ const navigationItems = [
 ]
 
 export function SimpleNavigation() {
-  const { user, userProfile, signOut, loading, error } = useAuth()
+  const { user, userProfile, signOut, loading } = useAuth()
   const pathname = usePathname()
 
-  // 移除可能导致无限渲染的日志
+  // 如果用户未登录，不显示导航栏
+  if (!user) {
+    return null
+  }
 
-  // 强制显示导航栏，不管任何状态
+  // 如果还在加载状态，也不显示导航栏
+  if (loading) {
+    return null
+  }
+
   return (
     <aside className="hidden md:flex md:flex-col md:fixed md:inset-y-0 md:left-0 md:w-64 md:bg-gray-50 md:border-r z-10">
       <div className="flex flex-col flex-1">

@@ -1,12 +1,12 @@
 "use client"
 
 import { useApp } from "@/components/providers"
+import { useAuth } from "@/components/auth-provider"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Target, TrendingUp, Award, Star, Clock, ChevronRight } from "lucide-react"
 import Link from "next/link"
 import type { User } from "@supabase/supabase-js"
-import { SimpleNavigation } from "@/components/simple-navigation"
 import { useEffect } from "react"
 
 interface UserProfile {
@@ -27,6 +27,7 @@ interface MainDashboardProps {
 
 export default function MainDashboard({ user, userProfile }: MainDashboardProps) {
   const { habits, refreshHabits } = useApp()
+  const { user: authUser } = useAuth()
 
   // 当用户登录后，刷新习惯数据
   useEffect(() => {
@@ -48,8 +49,8 @@ export default function MainDashboard({ user, userProfile }: MainDashboardProps)
 
   return (
     <div className="min-h-screen">
-      <SimpleNavigation />
-      <main className="pb-20 md:pb-0 md:ml-64">
+      {/* 响应式主内容区 - 根据用户登录状态调整布局 */}
+      <main className={`pb-20 md:pb-0 ${authUser ? 'md:ml-64' : ''}`}>
         <div className="p-6 md:p-8 pt-20 md:pt-8">
           {/* 欢迎区域 */}
           <div className="mb-8">

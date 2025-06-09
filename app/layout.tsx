@@ -5,7 +5,7 @@ import { Inter } from "next/font/google"
 import { Providers } from "@/components/providers"
 import { AuthProvider } from "@/components/auth-provider"
 import { AuthGuard } from "@/components/auth-guard"
-import { SimpleNavigation } from "@/components/simple-navigation"
+import { ConditionalNavigation } from "@/components/conditional-navigation"
 // import { AuthDebug } from "@/components/auth-debug"
 
 const inter = Inter({
@@ -27,6 +27,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN" suppressHydrationWarning>
+      <head>
+        <link
+          href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet"
+        />
+      </head>
       <body className={inter.className}>
         <Providers>
           <AuthProvider>
@@ -40,17 +46,4 @@ export default function RootLayout({
       </body>
     </html>
   )
-}
-
-// 条件性导航组件
-function ConditionalNavigation() {
-  if (typeof window !== 'undefined') {
-    const pathname = window.location.pathname
-    // 在认证相关页面不显示导航
-    if (pathname.startsWith('/auth') || pathname === '/login') {
-      return null
-    }
-  }
-  
-  return <SimpleNavigation />
 }

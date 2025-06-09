@@ -57,6 +57,9 @@ export const analytics = {
     },
     streak: (days: number) => {
       safePlausibleCall('Habit Streak', { props: { days: days.toString() } })
+    },
+    deleted: (habitName: string) => {
+      safePlausibleCall('Habit Deleted', { props: { habit: habitName } })
     }
   },
 

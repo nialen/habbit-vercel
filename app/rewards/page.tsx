@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { useApp } from "@/components/providers"
+import { PageLayout } from "@/components/page-layout"
 
 interface Reward {
   id: string
@@ -149,7 +150,7 @@ export default function RewardsPage() {
   }
 
   return (
-    <div className="p-8 pt-20 md:pt-8">
+    <PageLayout>
       {/* 页面标题 */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-2">奖励兑换</h1>
@@ -204,78 +205,79 @@ export default function RewardsPage() {
             <div className="flex items-center gap-3 p-4 bg-purple-50 rounded-xl">
               <span className="material-icons text-purple-500">emoji_events</span>
               <div>
-                <p className="font-semibold text-purple-800">获得成就</p>
-                <p className="text-sm text-purple-600">每个成就 +100 积分</p>
+                <p className="font-semibold text-purple-800">达成成就</p>
+                <p className="text-sm text-purple-600">特殊成就 +100 积分</p>
               </div>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* 分类筛选 */}
-      <div className="flex gap-2 mb-6">
-        {categories.map((category) => (
-          <Button
-            key={category}
-            variant={selectedCategory === category ? "default" : "outline"}
-            onClick={() => setSelectedCategory(category)}
-            className={
-              selectedCategory === category
-                ? "bg-blue-500 hover:bg-blue-600 text-white"
-                : "border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400"
-            }
-          >
-            {category}
-          </Button>
-        ))}
+      {/* 奖励分类筛选 */}
+      <div className="mb-6">
+        <div className="flex gap-2">
+          {categories.map((category) => (
+            <Button
+              key={category}
+              variant={selectedCategory === category ? "default" : "outline"}
+              onClick={() => setSelectedCategory(category)}
+              className={
+                selectedCategory === category
+                  ? "bg-blue-500 hover:bg-blue-600 text-white"
+                  : "border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400"
+              }
+            >
+              {category}
+            </Button>
+          ))}
+        </div>
       </div>
 
       {/* 奖励商品网格 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         {filteredRewards.map((reward) => (
-          <Card key={reward.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+          <Card key={reward.id} className="hover:shadow-lg transition-shadow duration-200">
             <CardContent className="p-6">
               <div className="text-center mb-4">
-                <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center text-4xl mx-auto mb-3">
-                  {reward.image}
-                </div>
-                <h3 className="font-bold text-lg text-gray-800 mb-2">{reward.name}</h3>
-                <p className="text-sm text-gray-600 mb-3">{reward.description}</p>
+                <div className="text-5xl mb-3">{reward.image}</div>
+                <h3 className="font-bold text-gray-800 text-lg mb-2">{reward.name}</h3>
+                <p className="text-gray-600 text-sm mb-4">{reward.description}</p>
+              </div>
 
-                <div className="flex items-center justify-center gap-2 mb-3">
-                  <Badge className={getCategoryColor(reward.category)}>{reward.category}</Badge>
-                  {reward.popularity >= 90 && <Badge className="bg-red-100 text-red-700">热门</Badge>}
+              <div className="flex items-center justify-between mb-4">
+                <Badge className={getCategoryColor(reward.category)}>{reward.category}</Badge>
+                <div className="flex items-center gap-1">
+                  <span className="material-icons text-yellow-500 text-sm">star</span>
+                  <span className="text-sm text-gray-600">{reward.popularity}%好评</span>
                 </div>
               </div>
 
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-500">所需积分</span>
-                  <div className="flex items-center gap-1">
-                    <span className="material-icons text-yellow-500 text-sm">star</span>
-                    <span className="font-bold text-lg text-gray-800">{reward.points}</span>
-                  </div>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <span className="material-icons text-blue-500">stars</span>
+                  <span className="font-bold text-xl text-blue-600">{reward.points}</span>
+                  <span className="text-gray-500 text-sm">积分</span>
                 </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-500">库存</span>
-                  <span className="text-sm font-medium text-gray-700">
-                    {reward.stock === 999 ? "充足" : `${reward.stock}件`}
-                  </span>
-                </div>
-
-                <Button
-                  onClick={() => exchangeReward(reward)}
-                  disabled={currentPoints < reward.points || reward.stock === 0}
-                  className={`w-full ${
-                    currentPoints >= reward.points && reward.stock > 0
-                      ? "bg-blue-500 hover:bg-blue-600 text-white"
-                      : "bg-gray-300 hover:bg-gray-300 cursor-not-allowed text-gray-500"
-                  }`}
-                >
-                  {currentPoints >= reward.points ? "立即兑换" : "积分不足"}
-                </Button>
+                {reward.stock < 999 && (
+                  <span className="text-sm text-gray-500">库存: {reward.stock}</span>
+                )}
               </div>
+
+              <Button
+                onClick={() => exchangeReward(reward)}
+                disabled={currentPoints < reward.points || reward.stock === 0}
+                className={`w-full ${
+                  currentPoints >= reward.points && reward.stock > 0
+                    ? "bg-blue-500 hover:bg-blue-600 text-white"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                }`}
+              >
+                {currentPoints >= reward.points && reward.stock > 0
+                  ? "立即兑换"
+                  : currentPoints < reward.points
+                    ? "积分不足"
+                    : "暂时缺货"}
+              </Button>
             </CardContent>
           </Card>
         ))}
@@ -286,7 +288,7 @@ export default function RewardsPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <span className="material-icons text-green-500">history</span>
+              <span className="material-icons text-purple-500">history</span>
               兑换历史
             </CardTitle>
           </CardHeader>
@@ -295,11 +297,11 @@ export default function RewardsPage() {
               {exchangeHistory.map((exchange) => (
                 <div key={exchange.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
                   <div>
-                    <h4 className="font-semibold text-gray-800">{exchange.rewardName}</h4>
+                    <p className="font-medium text-gray-800">{exchange.rewardName}</p>
                     <p className="text-sm text-gray-500">{exchange.date}</p>
                   </div>
                   <div className="text-right">
-                    <p className="font-bold text-red-600">-{exchange.points} 积分</p>
+                    <p className="text-red-600 font-medium">-{exchange.points} 积分</p>
                     <Badge className="bg-green-100 text-green-700">{exchange.status}</Badge>
                   </div>
                 </div>
@@ -308,6 +310,6 @@ export default function RewardsPage() {
           </CardContent>
         </Card>
       )}
-    </div>
+    </PageLayout>
   )
 }

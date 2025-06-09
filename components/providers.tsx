@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useState, useEffect, useMemo, useCallback, type ReactNode } from "react"
 import { isDemoMode } from "@/lib/app-mode"
-import { getHabits } from "@/lib/database"
 
 interface AppContextType {
   habits: Habit[]
@@ -46,7 +45,7 @@ export function useApp() {
 export function Providers({ children }: { children: ReactNode }) {
   const [habits, setHabits] = useState<Habit[]>([])
   const [activities, setActivities] = useState<Activity[]>([])
-  const [loadingHabits, setLoadingHabits] = useState(true)
+  const [loadingHabits, setLoadingHabits] = useState(false)
   
   const demoMode = useMemo(() => isDemoMode(), [])
 
@@ -54,86 +53,93 @@ export function Providers({ children }: { children: ReactNode }) {
   const refreshHabits = useCallback(async (userId?: string) => {
     setLoadingHabits(true)
     
-    if (demoMode) {
-      // 演示模式：使用模拟习惯数据
-      console.log('🎭 加载演示习惯数据')
-      const demoHabits: Habit[] = [
-        {
-          id: "1",
-          name: "早睡早起",
-          icon: "🌙",
-          streak: 5,
-          completedToday: false,
-          category: "健康",
-          createdAt: new Date().toISOString(),
-        },
-        {
-          id: "2",
-          name: "刷牙洗脸",
-          icon: "🦷",
-          streak: 3,
-          completedToday: true,
-          category: "卫生",
-          createdAt: new Date().toISOString(),
-        },
-        {
-          id: "3",
-          name: "整理玩具",
-          icon: "🧸",
-          streak: 2,
-          completedToday: false,
-          category: "整理",
-          createdAt: new Date().toISOString(),
-        },
-        {
-          id: "4",
-          name: "阅读绘本",
-          icon: "📚",
-          streak: 7,
-          completedToday: true,
-          category: "学习",
-          createdAt: new Date().toISOString(),
-        },
-        {
-          id: "5",
-          name: "喝水记录",
-          icon: "💧",
-          streak: 4,
-          completedToday: false,
-          category: "健康",
-          createdAt: new Date().toISOString(),
-        },
-      ]
-      setHabits(demoHabits)
-    } else {
-      // 完整模式：从数据库加载或显示空数据
-      if (userId) {
-        console.log('🔐 从数据库加载习惯数据')
-        try {
-          const dbHabits = await getHabits(userId)
-          // 转换数据库格式到前端格式
-          const formattedHabits: Habit[] = dbHabits.map(habit => ({
-            id: habit.id,
-            name: habit.name,
-            icon: habit.icon,
-            streak: 0, // TODO: 计算连续天数
-            completedToday: false, // TODO: 检查今日是否完成
-            category: habit.category,
-            createdAt: habit.created_at,
-          }))
-          setHabits(formattedHabits)
-        } catch (error) {
-          console.error('加载习惯数据失败:', error)
+    try {
+      if (demoMode) {
+        // 演示模式：使用模拟习惯数据
+        console.log('🎭 加载演示习惯数据')
+        const demoHabits: Habit[] = [
+          {
+            id: "1",
+            name: "早睡早起",
+            icon: "🌙",
+            streak: 5,
+            completedToday: false,
+            category: "健康",
+            createdAt: new Date().toISOString(),
+          },
+          {
+            id: "2",
+            name: "刷牙洗脸",
+            icon: "🦷",
+            streak: 3,
+            completedToday: true,
+            category: "卫生",
+            createdAt: new Date().toISOString(),
+          },
+          {
+            id: "3",
+            name: "整理玩具",
+            icon: "🧸",
+            streak: 2,
+            completedToday: false,
+            category: "整理",
+            createdAt: new Date().toISOString(),
+          },
+          {
+            id: "4",
+            name: "阅读绘本",
+            icon: "📚",
+            streak: 7,
+            completedToday: true,
+            category: "学习",
+            createdAt: new Date().toISOString(),
+          },
+          {
+            id: "5",
+            name: "喝水记录",
+            icon: "💧",
+            streak: 4,
+            completedToday: false,
+            category: "健康",
+            createdAt: new Date().toISOString(),
+          },
+        ]
+        setHabits(demoHabits)
+      } else {
+        // 完整模式：动态导入数据库函数以避免初始加载问题
+        if (userId) {
+          console.log('🔐 从数据库加载习惯数据')
+          try {
+            // 动态导入以避免服务端/客户端不一致问题
+            const { getHabits } = await import("@/lib/database")
+            const dbHabits = await getHabits(userId)
+            // 转换数据库格式到前端格式
+            const formattedHabits: Habit[] = dbHabits.map(habit => ({
+              id: habit.id,
+              name: habit.name,
+              icon: habit.icon,
+              streak: 0, // TODO: 计算连续天数
+              completedToday: false, // TODO: 检查今日是否完成
+              category: habit.category,
+              createdAt: habit.created_at,
+            }))
+            setHabits(formattedHabits)
+          } catch (error) {
+            console.error('加载习惯数据失败:', error)
+            setHabits([])
+          }
+        } else {
+          // 未登录时显示空数据
+          console.log('👤 用户未登录，显示空数据')
           setHabits([])
         }
-      } else {
-        // 未登录时显示空数据
-        console.log('👤 用户未登录，显示空数据')
-        setHabits([])
       }
+    } catch (error) {
+      console.error('刷新习惯数据失败:', error)
+      setHabits([])
+    } finally {
+      setLoadingHabits(false)
     }
-    
-    setLoadingHabits(false)
   }, [demoMode])
 
   useEffect(() => {
@@ -178,10 +184,7 @@ export function Providers({ children }: { children: ReactNode }) {
     ]
 
     setActivities(defaultActivities)
-
-    // 初次加载时，先加载演示数据或空数据
-    refreshHabits()
-  }, [refreshHabits])
+  }, [])
 
   return (
     <AppContext.Provider

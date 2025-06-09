@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { useToast } from "@/components/ui/use-toast"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { PageLayout } from "@/components/page-layout"
 import Link from "next/link"
 
 interface Post {
@@ -190,208 +191,257 @@ export default function CommunityPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      {/* 主内容区域 */}
-      <div className="p-4 md:p-8 pt-20 md:pt-8 max-w-4xl mx-auto">
-        <div className="min-h-screen flex items-start justify-center">
-          <div className="w-full max-w-4xl px-6 py-8">
-            {/* 页面标题 */}
-            <div className="mb-8 text-center">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <span className="text-white text-xl">💬</span>
-                </div>
-                <div>
-                  <h1 className="text-3xl font-bold text-gray-800">家长讨论区</h1>
-                  <p className="text-gray-600 mt-1">分享育儿经验，交流成长心得</p>
-                </div>
-              </div>
-            </div>
+    <PageLayout>
+      {/* 页面标题 */}
+      <div className="mb-8 text-center">
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <span className="material-icons text-4xl text-blue-500">groups</span>
+          <h1 className="text-3xl font-bold text-gray-800">家长社区</h1>
+        </div>
+        <p className="text-gray-600 max-w-2xl mx-auto">
+          与其他家长分享育儿经验，交流成长心得，共同陪伴孩子健康快乐成长
+        </p>
+      </div>
 
-            {/* 搜索和发布 */}
-            <div className="mb-8 flex flex-col sm:flex-row gap-4 max-w-3xl mx-auto">
-              <div className="flex-1 relative">
-                <Input
-                  placeholder="搜索帖子、标签..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 h-12 text-base"
-                />
+      {/* 社区统计 */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <Card className="bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200">
+          <CardContent className="p-4 text-center">
+            <span className="material-icons text-2xl text-blue-500 mb-2">group</span>
+            <p className="text-lg font-bold text-blue-800">2,847</p>
+            <p className="text-sm text-blue-600">活跃家长</p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-r from-green-50 to-green-100 border-green-200">
+          <CardContent className="p-4 text-center">
+            <span className="material-icons text-2xl text-green-500 mb-2">forum</span>
+            <p className="text-lg font-bold text-green-800">15,623</p>
+            <p className="text-sm text-green-600">讨论帖子</p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-r from-purple-50 to-purple-100 border-purple-200">
+          <CardContent className="p-4 text-center">
+            <span className="material-icons text-2xl text-purple-500 mb-2">favorite</span>
+            <p className="text-lg font-bold text-purple-800">98,456</p>
+            <p className="text-sm text-purple-600">点赞互动</p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-r from-orange-50 to-orange-100 border-orange-200">
+          <CardContent className="p-4 text-center">
+            <span className="material-icons text-2xl text-orange-500 mb-2">today</span>
+            <p className="text-lg font-bold text-orange-800">156</p>
+            <p className="text-sm text-orange-600">今日新帖</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* 搜索和筛选 */}
+      <Card className="mb-6">
+        <CardContent className="p-6">
+          <div className="flex flex-col md:flex-row gap-4">
+            {/* 搜索框 */}
+            <div className="flex-1">
+              <div className="relative">
                 <span className="material-icons absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                   search
                 </span>
-              </div>
-              <Button
-                onClick={() => setShowNewPostForm(!showNewPostForm)}
-                className="bg-blue-500 hover:bg-blue-600 text-white h-12 px-6 text-base"
-              >
-                <span className="material-icons text-sm mr-2">add</span>
-                {showNewPostForm ? "取消" : "发布新帖"}
-              </Button>
-            </div>
-
-            {/* 分类筛选 */}
-            <div className="mb-8 bg-white p-4 rounded-xl shadow-sm max-w-3xl mx-auto">
-              <div className="flex flex-wrap gap-3 justify-center">
-                {categories.map((category) => (
-                  <Button
-                    key={category.id}
-                    variant={selectedCategory === category.id ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setSelectedCategory(category.id)}
-                    className={`${
-                      selectedCategory === category.id
-                        ? "bg-blue-500 hover:bg-blue-600 text-white"
-                        : "hover:bg-blue-50 hover:border-blue-300"
-                    } rounded-full text-sm px-5 py-2`}
-                  >
-                    {category.name}
-                  </Button>
-                ))}
+                <Input
+                  placeholder="搜索帖子标题、内容或标签..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10"
+                />
               </div>
             </div>
 
-            {/* 发布新帖表单 */}
-            {showNewPostForm && (
-              <div className="max-w-3xl mx-auto mb-8">
-                <Card className="border-blue-200 shadow-lg overflow-hidden">
-                  <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100 py-4">
-                    <CardTitle className="text-blue-800 text-xl text-center">发布新帖</CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-6">
-                    <form onSubmit={handleSubmit} className="space-y-5">
-                      <div>
-                        <Input
-                          placeholder="请输入帖子标题..."
-                          value={newPost.title}
-                          onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
-                          className="text-lg font-medium h-12"
-                        />
-                      </div>
-                      <div className="flex flex-col sm:flex-row gap-4">
-                        <select
-                          value={newPost.category}
-                          onChange={(e) => setNewPost({ ...newPost, category: e.target.value })}
-                          className="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
-                        >
-                          {categories.slice(1).map((category) => (
-                            <option key={category.id} value={category.id}>
-                              {category.name}
-                            </option>
-                          ))}
-                        </select>
-                        <Input
-                          placeholder="标签（用逗号分隔）"
-                          value={newPost.tags}
-                          onChange={(e) => setNewPost({ ...newPost, tags: e.target.value })}
-                          className="flex-1 h-12"
-                        />
-                      </div>
-                      <Textarea
-                        placeholder="分享您的育儿经验或提出问题..."
-                        value={newPost.content}
-                        onChange={(e) => setNewPost({ ...newPost, content: e.target.value })}
-                        rows={5}
-                        className="resize-none text-base"
-                      />
-                      <div className="flex gap-4 justify-center">
-                        <Button type="submit" disabled={isLoading} className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3">
-                          {isLoading ? "发布中..." : "发布帖子"}
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() => setShowNewPostForm(false)}
-                          className="hover:bg-gray-50 px-8 py-3"
-                        >
-                          取消
-                        </Button>
-                      </div>
-                    </form>
-                  </CardContent>
-                </Card>
-              </div>
-            )}
-
-            {/* 帖子列表 */}
-            <div className="max-w-3xl mx-auto space-y-5">
-              {filteredPosts.map((post) => {
-                const categoryInfo = getCategoryInfo(post.category)
-
-                return (
-                  <Card
-                    key={post.id}
-                    className="hover:shadow-lg transition-all duration-200 border-gray-200 overflow-hidden"
-                  >
-                    <CardContent className="p-0">
-                      <Link href={`/community/${post.id}`} className="block p-6 hover:bg-blue-50/40">
-                        <div className="flex items-start gap-4">
-                          <Avatar className="w-12 h-12">
-                            <AvatarImage src={post.avatar || "/placeholder.svg"} alt={post.author} />
-                            <AvatarFallback>{post.author[0]}</AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-2 flex-wrap">
-                              <h3 className="font-medium text-gray-800">{post.author}</h3>
-                              <span className="text-sm text-gray-500">·</span>
-                              <span className="text-sm text-gray-500">{formatTime(post.created_at)}</span>
-                              {post.is_pinned && (
-                                <Badge variant="secondary" className="bg-red-100 text-red-800">
-                                  置顶
-                                </Badge>
-                              )}
-                              <Badge className={`${categoryInfo.color}`}>{categoryInfo.name}</Badge>
-                            </div>
-
-                            <h2 className="text-xl font-bold text-gray-900 mb-3 line-clamp-1">{post.title}</h2>
-
-                            <p className="text-gray-600 mb-4 line-clamp-2 leading-relaxed">{post.content}</p>
-
-                            {post.tags.length > 0 && (
-                              <div className="flex flex-wrap gap-2 mb-4">
-                                {post.tags.map((tag, index) => (
-                                  <span key={index} className="px-3 py-1 bg-gray-100 text-gray-600 text-sm rounded-full">
-                                    #{tag}
-                                  </span>
-                                ))}
-                              </div>
-                            )}
-
-                            <div className="flex items-center gap-6 text-sm text-gray-500">
-                              <span className="flex items-center gap-1 hover:text-blue-500 transition-colors">
-                                <span className="material-icons text-sm">thumb_up</span>
-                                {post.likes_count}
-                              </span>
-                              <span className="flex items-center gap-1 hover:text-blue-500 transition-colors">
-                                <span className="material-icons text-sm">comment</span>
-                                {post.comments_count}
-                              </span>
-                              <span className="flex items-center gap-1 ml-auto text-blue-500 hover:text-blue-600">
-                                <span className="material-icons text-sm">arrow_forward</span>
-                                查看详情
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </Link>
-                    </CardContent>
-                  </Card>
-                )
-              })}
-            </div>
-
-            {filteredPosts.length === 0 && (
-              <div className="text-center py-16 bg-white rounded-xl shadow-sm max-w-2xl mx-auto">
-                <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <span className="material-icons text-3xl text-gray-400">search_off</span>
-                </div>
-                <h3 className="text-xl font-medium text-gray-600 mb-3">暂无相关帖子</h3>
-                <p className="text-gray-500">试试调整搜索条件或发布第一个帖子吧！</p>
-              </div>
-            )}
+            {/* 发布按钮 */}
+            <Button
+              onClick={() => setShowNewPostForm(!showNewPostForm)}
+              className="bg-blue-500 hover:bg-blue-600 text-white"
+            >
+              <span className="material-icons mr-2">edit</span>
+              发布帖子
+            </Button>
           </div>
-        </div>
+
+          {/* 分类筛选 */}
+          <div className="flex flex-wrap gap-2 mt-4">
+            {categories.map((category) => (
+              <Button
+                key={category.id}
+                variant={selectedCategory === category.id ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSelectedCategory(category.id)}
+                className={
+                  selectedCategory === category.id
+                    ? "bg-blue-500 hover:bg-blue-600 text-white"
+                    : "border-gray-300 text-gray-600 hover:bg-gray-50"
+                }
+              >
+                {category.name}
+              </Button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* 新帖发布表单 */}
+      {showNewPostForm && (
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <span className="material-icons text-blue-500">create</span>
+              发布新帖子
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">标题</label>
+                <Input
+                  value={newPost.title}
+                  onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
+                  placeholder="请输入帖子标题..."
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">内容</label>
+                <Textarea
+                  value={newPost.content}
+                  onChange={(e) => setNewPost({ ...newPost, content: e.target.value })}
+                  placeholder="分享您的育儿经验或提出问题..."
+                  rows={6}
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">分类</label>
+                  <select
+                    value={newPost.category}
+                    onChange={(e) => setNewPost({ ...newPost, category: e.target.value })}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                  >
+                    {categories.slice(1).map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">标签（用逗号分隔）</label>
+                  <Input
+                    value={newPost.tags}
+                    onChange={(e) => setNewPost({ ...newPost, tags: e.target.value })}
+                    placeholder="例如：阅读, 习惯培养"
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <Button type="submit" disabled={isLoading} className="bg-blue-500 hover:bg-blue-600">
+                  {isLoading ? "发布中..." : "发布帖子"}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowNewPostForm(false)}
+                >
+                  取消
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* 帖子列表 */}
+      <div className="space-y-4">
+        {filteredPosts.map((post) => {
+          const categoryInfo = getCategoryInfo(post.category)
+          return (
+            <Card key={post.id} className="hover:shadow-lg transition-shadow duration-200">
+              <CardContent className="p-6">
+                <div className="flex items-start gap-4">
+                  {/* 头像 */}
+                  <Avatar className="w-12 h-12">
+                    <AvatarImage src={post.avatar} alt={post.author} />
+                    <AvatarFallback>{post.author.charAt(0)}</AvatarFallback>
+                  </Avatar>
+
+                  {/* 帖子内容 */}
+                  <div className="flex-1">
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="font-semibold text-gray-800">{post.author}</h3>
+                          <span className="text-sm text-gray-500">·</span>
+                          <span className="text-sm text-gray-500">{formatTime(post.created_at)}</span>
+                          {post.is_pinned && (
+                            <Badge className="bg-red-100 text-red-700">置顶</Badge>
+                          )}
+                        </div>
+                        <Badge className={categoryInfo.color}>{categoryInfo.name}</Badge>
+                      </div>
+                    </div>
+
+                    <h2 className="text-lg font-semibold text-gray-800 mb-2">{post.title}</h2>
+                    <p className="text-gray-600 mb-4 line-clamp-3">{post.content}</p>
+
+                    {/* 标签 */}
+                    {post.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {post.tags.map((tag, index) => (
+                          <span
+                            key={index}
+                            className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full"
+                          >
+                            #{tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* 互动按钮 */}
+                    <div className="flex items-center gap-6">
+                      <button className="flex items-center gap-1 text-gray-500 hover:text-blue-500 transition-colors">
+                        <span className="material-icons text-sm">thumb_up</span>
+                        <span className="text-sm">{post.likes_count}</span>
+                      </button>
+
+                      <button className="flex items-center gap-1 text-gray-500 hover:text-blue-500 transition-colors">
+                        <span className="material-icons text-sm">comment</span>
+                        <span className="text-sm">{post.comments_count}</span>
+                      </button>
+
+                      <button className="flex items-center gap-1 text-gray-500 hover:text-blue-500 transition-colors">
+                        <span className="material-icons text-sm">share</span>
+                        <span className="text-sm">分享</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )
+        })}
+
+        {filteredPosts.length === 0 && (
+          <div className="text-center py-12">
+            <div className="text-6xl mb-4">🔍</div>
+            <h3 className="text-xl font-semibold text-gray-700 mb-2">没有找到相关帖子</h3>
+            <p className="text-gray-500">试试调整搜索条件或换个关键词</p>
+          </div>
+        )}
       </div>
-    </div>
+    </PageLayout>
   )
 }

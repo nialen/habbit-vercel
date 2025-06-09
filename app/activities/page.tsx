@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { useApp } from "@/components/providers"
+import { PageLayout } from "@/components/page-layout"
 
 const categoryIcons = {
   学习: "school",
@@ -140,7 +141,7 @@ export default function ActivitiesPage() {
   }
 
   return (
-    <div className="p-8 pt-20 md:pt-8">
+    <PageLayout>
       {/* 页面标题 */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-2">亲子活动提案</h1>
@@ -198,136 +199,95 @@ export default function ActivitiesPage() {
         <div>
           <h3 className="text-sm font-medium text-gray-600 mb-3">活动分类:</h3>
           <div className="flex flex-wrap gap-2">
-            {categories.map((category) => {
-              const Icon = category !== "全部" ? categoryIcons[category as keyof typeof categoryIcons] : "apps"
-              return (
-                <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                    selectedCategory === category
-                      ? "bg-blue-500 text-white shadow-md"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
-                >
-                  <span className="material-icons text-sm">{Icon}</span>
-                  {category}
-                </button>
-              )
-            })}
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                  selectedCategory === category
+                    ? "bg-blue-500 text-white shadow-md"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
+              >
+                {category}
+              </button>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* 今日推荐 */}
-      <div className="mb-8">
-        <div className="flex items-center gap-2 mb-4">
-          <span className="material-icons text-blue-500">recommend</span>
-          <h2 className="text-xl font-bold text-gray-800">今日推荐</h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {extendedActivities.slice(0, 3).map((activity, index) => {
-            const bgColors = ["bg-orange-50", "bg-green-50", "bg-purple-50"]
-            const textColors = ["text-orange-600", "text-green-600", "text-purple-600"]
-            const badgeColors = [
-              "bg-orange-100 text-orange-700",
-              "bg-green-100 text-green-700",
-              "bg-purple-100 text-purple-700",
-            ]
-            const hoverColors = ["hover:bg-orange-100", "hover:bg-green-100", "hover:bg-purple-100"]
-
-            return (
-              <div
-                key={activity.id}
-                className={`${bgColors[index]} ${hoverColors[index]} rounded-2xl p-6 border border-gray-100 transition-colors cursor-pointer`}
+      {/* 活动卡片网格 */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredActivities.map((activity) => (
+          <div key={activity.id} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200">
+            <div className="flex justify-between items-start mb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                  <span className="material-icons text-blue-600">{categoryIcons[activity.category as keyof typeof categoryIcons]}</span>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-800 text-lg">{activity.title}</h3>
+                  <p className="text-sm text-gray-500">{activity.duration}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => toggleFavorite(activity.id)}
+                className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+                  favorites.includes(activity.id)
+                    ? "bg-red-100 text-red-500"
+                    : "bg-gray-100 text-gray-400 hover:bg-gray-200"
+                }`}
               >
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="text-2xl">{index === 0 ? "🎨" : index === 1 ? "🌳" : "🔬"}</span>
-                  <h3 className="font-bold text-gray-800">{activity.title}</h3>
-                </div>
-                <p className="text-gray-600 text-sm mb-4">{activity.description}</p>
-                <div className="flex items-center justify-between">
-                  <Badge className={badgeColors[index]}>{activity.category}</Badge>
-                  <Button
-                    size="sm"
-                    className={`${textColors[index]} ${
-                      index === 0 ? "hover:bg-orange-100" : index === 1 ? "hover:bg-green-100" : "hover:bg-purple-100"
-                    }`}
-                    variant="ghost"
-                  >
-                    查看详情 →
-                  </Button>
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      </div>
-
-      {/* 活动列表 */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {filteredActivities.map((activity) => {
-          const CategoryIcon = categoryIcons[activity.category as keyof typeof categoryIcons]
-          const isFavorite = favorites.includes(activity.id)
-
-          return (
-            <div
-              key={activity.id}
-              className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
-                    <span className="material-icons text-blue-500 text-lg">{CategoryIcon}</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-gray-800">{activity.title}</h3>
-                    <div className="flex items-center gap-2 mt-1">
-                      <Badge className="bg-blue-100 text-blue-700 text-xs">{activity.category}</Badge>
-                      {activity.ageGroup && (
-                        <Badge className="bg-gray-100 text-gray-600 text-xs">{activity.ageGroup}岁</Badge>
-                      )}
-                    </div>
-                  </div>
-                </div>
-                <button
-                  onClick={() => toggleFavorite(activity.id)}
-                  className="p-2 rounded-full hover:bg-gray-100 transition-colors"
-                >
-                  <span className={`material-icons text-lg ${isFavorite ? "text-red-500" : "text-gray-400"}`}>
-                    {isFavorite ? "favorite" : "favorite_border"}
-                  </span>
-                </button>
-              </div>
-
-              <p className="text-gray-600 text-sm mb-4">{activity.description}</p>
-
-              <div className="space-y-3 mb-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-500">难度等级</span>
-                  <div className="flex items-center">{getDifficultyStars(activity.difficulty)}</div>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-500">所需时长</span>
-                  <span className="text-sm font-medium text-gray-700">{activity.duration}</span>
-                </div>
-              </div>
-
-              <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white rounded-xl">开始活动</Button>
+                <span className="material-icons text-sm">
+                  {favorites.includes(activity.id) ? "favorite" : "favorite_border"}
+                </span>
+              </button>
             </div>
-          )
-        })}
+
+            <p className="text-gray-600 text-sm mb-4 leading-relaxed">{activity.description}</p>
+
+            <div className="flex items-center gap-2 mb-4">
+              <Badge variant="secondary" className="bg-gray-100 text-gray-700">
+                {activity.category}
+              </Badge>
+              <Badge variant="secondary" className="bg-green-100 text-green-700">
+                {activity.ageGroup}岁
+              </Badge>
+            </div>
+
+            <div className="mb-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm text-gray-600">难度等级</span>
+                <div className="flex">{getDifficultyStars(activity.difficulty)}</div>
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <h4 className="text-sm font-medium text-gray-700 mb-2">需要材料:</h4>
+              <div className="flex flex-wrap gap-1">
+                {activity.materials.map((material, index) => (
+                  <span key={index} className="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full">
+                    {material}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="p-3 bg-green-50 rounded-xl">
+              <p className="text-sm text-green-800 font-medium">教育价值</p>
+              <p className="text-sm text-green-700">{activity.educationalValue}</p>
+            </div>
+          </div>
+        ))}
       </div>
 
       {filteredActivities.length === 0 && (
-        <div className="text-center py-12 bg-white rounded-2xl shadow-sm border border-gray-100">
-          <span className="material-icons text-5xl text-gray-400 mb-4">search_off</span>
-          <h3 className="text-xl font-semibold text-gray-600 mb-2">没有找到相关活动</h3>
-          <p className="text-gray-500">试试调整筛选条件或搜索其他关键词吧！</p>
+        <div className="text-center py-12">
+          <div className="text-6xl mb-4">🎨</div>
+          <h3 className="text-xl font-semibold text-gray-700 mb-2">没有找到相关活动</h3>
+          <p className="text-gray-500">试试调整筛选条件或搜索关键词</p>
         </div>
       )}
-    </div>
+    </PageLayout>
   )
 }
