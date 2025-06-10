@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, useMemo, useCallback, type ReactNode } from "react"
 import { isDemoMode } from "@/lib/app-mode"
+import { Toaster } from "@/components/ui/toaster"
 
 interface AppContextType {
   habits: Habit[]
@@ -198,6 +199,7 @@ export function Providers({ children }: { children: ReactNode }) {
       }}
     >
       {children}
+      <Toaster />
     </AppContext.Provider>
   )
 }

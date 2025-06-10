@@ -4,7 +4,7 @@ import { useApp } from "@/components/providers"
 import { useAuth } from "@/components/auth-provider"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Target, TrendingUp, Award, Star, Clock, ChevronRight } from "lucide-react"
+import { Target, TrendingUp, Award, Star, Clock, ChevronRight, Settings } from "lucide-react"
 import Link from "next/link"
 import type { User } from "@supabase/supabase-js"
 import { useEffect } from "react"
@@ -54,8 +54,18 @@ export default function MainDashboard({ user, userProfile }: MainDashboardProps)
         <div className="p-6 md:p-8 pt-20 md:pt-8">
           {/* 欢迎区域 */}
           <div className="mb-8">
-            <h1 className="text-2xl font-bold text-gray-800 mb-2">你好，{userProfile?.child_name || "小朋友"}！👋</h1>
-            <p className="text-gray-600">今天也要做最棒的自己哦</p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-800 mb-2">你好，{userProfile?.child_name || "小朋友"}！👋</h1>
+                <p className="text-gray-600">今天也要做最棒的自己哦</p>
+              </div>
+              <Link href="/settings">
+                <Button variant="outline" size="sm" className="gap-2">
+                  <Settings className="w-4 h-4" />
+                  个人设置
+                </Button>
+              </Link>
+            </div>
           </div>
 
           {/* 今日概览统计 */}

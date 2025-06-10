@@ -6,6 +6,7 @@ import { Providers } from "@/components/providers"
 import { AuthProvider } from "@/components/auth-provider"
 import { AuthGuard } from "@/components/auth-guard"
 import { ConditionalNavigation } from "@/components/conditional-navigation"
+import { FirstLoginHandler } from "@/components/first-login-handler"
 // import { AuthDebug } from "@/components/auth-debug"
 
 const inter = Inter({
@@ -39,6 +40,7 @@ export default function RootLayout({
             <AuthGuard>
               <ConditionalNavigation />
               {children}
+              <FirstLoginHandler />
             </AuthGuard>
             {/* <AuthDebug /> */}
           </AuthProvider>

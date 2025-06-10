@@ -4,6 +4,7 @@ import { useAuth } from "@/components/auth-provider"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import { memo, useMemo } from "react"
 import {
   Home,
   Target,
@@ -15,6 +16,7 @@ import {
   Bell,
   LogOut,
   Sparkles,
+  Settings,
 } from "lucide-react"
 
 // 定义导航项
@@ -27,11 +29,23 @@ const navigationItems = [
   { name: "奖励兑换", href: "/rewards", icon: Award },
   { name: "家长社区", href: "/community", icon: Users },
   { name: "通知中心", href: "/notifications", icon: Bell },
+  { name: "个人设置", href: "/settings", icon: Settings },
 ]
 
-export function SimpleNavigation() {
+export const SimpleNavigation = memo(function SimpleNavigation() {
   const { user, userProfile, signOut, loading } = useAuth()
   const pathname = usePathname()
+
+  // 使用 useMemo 优化用户显示信息的计算
+  const userDisplayInfo = useMemo(() => {
+    if (!userProfile) return null
+    
+    return {
+      initial: userProfile.child_name?.charAt(0) || "用",
+      name: userProfile.child_name || "小朋友",
+      age: userProfile.child_age || 6
+    }
+  }, [userProfile])
 
   // 如果用户未登录，不显示导航栏
   if (!user) {
@@ -87,15 +101,15 @@ export function SimpleNavigation() {
           <div className="p-3 bg-white rounded-lg flex items-center gap-3 mb-2">
             <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
               <span className="text-indigo-500 font-bold text-sm">
-                {userProfile?.child_name?.charAt(0) || "用"}
+                {userDisplayInfo?.initial}
               </span>
             </div>
             <div>
               <p className="font-semibold text-sm text-gray-800">
-                {userProfile?.child_name || "小朋友"}
+                {userDisplayInfo?.name}
               </p>
               <p className="text-xs text-gray-500">
-                {userProfile?.child_age || 6}岁 · 已坚持15天
+                {userDisplayInfo?.age}岁 · 已坚持15天
               </p>
             </div>
           </div>
@@ -111,4 +125,4 @@ export function SimpleNavigation() {
       </div>
     </aside>
   )
-} 
+}) 
