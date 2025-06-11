@@ -102,6 +102,13 @@ export async function getParentingAdvice(concern: string, childAge: number): Pro
 
   } catch (error) {
     console.error("AI顾问API错误:", error)
+    console.error("错误详情:", {
+      message: error instanceof Error ? error.message : '未知错误',
+      name: error instanceof Error ? error.name : '未知错误类型',
+      stack: error instanceof Error ? error.stack : '无堆栈信息',
+      hasApiKey: !!process.env.HABIT_WORDS_KEY,
+      apiKeyLength: process.env.HABIT_WORDS_KEY?.length || 0
+    })
     
     // 返回友好的错误响应
     return {
