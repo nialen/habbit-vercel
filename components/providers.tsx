@@ -4,6 +4,7 @@ import { createContext, useContext, useState, useEffect, useMemo, useCallback, t
 import { isDemoMode } from "@/lib/app-mode"
 import { Toaster } from "@/components/ui/toaster"
 import { ThemeProvider } from "@/components/theme-provider"
+import { useAuth } from "@/components/auth-provider"
 
 interface AppContextType {
   habits: Habit[]
@@ -12,6 +13,9 @@ interface AppContextType {
   setActivities: (activities: Activity[]) => void
   loadingHabits: boolean
   refreshHabits: (userId?: string) => void
+  toggleHabit: (habitId: string, userId: string) => Promise<void>
+  addHabit: (habit: Omit<Habit, 'id' | 'createdAt' | 'streak' | 'completedToday'>, userId: string) => Promise<void>
+  deleteHabit: (habitId: string) => Promise<void>
 }
 
 interface Habit {
@@ -38,8 +42,8 @@ const AppContext = createContext<AppContextType | undefined>(undefined)
 
 export function useApp() {
   const context = useContext(AppContext)
-  if (!context) {
-    throw new Error("useApp must be used within Providers")
+  if (context === undefined) {
+    throw new Error("useApp must be used within an AppProvider")
   }
   return context
 }
@@ -53,6 +57,8 @@ export function Providers({ children }: { children: ReactNode }) {
 
   // 刷新习惯数据的函数
   const refreshHabits = useCallback(async (userId?: string) => {
+    if (!userId && !demoMode) return
+    
     setLoadingHabits(true)
     
     try {
@@ -107,40 +113,185 @@ export function Providers({ children }: { children: ReactNode }) {
           },
         ]
         setHabits(demoHabits)
-      } else {
-        // 完整模式：动态导入数据库函数以避免初始加载问题
-        if (userId) {
-          console.log('🔐 从数据库加载习惯数据')
-          try {
-            // 动态导入以避免服务端/客户端不一致问题
-            const { getHabits } = await import("@/lib/database")
-            const dbHabits = await getHabits(userId)
-            // 转换数据库格式到前端格式
-            const formattedHabits: Habit[] = dbHabits.map(habit => ({
-              id: habit.id,
-              name: habit.name,
-              icon: habit.icon,
-              streak: 0, // TODO: 计算连续天数
-              completedToday: false, // TODO: 检查今日是否完成
-              category: habit.category,
-              createdAt: habit.created_at,
-            }))
-            setHabits(formattedHabits)
-          } catch (error) {
-            console.error('加载习惯数据失败:', error)
-            setHabits([])
-          }
+      } else if (userId) {
+        // 生产模式：从API获取真实数据
+        console.log('🔄 从数据库加载习惯数据')
+        const response = await fetch(`/api/habits?userId=${userId}`)
+        if (response.ok) {
+          const data = await response.json()
+          
+          // 转换数据库格式到前端格式
+          const transformedHabits: Habit[] = await Promise.all(
+            data.habits.map(async (dbHabit: any) => {
+              // 获取今日完成记录
+              const today = new Date().toISOString().split('T')[0]
+              const logsResponse = await fetch(`/api/habits/logs?userId=${userId}&habitId=${dbHabit.id}&date=${today}`)
+              const logsData = await logsResponse.json()
+              const completedToday = logsData.logs?.length > 0
+
+              // 计算连续天数
+              const allLogsResponse = await fetch(`/api/habits/logs?userId=${userId}&habitId=${dbHabit.id}`)
+              const allLogsData = await allLogsResponse.json()
+              const streak = calculateStreak(allLogsData.logs || [])
+
+              return {
+                id: dbHabit.id,
+                name: dbHabit.name,
+                icon: dbHabit.icon,
+                category: dbHabit.category,
+                streak,
+                completedToday,
+                createdAt: dbHabit.created_at,
+              }
+            })
+          )
+          
+          setHabits(transformedHabits)
         } else {
-          // 未登录时显示空数据
-          console.log('👤 用户未登录，显示空数据')
-          setHabits([])
+          console.error('获取习惯数据失败')
         }
       }
     } catch (error) {
-      console.error('刷新习惯数据失败:', error)
-      setHabits([])
+      console.error('加载习惯数据时出错:', error)
     } finally {
       setLoadingHabits(false)
+    }
+  }, [demoMode])
+
+  // 计算连续天数
+  const calculateStreak = (logs: any[]) => {
+    if (!logs.length) return 0
+    
+    const sortedLogs = logs.sort((a, b) => new Date(b.completed_at).getTime() - new Date(a.completed_at).getTime())
+    let streak = 0
+    let currentDate = new Date()
+    
+    for (const log of sortedLogs) {
+      const logDate = new Date(log.completed_at)
+      const diffDays = Math.floor((currentDate.getTime() - logDate.getTime()) / (1000 * 60 * 60 * 24))
+      
+      if (diffDays === streak) {
+        streak++
+        currentDate = logDate
+      } else {
+        break
+      }
+    }
+    
+    return streak
+  }
+
+  // 切换习惯完成状态
+  const toggleHabit = useCallback(async (habitId: string, userId: string) => {
+    if (demoMode) {
+      // 演示模式：只更新本地状态
+      setHabits(prev => prev.map(habit => 
+        habit.id === habitId 
+          ? {
+              ...habit,
+              completedToday: !habit.completedToday,
+              streak: !habit.completedToday ? habit.streak + 1 : Math.max(0, habit.streak - 1)
+            }
+          : habit
+      ))
+      return
+    }
+
+    try {
+      const habit = habits.find(h => h.id === habitId)
+      if (!habit) return
+
+      if (!habit.completedToday) {
+        // 记录完成
+        const response = await fetch('/api/habits/logs', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            user_id: userId,
+            habit_id: habitId,
+          }),
+        })
+
+        if (response.ok) {
+          // 刷新数据
+          await refreshHabits(userId)
+        }
+      } else {
+        // 取消完成 - 需要找到今日的记录并删除
+        const today = new Date().toISOString().split('T')[0]
+        const logsResponse = await fetch(`/api/habits/logs?userId=${userId}&habitId=${habitId}&date=${today}`)
+        if (logsResponse.ok) {
+          const logsData = await logsResponse.json()
+          if (logsData.logs?.length > 0) {
+            await fetch(`/api/habits/logs?id=${logsData.logs[0].id}`, {
+              method: 'DELETE',
+            })
+            await refreshHabits(userId)
+          }
+        }
+      }
+    } catch (error) {
+      console.error('切换习惯状态失败:', error)
+    }
+  }, [habits, refreshHabits, demoMode])
+
+  // 添加新习惯
+  const addHabit = useCallback(async (habitData: Omit<Habit, 'id' | 'createdAt' | 'streak' | 'completedToday'>, userId: string) => {
+    if (demoMode) {
+      // 演示模式：只更新本地状态
+      const newHabit: Habit = {
+        ...habitData,
+        id: Date.now().toString(),
+        streak: 0,
+        completedToday: false,
+        createdAt: new Date().toISOString(),
+      }
+      setHabits(prev => [newHabit, ...prev])
+      return
+    }
+
+    try {
+      const response = await fetch('/api/habits', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          name: habitData.name,
+          icon: habitData.icon,
+          category: habitData.category,
+        }),
+      })
+
+      if (response.ok) {
+        await refreshHabits(userId)
+      }
+    } catch (error) {
+      console.error('添加习惯失败:', error)
+    }
+  }, [refreshHabits, demoMode])
+
+  // 删除习惯
+  const deleteHabit = useCallback(async (habitId: string) => {
+    if (demoMode) {
+      // 演示模式：只更新本地状态
+      setHabits(prev => prev.filter(h => h.id !== habitId))
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/habits?id=${habitId}`, {
+        method: 'DELETE',
+      })
+
+      if (response.ok) {
+        setHabits(prev => prev.filter(h => h.id !== habitId))
+      }
+    } catch (error) {
+      console.error('删除习惯失败:', error)
     }
   }, [demoMode])
 
@@ -203,6 +354,9 @@ export function Providers({ children }: { children: ReactNode }) {
           setActivities,
           loadingHabits,
           refreshHabits,
+          toggleHabit,
+          addHabit,
+          deleteHabit,
         }}
       >
         {children}

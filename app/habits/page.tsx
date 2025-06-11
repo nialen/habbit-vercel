@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Input } from "@/components/ui/input"
 import { useApp } from "@/components/providers"
+import { useAuth } from "@/components/auth-provider"
 import { analytics } from "@/lib/analytics"
 import { PageLayout } from "@/components/page-layout"
 import { Target, CheckCircle, TrendingUp, Star, Plus, MoreHorizontal, Check, Trash2 } from "lucide-react"
@@ -17,7 +18,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 export default function HabitsPage() {
-  const { habits, setHabits } = useApp()
+  const { habits, loadingHabits, toggleHabit, addHabit, deleteHabit } = useApp()
+  const { user } = useAuth()
   const [showAddForm, setShowAddForm] = useState(false)
   const [newHabit, setNewHabit] = useState({ name: "", icon: "⭐", category: "健康" })
 
@@ -38,7 +40,9 @@ export default function HabitsPage() {
     { name: "冥想放松", icon: "🧘", category: "健康", description: "每天5-10分钟的深呼吸" }
   ]
 
-  const toggleHabit = (habitId: string) => {
+  const handleToggleHabit = async (habitId: string) => {
+    if (!user?.id) return
+    
     const habit = habits.find(h => h.id === habitId)
     if (habit) {
       // 追踪习惯完成事件
@@ -51,41 +55,23 @@ export default function HabitsPage() {
       }
     }
 
-    setHabits(
-      habits.map((habit) =>
-        habit.id === habitId
-          ? {
-              ...habit,
-              completedToday: !habit.completedToday,
-              streak: !habit.completedToday ? habit.streak + 1 : Math.max(0, habit.streak - 1),
-            }
-          : habit,
-      ),
-    )
+    await toggleHabit(habitId, user.id)
   }
 
-  const addHabit = () => {
-    if (!newHabit.name.trim()) return
+  const handleAddHabit = async () => {
+    if (!newHabit.name.trim() || !user?.id) return
 
     // 追踪新习惯创建事件
     analytics.habit.created(newHabit.name)
 
-    const habit = {
-      id: Date.now().toString(),
-      name: newHabit.name,
-      icon: newHabit.icon,
-      category: newHabit.category,
-      streak: 0,
-      completedToday: false,
-      createdAt: new Date().toISOString(),
-    }
-
-    setHabits([...habits, habit])
+    await addHabit(newHabit, user.id)
     setNewHabit({ name: "", icon: "⭐", category: "健康" })
     setShowAddForm(false)
   }
 
-  const addDefaultHabit = (defaultHabit: typeof defaultHabits[0]) => {
+  const handleAddDefaultHabit = async (defaultHabit: typeof defaultHabits[0]) => {
+    if (!user?.id) return
+    
     // 检查是否已经存在相同名称的习惯
     if (habits.some(h => h.name === defaultHabit.name)) {
       return
@@ -94,23 +80,17 @@ export default function HabitsPage() {
     // 追踪默认习惯创建事件
     analytics.habit.created(defaultHabit.name)
 
-    const habit = {
-      id: Date.now().toString(),
+    await addHabit({
       name: defaultHabit.name,
       icon: defaultHabit.icon,
       category: defaultHabit.category,
-      streak: 0,
-      completedToday: false,
-      createdAt: new Date().toISOString(),
-    }
-
-    setHabits([...habits, habit])
+    }, user.id)
   }
 
-  const deleteHabit = (habitId: string) => {
+  const handleDeleteHabit = async (habitId: string) => {
     const habit = habits.find(h => h.id === habitId)
     if (habit && confirm(`确定要删除习惯"${habit.name}"吗？`)) {
-      setHabits(habits.filter(h => h.id !== habitId))
+      await deleteHabit(habitId)
       // 追踪习惯删除事件
       analytics.habit.deleted(habit.name)
     }
@@ -120,151 +100,146 @@ export default function HabitsPage() {
   const completedToday = habits.filter((h) => h.completedToday).length
   const progressPercentage = habits.length > 0 ? (completedToday / habits.length) * 100 : 0
 
+  if (loadingHabits) {
+    return (
+      <PageLayout>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+            <p className="text-gray-600">加载习惯数据中...</p>
+          </div>
+        </div>
+      </PageLayout>
+    )
+  }
+
   return (
     <PageLayout>
       {/* 页面标题 */}
-      <header className="mb-8">
-        <h2 className="text-3xl font-semibold text-sky-900">习惯管理</h2>
-        <p className="text-sky-700">培养好习惯，成就更好的自己</p>
-      </header>
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-800 mb-2">习惯管理</h1>
+        <p className="text-gray-600">培养良好习惯，成就美好未来 🌱</p>
+      </div>
 
       {/* 统计概览 */}
-      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-sky-100 p-6 rounded-xl shadow-lg flex items-center space-x-4">
-          <Target className="w-8 h-8 text-sky-500" />
-          <div>
-            <p className="text-sky-800 text-sm">进行中习惯</p>
-            <p className="text-2xl font-bold text-sky-900">{habits.length}</p>
-          </div>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <Card className="bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-blue-500 rounded-2xl flex items-center justify-center">
+                <Target className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <p className="text-sm text-blue-600 mb-1">今日进度</p>
+                <p className="text-2xl font-bold text-blue-800">{completedToday}/{habits.length}</p>
+              </div>
+            </div>
+            <div className="mt-4">
+              <Progress value={progressPercentage} className="bg-blue-200" />
+              <p className="text-xs text-blue-600 mt-2">{progressPercentage.toFixed(0)}% 完成</p>
+            </div>
+          </CardContent>
+        </Card>
 
-        <div className="bg-green-100 p-6 rounded-xl shadow-lg flex items-center space-x-4">
-          <CheckCircle className="w-8 h-8 text-green-500" />
-          <div>
-            <p className="text-green-800 text-sm">今日完成</p>
-            <p className="text-2xl font-bold text-green-900">{completedToday}</p>
-          </div>
-        </div>
+        <Card className="bg-gradient-to-r from-yellow-50 to-yellow-100 border-yellow-200">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-yellow-500 rounded-2xl flex items-center justify-center">
+                <Star className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <p className="text-sm text-yellow-600 mb-1">累计星星</p>
+                <p className="text-2xl font-bold text-yellow-800">{totalStars}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-        <div className="bg-purple-100 p-6 rounded-xl shadow-lg flex items-center space-x-4">
-          <TrendingUp className="w-8 h-8 text-purple-500" />
-          <div>
-            <p className="text-purple-800 text-sm">累计星星</p>
-            <p className="text-2xl font-bold text-purple-900">{totalStars}</p>
-          </div>
-        </div>
+        <Card className="bg-gradient-to-r from-green-50 to-green-100 border-green-200">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-green-500 rounded-2xl flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <p className="text-sm text-green-600 mb-1">习惯总数</p>
+                <p className="text-2xl font-bold text-green-800">{habits.length}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
-        <div className="bg-pink-100 p-6 rounded-xl shadow-lg flex items-center space-x-4">
-          <Star className="w-8 h-8 text-pink-500" />
-          <div>
-            <p className="text-pink-800 text-sm">完成率</p>
-            <p className="text-2xl font-bold text-pink-900">{Math.round(progressPercentage)}%</p>
-          </div>
-        </div>
-      </section>
-
-      {/* 今日进度条 */}
-      <section className="bg-sky-100 p-6 rounded-xl shadow-lg mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="font-semibold text-sky-800">今日习惯完成进度</h3>
-          <span className="text-sm text-sky-600">
-            {completedToday}/{habits.length}
-          </span>
-        </div>
-        <Progress value={progressPercentage} className="h-2.5 mb-3" />
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-sky-700">
-            {progressPercentage === 100 ? "🎉 今天的习惯全部完成啦！" : "继续加油，坚持就是胜利！"}
-          </span>
-          <span className="text-sky-700 font-medium">{Math.round(progressPercentage)}%</span>
-        </div>
-      </section>
-
-      {/* 我的习惯 */}
-      <section className="bg-sky-100 p-6 rounded-xl shadow-lg mb-8">
+      {/* 习惯列表 */}
+      <div className="mb-8">
         <div className="flex justify-between items-center mb-6">
-          <h3 className="text-xl font-semibold text-sky-600">⭐ 我的习惯</h3>
+          <h2 className="text-xl font-semibold text-gray-800">我的习惯</h2>
           <Button
-            onClick={() => setShowAddForm(!showAddForm)}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg flex items-center transition-colors"
+            onClick={() => setShowAddForm(true)}
+            className="bg-blue-500 hover:bg-blue-600 text-white"
           >
-            <Plus className="w-4 h-4 mr-2" />
-            自定义习惯
+            <Plus size={16} className="mr-2" />
+            添加习惯
           </Button>
         </div>
 
         {/* 添加习惯表单 */}
         {showAddForm && (
-          <Card className="mb-6 bg-white shadow-md">
+          <Card className="mb-6 border-blue-200">
             <CardHeader>
-              <CardTitle className="text-lg text-sky-800">添加自定义习惯</CardTitle>
+              <CardTitle>添加新习惯</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2 text-sky-700">习惯名称</label>
+                  <label className="block text-sm font-medium mb-2">习惯名称</label>
                   <Input
                     value={newHabit.name}
                     onChange={(e) => setNewHabit({ ...newHabit, name: e.target.value })}
-                    placeholder="例如：每天喝8杯水"
-                    className="rounded-lg border-sky-200 focus:border-sky-400"
+                    placeholder="例如：早睡早起"
                   />
                 </div>
-
                 <div>
-                  <label className="block text-sm font-medium mb-2 text-sky-700">选择图标</label>
-                  <div className="flex flex-wrap gap-2">
-                    {habitIcons.map((icon) => (
-                      <button
-                        key={icon}
-                        onClick={() => setNewHabit({ ...newHabit, icon })}
-                        className={`w-12 h-12 rounded-lg border-2 flex items-center justify-center text-xl transition-all ${
-                          newHabit.icon === icon ? "border-sky-500 bg-sky-50" : "border-gray-200 hover:border-sky-300"
-                        }`}
-                      >
-                        {icon}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2 text-sky-700">分类</label>
-                  <div className="flex flex-wrap gap-2">
-                    {categories.map((category) => (
-                      <button
-                        key={category}
-                        onClick={() => setNewHabit({ ...newHabit, category })}
-                        className={`px-4 py-2 rounded-lg border transition-all ${
-                          newHabit.category === category
-                            ? "border-sky-500 bg-sky-500 text-white"
-                            : "border-gray-200 hover:border-sky-300"
-                        }`}
-                      >
-                        {category}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex gap-2">
-                  <Button onClick={addHabit} className="bg-blue-500 hover:bg-blue-600 text-white">
-                    添加习惯
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => setShowAddForm(false)}
-                    className="border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400"
+                  <label className="block text-sm font-medium mb-2">图标</label>
+                  <select
+                    value={newHabit.icon}
+                    onChange={(e) => setNewHabit({ ...newHabit, icon: e.target.value })}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
                   >
-                    取消
-                  </Button>
+                    {habitIcons.map((icon) => (
+                      <option key={icon} value={icon}>
+                        {icon}
+                      </option>
+                    ))}
+                  </select>
                 </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">分类</label>
+                  <select
+                    value={newHabit.category}
+                    onChange={(e) => setNewHabit({ ...newHabit, category: e.target.value })}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                  >
+                    {categories.map((category) => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className="flex gap-2 mt-4">
+                <Button onClick={handleAddHabit} className="bg-blue-500 hover:bg-blue-600">
+                  添加习惯
+                </Button>
+                <Button variant="outline" onClick={() => setShowAddForm(false)}>
+                  取消
+                </Button>
               </div>
             </CardContent>
           </Card>
         )}
 
-        {/* 习惯列表 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {habits.map((habit) => (
             <div key={habit.id} className="bg-white p-5 rounded-lg shadow-md">
@@ -278,145 +253,103 @@ export default function HabitsPage() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-32">
                     <DropdownMenuItem
-                      onClick={() => deleteHabit(habit.id)}
+                      onClick={() => handleDeleteHabit(habit.id)}
                       className="text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer"
                     >
                       <Trash2 className="h-4 mr-2" />
+                      删除
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
               <p className="text-sm text-sky-700 mb-3">每天坚持{habit.name}，养成好习惯</p>
 
-              <span
-                className={`inline-block ${
-                  habit.category === "健康"
-                    ? "bg-sky-200 text-sky-800"
-                    : habit.category === "学习"
-                      ? "bg-green-200 text-green-800"
-                      : habit.category === "卫生"
-                        ? "bg-blue-200 text-blue-800"
-                        : habit.category === "整理"
-                          ? "bg-yellow-200 text-yellow-800"
-                          : habit.category === "社交"
-                            ? "bg-purple-200 text-purple-800"
-                            : "bg-pink-200 text-pink-800"
-                } text-xs font-semibold px-2.5 py-0.5 rounded-full mb-4`}
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl">{habit.icon}</span>
+                  <span className="text-sm text-gray-600">{habit.category}</span>
+                </div>
+                <div className="text-right">
+                  <div className="text-lg font-bold text-sky-800">{habit.streak}</div>
+                  <div className="text-xs text-sky-600">连续天数</div>
+                </div>
+              </div>
+
+              <Button
+                onClick={() => handleToggleHabit(habit.id)}
+                className={`w-full ${
+                  habit.completedToday
+                    ? "bg-green-500 hover:bg-green-600 text-white"
+                    : "bg-sky-500 hover:bg-sky-600 text-white"
+                }`}
               >
-                {habit.category}
-              </span>
-
-              <div className="mb-3">
-                <div className="flex justify-between text-xs text-sky-600 mb-1">
-                  <span>目标: 21天</span>
-                  <span>{Math.round((habit.streak / 21) * 100)}%</span>
-                </div>
-                <div className="w-full bg-sky-200 rounded-full h-2.5">
-                  <div
-                    className={`${
-                      habit.category === "健康"
-                        ? "bg-sky-500"
-                        : habit.category === "学习"
-                          ? "bg-green-500"
-                          : habit.category === "卫生"
-                            ? "bg-blue-500"
-                            : habit.category === "整理"
-                              ? "bg-yellow-500"
-                              : habit.category === "社交"
-                                ? "bg-purple-500"
-                                : "bg-pink-500"
-                    } h-2.5 rounded-full`}
-                    style={{ width: `${Math.min((habit.streak / 21) * 100, 100)}%` }}
-                  ></div>
-                </div>
-              </div>
-
-              <div className="flex justify-between items-center text-sm text-sky-700">
-                <div>
-                  <p>{habit.streak > 10 ? "习惯养成中" : "新手"}</p>
-                  <p>已连击 {habit.streak} 天</p>
-                </div>
-                <Button
-                  onClick={() => toggleHabit(habit.id)}
-                  className={`${
-                    habit.completedToday ? "bg-green-500 hover:bg-green-600" : "bg-blue-500 hover:bg-blue-600"
-                  } text-white px-4 py-2 rounded-lg`}
-                >
-                  {habit.completedToday ? (
-                    <>
-                      <Check className="w-4 h-4 mr-1" />
-                      已完成
-                    </>
-                  ) : (
-                    <>
-                      <Plus className="w-4 h-4 mr-1" />
-                      打卡
-                    </>
-                  )}
-                </Button>
-              </div>
+                {habit.completedToday ? (
+                  <>
+                    <CheckCircle size={16} className="mr-2" />
+                    已完成
+                  </>
+                ) : (
+                  "立即打卡"
+                )}
+              </Button>
             </div>
           ))}
         </div>
 
         {habits.length === 0 && (
-          <div className="text-center py-12 bg-white rounded-lg shadow-md">
-            <Target className="w-12 h-12 text-gray-400 mb-4 mx-auto" />
-            <h3 className="text-xl font-semibold text-gray-600 mb-2">还没有添加习惯</h3>
-            <p className="text-gray-500 mb-4">点击"自定义习惯"或从下方推荐习惯中选择，开始你的成长之旅吧！</p>
-            <div className="flex gap-2 justify-center">
-              <Button onClick={() => setShowAddForm(true)} className="bg-blue-500 hover:bg-blue-600 text-white">
-                <Plus className="w-4 h-4 mr-2" />
-                自定义习惯
-              </Button>
-            </div>
+          <div className="text-center py-12">
+            <div className="text-6xl mb-4">🌱</div>
+            <h3 className="text-xl font-semibold text-gray-700 mb-2">还没有习惯</h3>
+            <p className="text-gray-500 mb-6">开始添加第一个好习惯吧！</p>
+            <Button
+              onClick={() => setShowAddForm(true)}
+              className="bg-blue-500 hover:bg-blue-600 text-white"
+            >
+              <Plus size={16} className="mr-2" />
+              添加习惯
+            </Button>
           </div>
         )}
-      </section>
+      </div>
 
       {/* 推荐习惯 */}
-      <section className="bg-gradient-to-r from-purple-100 to-pink-100 p-6 rounded-xl shadow-lg">
-        <div className="mb-6">
-          <h3 className="text-xl font-semibold text-purple-900 mb-2">🌟 推荐习惯</h3>
-          <p className="text-purple-700">选择适合的习惯，一键添加到你的习惯列表</p>
-        </div>
-        
+      <section>
+        <h2 className="text-xl font-semibold text-gray-800 mb-6">推荐习惯</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {defaultHabits.map((defaultHabit, index) => {
             const isAdded = habits.some(h => h.name === defaultHabit.name)
             
             return (
-              <div key={index} className="bg-white p-4 rounded-lg shadow-sm border border-purple-200">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center text-lg">
-                      {defaultHabit.icon}
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-gray-900">{defaultHabit.name}</h4>
-                      <span className={`inline-block text-xs px-2 py-1 rounded-full ${
-                        defaultHabit.category === "健康"
-                          ? "bg-sky-100 text-sky-700"
-                          : defaultHabit.category === "学习"
-                            ? "bg-green-100 text-green-700"
-                            : defaultHabit.category === "卫生"
-                              ? "bg-blue-100 text-blue-700"
-                              : defaultHabit.category === "整理"
-                                ? "bg-yellow-100 text-yellow-700"
-                                : defaultHabit.category === "社交"
-                                  ? "bg-purple-100 text-purple-700"
-                                  : "bg-pink-100 text-pink-700"
-                      }`}>
-                        {defaultHabit.category}
-                      </span>
-                    </div>
+              <div key={index} className="bg-white p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center text-xl">
+                    {defaultHabit.icon}
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-medium text-gray-900">{defaultHabit.name}</h4>
+                    <span className={`inline-block text-xs px-2 py-1 rounded-full ${
+                      defaultHabit.category === "健康"
+                        ? "bg-sky-100 text-sky-700"
+                        : defaultHabit.category === "学习"
+                          ? "bg-green-100 text-green-700"
+                          : defaultHabit.category === "卫生"
+                            ? "bg-blue-100 text-blue-700"
+                            : defaultHabit.category === "整理"
+                              ? "bg-yellow-100 text-yellow-700"
+                              : defaultHabit.category === "社交"
+                                ? "bg-purple-100 text-purple-700"
+                                : "bg-pink-100 text-pink-700"
+                    }`}>
+                      {defaultHabit.category}
+                    </span>
                   </div>
                 </div>
                 
                 <p className="text-sm text-gray-600 mb-3">{defaultHabit.description}</p>
                 
                 <Button
-                  onClick={() => addDefaultHabit(defaultHabit)}
+                  onClick={() => handleAddDefaultHabit(defaultHabit)}
                   disabled={isAdded}
                   className={`w-full text-sm ${
                     isAdded
