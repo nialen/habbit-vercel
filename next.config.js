@@ -36,12 +36,16 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   
-  // 跳过出错的页面，允许构建继续
-  onDemandEntries: {
-    // 页面在开发中将在此时间段后被处置（以毫秒为单位）
-    maxInactiveAge: 25 * 1000,
-    // 应该同时保留的页面数
-    pagesBufferLength: 2,
+  // 环境变量配置
+  env: {
+    // 忽略特定的运行时错误
+    SUPPRESS_STORAGE_ERRORS: 'true',
+  },
+  
+  // 静态生成优化
+  generateBuildId: async () => {
+    // 使用时间戳作为构建ID
+    return `build-${Date.now()}`
   },
 }
 

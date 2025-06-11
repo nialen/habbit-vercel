@@ -5,6 +5,7 @@ import type { User } from "@supabase/supabase-js"
 import { createClient } from "@/lib/supabase/client"
 import { isSupabaseConfigured } from "@/lib/supabase"
 import { isDemoMode, isCompleteMode, isCompleteModeConfigured } from "@/lib/app-mode"
+import { safeLocalStorage } from "@/lib/safe-storage"
 
 interface AuthContextType {
   user: User | null
@@ -64,26 +65,20 @@ const INIT_FLAG_KEY = 'auth_initialized'
 
 // 缓存工具函数
 const cacheUserProfile = (profile: UserProfile) => {
-  if (typeof window === 'undefined') return
-  try {
-    localStorage.setItem(CACHE_KEY, JSON.stringify(profile))
-    localStorage.setItem(CACHE_EXPIRY_KEY, (Date.now() + CACHE_DURATION).toString())
-  } catch (error) {
-    console.warn('无法缓存用户资料:', error)
-  }
+  safeLocalStorage.setItem(CACHE_KEY, JSON.stringify(profile))
+  safeLocalStorage.setItem(CACHE_EXPIRY_KEY, (Date.now() + CACHE_DURATION).toString())
 }
 
 const getCachedUserProfile = (): UserProfile | null => {
-  if (typeof window === 'undefined') return null
   try {
-    const expiry = localStorage.getItem(CACHE_EXPIRY_KEY)
+    const expiry = safeLocalStorage.getItem(CACHE_EXPIRY_KEY)
     if (!expiry || Date.now() > parseInt(expiry)) {
       // 缓存过期，清除
-      localStorage.removeItem(CACHE_KEY)
-      localStorage.removeItem(CACHE_EXPIRY_KEY)
+      safeLocalStorage.removeItem(CACHE_KEY)
+      safeLocalStorage.removeItem(CACHE_EXPIRY_KEY)
       return null
     }
-    const cached = localStorage.getItem(CACHE_KEY)
+    const cached = safeLocalStorage.getItem(CACHE_KEY)
     return cached ? JSON.parse(cached) : null
   } catch (error) {
     console.warn('无法读取缓存的用户资料:', error)
@@ -93,19 +88,14 @@ const getCachedUserProfile = (): UserProfile | null => {
 
 // 新增：Token有效性检查函数
 const cacheTokenExpiry = (expiresAt: number) => {
-  if (typeof window === 'undefined') return
-  try {
-    localStorage.setItem(TOKEN_EXPIRY_KEY, expiresAt.toString())
-    localStorage.setItem(LAST_AUTH_CHECK_KEY, Date.now().toString())
-  } catch (error) {
-    console.warn('无法缓存token过期时间:', error)
-  }
+  safeLocalStorage.setItem(TOKEN_EXPIRY_KEY, expiresAt.toString())
+  safeLocalStorage.setItem(LAST_AUTH_CHECK_KEY, Date.now().toString())
 }
 
 const isTokenValid = (): boolean => {
   if (typeof window === 'undefined') return false
   try {
-    const tokenExpiry = localStorage.getItem(TOKEN_EXPIRY_KEY)
+    const tokenExpiry = safeLocalStorage.getItem(TOKEN_EXPIRY_KEY)
     if (!tokenExpiry) return false
     
     const expiryTime = parseInt(tokenExpiry) * 1000 // 转换为毫秒
@@ -129,7 +119,7 @@ const isTokenValid = (): boolean => {
 const shouldSkipAuthCheck = (): boolean => {
   if (typeof window === 'undefined') return false
   
-  const lastCheck = localStorage.getItem(LAST_AUTH_CHECK_KEY)
+  const lastCheck = safeLocalStorage.getItem(LAST_AUTH_CHECK_KEY)
   const tokenValid = isTokenValid()
   
   if (!tokenValid) {
@@ -155,16 +145,11 @@ const shouldSkipAuthCheck = (): boolean => {
 }
 
 const clearUserProfileCache = () => {
-  if (typeof window === 'undefined') return
-  try {
-    localStorage.removeItem(CACHE_KEY)
-    localStorage.removeItem(CACHE_EXPIRY_KEY)
-    localStorage.removeItem(TOKEN_EXPIRY_KEY)
-    localStorage.removeItem(LAST_AUTH_CHECK_KEY)
-    localStorage.removeItem(INIT_FLAG_KEY)
-  } catch (error) {
-    console.warn('无法清除用户资料缓存:', error)
-  }
+  safeLocalStorage.removeItem(CACHE_KEY)
+  safeLocalStorage.removeItem(CACHE_EXPIRY_KEY)
+  safeLocalStorage.removeItem(TOKEN_EXPIRY_KEY)
+  safeLocalStorage.removeItem(LAST_AUTH_CHECK_KEY)
+  safeLocalStorage.removeItem(INIT_FLAG_KEY)
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -187,6 +172,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // 优化：首先尝试从缓存加载用户资料
   const [userProfile, setUserProfile] = useState<UserProfile | null>(() => {
     if (demoMode) return mockUserProfile
+    // 在服务器端不访问localStorage
+    if (typeof window === 'undefined') return null
     return getCachedUserProfile()
   })
   
