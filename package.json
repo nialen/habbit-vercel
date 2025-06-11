@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development next dev",
     "dev:prod": "cross-env NODE_ENV=production next dev",
-    "build": "next build",
     "build:dev": "cross-env NODE_ENV=development next build",
+    "build": "cross-env NODE_ENV=production next build",
     "build:prod": "cross-env NODE_ENV=production next build",
     "start:dev": "cross-env NODE_ENV=development next start",
     "start:prod": "cross-env NODE_ENV=production next start",
