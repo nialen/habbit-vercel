@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useEffect, useMemo, useCallback, type ReactNode } from "react"
 import { isDemoMode } from "@/lib/app-mode"
 import { Toaster } from "@/components/ui/toaster"
+import { ThemeProvider } from "@/components/theme-provider"
 
 interface AppContextType {
   habits: Habit[]
@@ -188,18 +189,25 @@ export function Providers({ children }: { children: ReactNode }) {
   }, [])
 
   return (
-    <AppContext.Provider
-      value={{
-        habits,
-        setHabits,
-        activities,
-        setActivities,
-        loadingHabits,
-        refreshHabits,
-      }}
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="light"
+      enableSystem={false}
+      disableTransitionOnChange
     >
-      {children}
-      <Toaster />
-    </AppContext.Provider>
+      <AppContext.Provider
+        value={{
+          habits,
+          setHabits,
+          activities,
+          setActivities,
+          loadingHabits,
+          refreshHabits,
+        }}
+      >
+        {children}
+        <Toaster />
+      </AppContext.Provider>
+    </ThemeProvider>
   )
 }

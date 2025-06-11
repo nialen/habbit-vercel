@@ -12,8 +12,8 @@ export function PageLayout({ children }: PageLayoutProps) {
 
   return (
     <div className="min-h-screen">
-      {/* 响应式主内容区 - 根据用户登录状态调整布局 */}
-      <main className={`pb-20 md:pb-0 ${user ? 'md:ml-64' : ''}`}>
+      {/* 主内容区 - 不再需要硬编码的侧边栏边距 */}
+      <main className="pb-20 md:pb-0">
         <div className="p-6 md:p-8 pt-20 md:pt-8">
           {children}
         </div>
