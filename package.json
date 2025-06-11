@@ -21,6 +21,7 @@
     "setup-env:dev": "node scripts/setup-env.js development",
     "setup-env:prod": "node scripts/setup-env.js production",
     "check-env": "node scripts/check-env.js",
+    "check-vercel-env": "node scripts/check-vercel-env.js",
     "configure-supabase": "node scripts/configure-supabase.js"
   },
   "dependencies": {
