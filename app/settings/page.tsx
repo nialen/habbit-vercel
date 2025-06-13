@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { PageLayout } from "@/components/page-layout"
+import { useFirstLogin } from "@/hooks/use-first-login"
 import { 
   Baby, 
   Mail, 
@@ -19,7 +20,8 @@ import {
   Settings as SettingsIcon,
   Shield,
   Palette,
-  Bell
+  Bell,
+  RefreshCw
 } from "lucide-react"
 
 interface ProfileFormData {
@@ -29,6 +31,7 @@ interface ProfileFormData {
 
 export default function SettingsPage() {
   const { user, userProfile, updateProfile, loading } = useAuth()
+  const { resetSetupState } = useFirstLogin()
   const { toast } = useToast()
   const [formData, setFormData] = useState<ProfileFormData>({
     child_name: "",
@@ -115,6 +118,14 @@ export default function SettingsPage() {
     }
   }
 
+  const handleResetFirstLogin = () => {
+    resetSetupState?.()
+    toast({
+      title: "重置成功",
+      description: "首次设置状态已重置，刷新页面后将重新显示设置弹窗",
+    })
+  }
+
   const getUserInitial = () => {
     return formData.child_name?.charAt(0) || userProfile?.child_name?.charAt(0) || "用"
   }
@@ -160,6 +171,7 @@ export default function SettingsPage() {
                   更新孩子的基本信息
                 </p>
               </CardHeader>
+              
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* 头像显示 */}
@@ -178,23 +190,7 @@ export default function SettingsPage() {
                   <Separator />
 
                   {/* 基本信息 */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* <div className="space-y-2">
-                      <Label htmlFor="email" className="flex items-center gap-2">
-                        <Mail className="w-4 h-4" />
-                        家长邮箱
-                      </Label>
-                      <Input
-                        id="email"
-                        value={user?.email || ""}
-                        disabled
-                        className="bg-gray-50"
-                      />
-                      <p className="text-xs text-gray-500">
-                        邮箱地址不可修改
-                      </p>
-                    </div> */}
-
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="child_name" className="flex items-center gap-2">
                         <Baby className="w-4 h-4" />
@@ -223,7 +219,6 @@ export default function SettingsPage() {
                         onChange={(e) => handleInputChange("child_age", parseInt(e.target.value) || 5)}
                         placeholder="请输入孩子的年龄"
                         required
-                        className="w-40"
                       />
                       <p className="text-xs text-gray-500">
                         请输入1-18岁之间的年龄
@@ -231,19 +226,29 @@ export default function SettingsPage() {
                     </div>
                   </div>
 
-                  {/* 保存按钮 */}
-                  <div className="flex items-center justify-between pt-4">
-                    <div className="text-sm text-gray-500">
-                      {hasChanges && "您有未保存的更改"}
-                    </div>
+                  {/* 提交按钮 */}
+                  <div className="flex gap-3">
                     <Button 
                       type="submit" 
                       disabled={!hasChanges || isSubmitting}
                       className="gap-2"
                     >
                       <Save className="w-4 h-4" />
-                      {isSubmitting ? "保存中..." : "保存更改"}
+                      {isSubmitting ? "更新中..." : "保存更改"}
                     </Button>
+                    
+                    {/* 开发工具 */}
+                    {process.env.NODE_ENV === 'development' && (
+                      <Button 
+                        type="button"
+                        variant="outline"
+                        onClick={handleResetFirstLogin}
+                        className="gap-2"
+                      >
+                        <RefreshCw className="w-4 h-4" />
+                        重置首次设置
+                      </Button>
+                    )}
                   </div>
                 </form>
               </CardContent>

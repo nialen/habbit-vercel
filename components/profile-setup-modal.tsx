@@ -29,9 +29,10 @@ interface ProfileFormData {
 interface ProfileSetupModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  onSetupComplete?: () => void
 }
 
-export function ProfileSetupModal({ open, onOpenChange }: ProfileSetupModalProps) {
+export function ProfileSetupModal({ open, onOpenChange, onSetupComplete }: ProfileSetupModalProps) {
   const { user, userProfile, updateProfile } = useAuth()
   const { toast } = useToast()
   const [formData, setFormData] = useState<ProfileFormData>({
@@ -111,6 +112,9 @@ export function ProfileSetupModal({ open, onOpenChange }: ProfileSetupModalProps
           title: "设置成功",
           description: `欢迎 ${formData.child_name} 加入星航成长营！让我们一起开始美好的成长之旅吧！`,
         })
+        
+        // 调用设置完成回调
+        onSetupComplete?.()
         onOpenChange(false)
       }
     } catch (error) {
