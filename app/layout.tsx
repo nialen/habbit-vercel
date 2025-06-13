@@ -7,8 +7,7 @@ import { AuthProvider } from "@/components/auth-provider"
 import { AuthGuard } from "@/components/auth-guard"
 import { ConditionalNavigation } from "@/components/conditional-navigation"
 import { FirstLoginHandler } from "@/components/first-login-handler"
-import { EnvironmentDebug } from "@/components/debug/environment-debug"
-// import { AuthDebug } from "@/components/auth-debug"
+
 
 const inter = Inter({
   subsets: ["latin"],
@@ -42,9 +41,7 @@ export default function RootLayout({
               <ConditionalNavigation />
               {children}
               <FirstLoginHandler />
-              <EnvironmentDebug />
             </AuthGuard>
-            {/* <AuthDebug /> */}
           </AuthProvider>
         </Providers>
       </body>
