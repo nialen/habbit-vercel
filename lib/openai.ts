@@ -45,7 +45,7 @@ export async function getParentingAdvice(concern: string, childAge: number): Pro
 5. 必须返回有效的JSON格式`
 
     const completion = await client.chat.completions.create({
-      model: "google/gemini-2.5-pro-preview",
+      model: "google/gemini-2.5-flash-preview-05-20",
       messages: [
         {
           role: "user",
@@ -57,7 +57,7 @@ export async function getParentingAdvice(concern: string, childAge: number): Pro
     }, {
       headers: {
         "HTTP-Referer": process.env.NEXT_PUBLIC_SITE_URL || "https://habitkids.online",
-        "X-Title": "星航成长营 StarVoyage"
+        "X-Title": "StarVoyage Habit Kids"
       }
     })
 

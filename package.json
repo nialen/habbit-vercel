@@ -22,7 +22,9 @@
     "setup-env:prod": "node scripts/setup-env.js production",
     "check-env": "node scripts/check-env.js",
     "check-vercel-env": "node scripts/check-vercel-env.js",
-    "configure-supabase": "node scripts/configure-supabase.js"
+    "configure-supabase": "node scripts/configure-supabase.js",
+    "test-ai": "node scripts/test-ai-advisor.js",
+    "test-ai-full": "node scripts/test-full-advisor.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -54,6 +56,8 @@
     "@radix-ui/react-toggle-group": "1.1.1",
     "@radix-ui/react-tooltip": "1.1.6",
     "@radix-ui/react-visually-hidden": "^1.2.3",
+    "@stagewise-plugins/react": "^0.4.7",
+    "@stagewise/toolbar-next": "^0.4.7",
     "@supabase/auth-ui-react": "^0.4.7",
     "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/ssr": "^0.6.1",
@@ -74,6 +78,7 @@
     "react-day-picker": "8.10.1",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.54.1",
+    "react-icons": "^5.5.0",
     "react-resizable-panels": "^2.1.7",
     "recharts": "2.15.0",
     "replicate": "^1.0.1",

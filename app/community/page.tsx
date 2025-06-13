@@ -200,7 +200,11 @@ export default function CommunityPage() {
                   key={category.id}
                   variant={selectedCategory === category.id ? "default" : "outline"}
                   onClick={() => setSelectedCategory(category.id)}
-                  className="flex items-center gap-2"
+                  className={`flex items-center gap-2 ${
+                    selectedCategory === category.id 
+                      ? "bg-blue-500 hover:bg-blue-600 text-white" 
+                      : ""
+                  }`}
                 >
                   <span className={`material-icons text-sm ${category.color}`}>{category.icon}</span>
                   {category.name}
@@ -325,7 +329,7 @@ export default function CommunityPage() {
                           <span className="font-medium text-gray-900">
                             {post.author_name || "匿名用户"}
                           </span>
-                          <Badge className={`${categoryInfo.color} bg-opacity-10`}>
+                          <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">
                             {categoryInfo.name}
                           </Badge>
                           <span className="text-sm text-gray-500">{formatTime(post.inserted_at)}</span>

@@ -48,7 +48,7 @@ export default function MainDashboard({ user, userProfile }: MainDashboardProps)
   const topHabits = [...habits].sort((a, b) => b.streak - a.streak).slice(0, 3)
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-blue-50">
       {/* 响应式主内容区 - 根据用户登录状态调整布局 */}
       <main className={`pb-20 md:pb-0 ${authUser ? 'md:ml-64' : ''}`}>
         <div className="p-6 md:p-8 pt-20 md:pt-8">

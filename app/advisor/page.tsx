@@ -89,7 +89,7 @@ export default function AdvisorPage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-blue-50">
       <SimpleNavigation />
       <main className="pb-20 md:pb-0 md:ml-64">
         <div className="p-4 md:p-8 pt-20 md:pt-8 max-w-4xl mx-auto">
@@ -137,7 +137,7 @@ export default function AdvisorPage() {
               placeholder="请描述您在育儿过程中遇到的困惑或挑战，比如：孩子不愿意刷牙、总是发脾气、不爱收拾玩具等..."
               value={concern}
               onChange={(e) => setConcern(e.target.value)}
-              className="min-h-[120px] resize-none border-2 border-gray-200 focus:border-sky-400 rounded-2xl"
+              className="min-h-[120px] resize-none border border-gray-200 focus:border-sky-400 focus-visible:ring-0 rounded-2xl"
               maxLength={300}
               disabled={isLoading}
             />

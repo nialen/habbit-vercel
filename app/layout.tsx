@@ -7,6 +7,8 @@ import { AuthProvider } from "@/components/auth-provider"
 import { AuthGuard } from "@/components/auth-guard"
 import { ConditionalNavigation } from "@/components/conditional-navigation"
 import { FirstLoginHandler } from "@/components/first-login-handler"
+import { StagewiseToolbar } from "@stagewise/toolbar-next"
+import { ReactPlugin } from "@stagewise-plugins/react"
 
 
 const inter = Inter({
@@ -41,6 +43,7 @@ export default function RootLayout({
               <ConditionalNavigation />
               {children}
               <FirstLoginHandler />
+              <StagewiseToolbar config={{ plugins: [ReactPlugin] }} />
             </AuthGuard>
           </AuthProvider>
         </Providers>
