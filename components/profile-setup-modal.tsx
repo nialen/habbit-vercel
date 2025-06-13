@@ -134,9 +134,6 @@ export function ProfileSetupModal({ open, onOpenChange }: ProfileSetupModalProps
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md" onInteractOutside={(e) => e.preventDefault()}>
         <DialogHeader className="text-center">
-          {/* <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Sparkles className="text-white w-8 h-8" />
-          </div> */}
           <div className="flex justify-center">
             <Avatar className="w-20 h-20">
               <AvatarFallback className="text-2xl font-semibold bg-indigo-100 text-indigo-600">
@@ -144,12 +141,12 @@ export function ProfileSetupModal({ open, onOpenChange }: ProfileSetupModalProps
               </AvatarFallback>
             </Avatar>
           </div>
-          {/* <DialogTitle className="text-2xl font-bold text-gray-800">
+          <DialogTitle className="text-2xl font-bold text-gray-800">
             欢迎加入星航成长营！
           </DialogTitle>
           <DialogDescription className="text-gray-600">
             请告诉我们孩子的昵称和年龄，开始美好的成长之旅
-          </DialogDescription> */}
+          </DialogDescription>
         </DialogHeader>
 
         <div className="mt-6 space-y-6">

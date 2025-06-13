@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useState, useMemo, useCallback, t
 import type { User } from "@supabase/supabase-js"
 import { createClient } from "@/lib/supabase/client"
 import { isSupabaseConfigured } from "@/lib/supabase"
-import { isDemoMode, isCompleteMode, isCompleteModeConfigured } from "@/lib/app-mode"
+import { isCompleteMode, isCompleteModeConfigured } from "@/lib/app-mode"
 import { safeLocalStorage } from "@/lib/safe-storage"
 
 interface AuthContextType {
@@ -19,7 +19,6 @@ interface AuthContextType {
   signOut: () => Promise<void>
   updateProfile: (data: Partial<UserProfile>) => Promise<{ error: any }>
   isAuthenticated: boolean
-  isDemoMode: boolean
 }
 
 interface UserProfile {
@@ -153,35 +152,21 @@ const clearUserProfileCache = () => {
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  // 使用 useMemo 来稳定 demoMode 的值，避免每次渲染都重新计算
-  const demoMode = useMemo(() => isDemoMode(), [])
   const completeMode = useMemo(() => isCompleteMode(), [])
-  
-  // 在演示模式下，直接初始化为非加载状态
-  const [user, setUser] = useState<User | null>(() => demoMode ? {
-    id: mockUserProfile.id,
-    email: mockUserProfile.email,
-    aud: 'authenticated',
-    role: 'authenticated',
-    created_at: mockUserProfile.created_at,
-    updated_at: mockUserProfile.updated_at,
-    app_metadata: {},
-    user_metadata: {},
-  } as User : null)
   
   // 优化：首先尝试从缓存加载用户资料
   const [userProfile, setUserProfile] = useState<UserProfile | null>(() => {
-    if (demoMode) return mockUserProfile
     // 在服务器端不访问localStorage
     if (typeof window === 'undefined') return null
     return getCachedUserProfile()
   })
   
-  const [loading, setLoading] = useState(() => !demoMode) // 演示模式下不需要加载
+  const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
   const [initialized, setInitialized] = useState(false)
 
-  const isAuthenticated = demoMode ? true : !!user
+  const isAuthenticated = !!user
   
   // 创建 Supabase 客户端实例
   const supabase = createClient()
@@ -314,13 +299,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return
     }
 
-    console.log('🔄 AuthProvider useEffect 启动，模式:', { demoMode, completeMode })
-    
-    if (demoMode) {
-      console.log('🎭 演示模式已在初始化时设置，跳过异步认证')
-      setInitialized(true)
-      return
-    }
+    console.log('🔄 AuthProvider useEffect 启动，模式:', { completeMode })
 
     // 🚀 新增：智能认证检查 - 在token有效期内直接跳过
     if (shouldSkipAuthCheck()) {
@@ -476,14 +455,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       subscription.unsubscribe()
       clearTimeout(timeoutId)
     }
-  }, [initialized, demoMode, completeMode, supabase, fetchUserProfile]) // 添加 initialized 依赖
+  }, [initialized, completeMode, supabase, fetchUserProfile]) // 添加 initialized 依赖
 
   const signIn = async (email: string, password: string) => {
-    if (demoMode) {
-      // 演示模式：模拟登录成功
-      return { error: null }
-    }
-
     if (!isSupabaseConfigured || !supabase) {
       return { error: new Error('数据库连接未配置，请联系管理员') }
     }
@@ -496,11 +470,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const signUp = async (email: string, password: string, userData: Partial<UserProfile>) => {
-    if (demoMode) {
-      // 演示模式：模拟注册成功
-      return { error: null }
-    }
-
     if (!isSupabaseConfigured || !supabase) {
       return { error: new Error('数据库连接未配置，请联系管理员') }
     }
@@ -551,11 +520,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const signInWithGithub = async () => {
-    if (demoMode) {
-      // 演示模式：模拟登录成功
-      return { error: null }
-    }
-
     if (!isSupabaseConfigured || !supabase) {
       return { error: new Error('数据库连接未配置，请联系管理员') }
     }
@@ -585,11 +549,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const signInWithGoogle = async () => {
-    if (demoMode) {
-      // 演示模式：模拟登录成功
-      return { error: null }
-    }
-
     if (!isSupabaseConfigured || !supabase) {
       return { error: new Error('数据库连接未配置，请联系管理员') }
     }
@@ -608,82 +567,111 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const signOut = async () => {
-    if (demoMode) {
-      // 演示模式：清除模拟用户数据
-      console.log('🎭 演示模式退出登录')
+    console.log('🔄 开始退出登录流程...')
+    
+    try {
+      // 立即清除所有本地状态，确保UI立即响应
       setUser(null)
       setUserProfile(null)
-      clearUserProfileCache()
+      setError(null)
       setLoading(false)
-      setInitialized(false) // 重置初始化状态
-      return
-    }
-
-    if (!isSupabaseConfigured || !supabase) {
-      console.error('❌ Supabase未配置，无法退出')
-      return
-    }
-
-    try {
-      console.log('🔄 开始退出登录流程...')
-      setLoading(true)
+      setInitialized(false)
       
       // 清除用户资料缓存
       clearUserProfileCache()
       
-      // 执行Supabase退出登录
-      const { error } = await supabase.auth.signOut()
-      
-      if (error) {
-        console.error('❌ 退出登录时发生错误:', error)
-        setError(error instanceof Error ? error : new Error('退出登录时发生未知错误'))
-      } else {
-        console.log('✅ 成功退出登录')
-        // 清除状态
-        setUser(null)
-        setUserProfile(null)
-        setError(null)
-        setInitialized(false) // 重置初始化状态
+      // 清除所有浏览器存储
+      if (typeof window !== 'undefined') {
+        try {
+          localStorage.clear()
+          sessionStorage.clear()
+          console.log('🧹 已清除所有浏览器存储')
+        } catch (error) {
+          console.warn('清除浏览器存储时出错:', error)
+        }
       }
+      
+      if (isSupabaseConfigured && supabase) {
+        // 执行Supabase退出登录（异步，但不等待结果）
+        supabase.auth.signOut().then(({ error }) => {
+          if (error) {
+            console.error('❌ Supabase退出登录时发生错误:', error)
+          } else {
+            console.log('✅ Supabase退出登录成功')
+          }
+        }).catch((error) => {
+          console.error('❌ Supabase退出登录异常:', error)
+        })
+      }
+      
+      console.log('🏁 退出登录流程结束，重定向到欢迎页面')
+      
+      // 确保在下一个事件循环中重定向，让状态更新完成
+      setTimeout(() => {
+        if (typeof window !== 'undefined') {
+          window.location.href = '/'
+        }
+      }, 100)
+      
     } catch (error) {
       console.error('退出登录过程中发生未知错误:', error)
-    } finally {
-      console.log('🏁 退出登录流程结束')
+      
+      // 确保无论如何都清除状态并重定向
+      setUser(null)
+      setUserProfile(null)
+      setError(null)
       setLoading(false)
+      setInitialized(false)
+      
+      if (typeof window !== 'undefined') {
+        localStorage.clear()
+        sessionStorage.clear()
+      }
+      
+      setTimeout(() => {
+        if (typeof window !== 'undefined') {
+          window.location.href = '/'
+        }
+      }, 100)
     }
   }
 
   const updateProfile = async (data: Partial<UserProfile>) => {
     if (!user) return { error: new Error("No user logged in") }
 
-    if (demoMode) {
-      // 演示模式：模拟更新成功
-      const updatedProfile = userProfile ? { ...userProfile, ...data } : null
-      setUserProfile(updatedProfile)
-      if (updatedProfile) {
-        cacheUserProfile(updatedProfile)
-      }
-      return { error: null }
-    }
-
-    if (!isSupabaseConfigured || !supabase) {
-      return { error: new Error('Supabase 未正确配置') }
-    }
-
-    const { error } = await supabase
-      .from("user_profiles")
-      .update({
-        ...data,
-        updated_at: new Date().toISOString(),
+    try {
+      console.log('🔄 更新用户资料...', { userId: user.id, data })
+      
+      // 调用API路由更新用户资料
+      const response = await fetch('/api/user/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          ...data,
+        }),
       })
-      .eq("id", user.id)
 
-    if (!error) {
-      // 强制重新获取用户资料，跳过缓存
-      await fetchUserProfile(user.id, user, true)
+      const result = await response.json()
+
+      if (!response.ok) {
+        console.error('❌ 更新用户资料失败:', result.error)
+        return { error: new Error(result.error || '更新用户资料失败') }
+      }
+
+      console.log('✅ 用户资料更新成功:', result.userProfile)
+      
+      // 更新本地状态
+      setUserProfile(result.userProfile)
+      cacheUserProfile(result.userProfile)
+      
+      return { error: null }
+    } catch (error) {
+      console.error('❌ 更新用户资料时发生错误:', error)
+      return { error: error instanceof Error ? error : new Error('更新用户资料时发生未知错误') }
     }
-
-    return { error }
   }
 
   return (
@@ -700,7 +688,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         signOut,
         updateProfile,
         isAuthenticated,
-        isDemoMode: demoMode,
       }}
     >
       {children}

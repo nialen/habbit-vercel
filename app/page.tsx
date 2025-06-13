@@ -29,6 +29,8 @@ export default function Dashboard() {
     }
   }, [mounted, isAuthenticated, user, userProfile, loading])
 
+
+
   if (!mounted) {
     return (
       <div className="min-h-screen flex items-center justify-center">
