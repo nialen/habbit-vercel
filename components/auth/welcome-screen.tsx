@@ -16,19 +16,13 @@ export function WelcomeScreen() {
       {/* 顶部导航栏 */}
       <nav className="relative z-20 w-full px-8 py-8">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center gap-4">
+          {/* Logo - 只保留图标 */}
+          <div className="flex items-center">
             <div className="w-12 h-12">
               <svg viewBox="0 0 100 100" className="w-full h-full">
                 <use href="/sprites/rocket.svg#rocket" />
               </svg>
             </div>
-            <span
-              className="text-3xl font-bold text-gray-900"
-              style={{ fontFamily: "__Grandstander_7c07ce, __Grandstander_Fallback_7c07ce, sans-serif" }}
-            >
-              星航成长营
-            </span>
           </div>
 
           {/* 导航链接和按钮 */}
@@ -194,27 +188,31 @@ export function WelcomeScreen() {
 
       {/* 主要内容区域 */}
       <div className="flex items-center justify-center min-h-[calc(100vh-120px)] p-4">
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          {/* 主标题 */}
-          <h1
-            className="text-5xl md:text-7xl font-bold text-gray-900 mb-8 leading-tight"
-            style={{ fontFamily: "__Grandstander_7c07ce, __Grandstander_Fallback_7c07ce, sans-serif" }}
-          >
-            让孩子的好习惯
-            <span className="block text-transparent bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600 bg-clip-text">
-              成为现实
-            </span>
-          </h1>
-
-          {/* 副标题 */}
-          <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed font-medium">
-            看着您孩子的习惯一天天养成！星航成长营通过AI智能陪伴和科学方法，
-            <br />
-            让每个小习惯都闪闪发光，充满成长的魔力！
-          </p>
-
-          {/* CTA按钮 */}
+        <div className="max-w-5xl mx-auto text-center relative z-10">
+          {/* 主标题 - 简化设计 */}
           <div className="mb-16">
+            <h1
+              className="text-5xl md:text-7xl font-bold leading-tight text-gray-900 mb-6"
+              style={{ fontFamily: "__Grandstander_7c07ce, __Grandstander_Fallback_7c07ce, sans-serif" }}
+            >
+              让孩子的好习惯
+              <span className="block text-transparent bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600 bg-clip-text">
+                成为现实
+              </span>
+            </h1>
+          </div>
+
+          {/* 副标题 - 简化设计 */}
+          <div className="mb-20">
+            <p className="text-xl md:text-2xl text-gray-600 leading-relaxed font-medium max-w-4xl mx-auto">
+              <span className="block mb-6">看着您孩子的习惯一天天养成！</span>
+              <span className="block mb-4">星航成长营通过AI智能陪伴和科学方法，</span>
+              <span className="block">让每个小习惯都闪闪发光，充满成长的魔力！</span>
+            </p>
+          </div>
+
+          {/* CTA按钮 - 简化设计 */}
+          <div className="mb-20">
             <Button
               onClick={handleLogin}
               className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-12 py-6 text-xl font-semibold rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
@@ -224,8 +222,8 @@ export function WelcomeScreen() {
             </Button>
           </div>
 
-          {/* 社会证明 */}
-          <div className="space-y-4">
+          {/* 社会证明 - 简化设计 */}
+          <div className="space-y-4 mb-24">
             <div className="flex items-center justify-center gap-2 text-lg font-semibold text-gray-700">
               <div className="w-6 h-6">
                 <svg viewBox="0 0 100 100" className="w-full h-full">
@@ -244,8 +242,8 @@ export function WelcomeScreen() {
             </div>
           </div>
 
-          {/* 核心功能亮点 */}
-          <div className="mt-20 grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+          {/* 核心功能亮点 - 简化设计 */}
+          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div className="p-6 relative">
               <div className="w-16 h-16 bg-gradient-to-br from-purple-100 to-purple-200 rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <TrendingUp className="w-8 h-8 text-purple-600" />
