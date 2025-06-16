@@ -75,34 +75,34 @@ export function RegisterFormWithVerification({ onSwitchToLogin }: RegisterFormWi
     setError("")
 
     try {
-      console.log('开始发送验证码到:', formData.email)
-      
+      console.log("开始发送验证码到:", formData.email)
+
       // 使用 Supabase 的 OTP 发送功能进行邮箱验证
       const { error } = await supabase.auth.signInWithOtp({
         email: formData.email,
         options: {
           shouldCreateUser: false, // 不自动创建用户，我们手动控制
           data: {
-            purpose: 'email_verification', // 标记这是用于邮箱验证的OTP
-          }
-        }
+            purpose: "email_verification", // 标记这是用于邮箱验证的OTP
+          },
+        },
       })
 
       if (error) {
-        console.error('Supabase OTP 错误:', error)
-        
+        console.error("Supabase OTP 错误:", error)
+
         // 常见错误处理
-        if (error.message.includes('rate') || error.message.includes('频繁')) {
+        if (error.message.includes("rate") || error.message.includes("频繁")) {
           setError("验证码发送太频繁，请稍后再试")
-        } else if (error.message.includes('User already registered')) {
+        } else if (error.message.includes("User already registered")) {
           setError("此邮箱已注册，请直接登录")
-        } else if (error.message.includes('Invalid email')) {
+        } else if (error.message.includes("Invalid email")) {
           setError("邮箱地址无效")
         } else {
           setError(`发送验证码失败: ${error.message}`)
         }
       } else {
-        console.log('验证码发送成功')
+        console.log("验证码发送成功")
         setVerificationCodeSent(true)
         setCurrentStep("verification")
         // 开始倒计时
@@ -118,10 +118,10 @@ export function RegisterFormWithVerification({ onSwitchToLogin }: RegisterFormWi
         }, 1000)
       }
     } catch (err) {
-      console.error('发送验证码错误:', err)
-      
+      console.error("发送验证码错误:", err)
+
       // 详细错误信息
-      if (err instanceof TypeError && err.message.includes('fetch')) {
+      if (err instanceof TypeError && err.message.includes("fetch")) {
         setError("网络连接失败，请检查网络连接或稍后重试")
       } else if (err instanceof Error) {
         setError(`发送验证码失败: ${err.message}`)
@@ -149,26 +149,26 @@ export function RegisterFormWithVerification({ onSwitchToLogin }: RegisterFormWi
     setError("")
 
     try {
-      console.log('验证验证码:', formData.verificationCode)
-      
+      console.log("验证验证码:", formData.verificationCode)
+
       // 验证 OTP
       const { error } = await supabase.auth.verifyOtp({
         email: formData.email,
         token: formData.verificationCode,
-        type: 'email'
+        type: "email",
       })
 
       if (error) {
-        console.error('验证码验证错误:', error)
+        console.error("验证码验证错误:", error)
         setError("验证码无效或已过期")
       } else {
-        console.log('验证码验证成功')
+        console.log("验证码验证成功")
         setCurrentStep("profile")
       }
     } catch (err) {
-      console.error('验证码验证错误:', err)
-      
-      if (err instanceof TypeError && err.message.includes('fetch')) {
+      console.error("验证码验证错误:", err)
+
+      if (err instanceof TypeError && err.message.includes("fetch")) {
         setError("网络连接失败，请检查网络连接或稍后重试")
       } else if (err instanceof Error) {
         setError(`验证失败: ${err.message}`)
@@ -243,7 +243,7 @@ export function RegisterFormWithVerification({ onSwitchToLogin }: RegisterFormWi
 
   // 渲染邮箱输入步骤
   const renderEmailStep = () => (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full max-w-md mx-auto card-modern">
       <CardHeader className="text-center">
         <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
           <Mail className="text-white w-8 h-8" />
@@ -264,7 +264,7 @@ export function RegisterFormWithVerification({ onSwitchToLogin }: RegisterFormWi
                 placeholder="请输入您的邮箱"
                 value={formData.email}
                 onChange={handleChange}
-                className="pl-10"
+                className="pl-10 input-modern"
                 required
               />
             </div>
@@ -272,9 +272,9 @@ export function RegisterFormWithVerification({ onSwitchToLogin }: RegisterFormWi
 
           {error && <div className="text-red-500 text-sm bg-red-50 p-3 rounded-lg">{error}</div>}
 
-          <Button 
-            onClick={sendVerificationCode} 
-            className="w-full bg-purple-500 hover:bg-purple-600" 
+          <Button
+            onClick={sendVerificationCode}
+            className="w-full bg-purple-500 hover:bg-purple-600"
             disabled={loading || !formData.email}
           >
             {loading ? "发送中..." : "发送验证码"}
@@ -290,23 +290,11 @@ export function RegisterFormWithVerification({ onSwitchToLogin }: RegisterFormWi
           </div>
 
           <div className="grid grid-cols-2 gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleGithubSignup}
-              disabled={loading}
-              className="w-full"
-            >
+            <Button type="button" variant="outline" onClick={handleGithubSignup} disabled={loading} className="w-full">
               <Github className="w-4 h-4 mr-2" />
               GitHub
             </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleGoogleSignup}
-              disabled={loading}
-              className="w-full"
-            >
+            <Button type="button" variant="outline" onClick={handleGoogleSignup} disabled={loading} className="w-full">
               <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24">
                 <path
                   fill="currentColor"
@@ -341,7 +329,7 @@ export function RegisterFormWithVerification({ onSwitchToLogin }: RegisterFormWi
 
   // 渲染验证码输入步骤
   const renderVerificationStep = () => (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full max-w-md mx-auto card-modern">
       <CardHeader className="text-center">
         <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
           <Shield className="text-white w-8 h-8" />
@@ -362,7 +350,7 @@ export function RegisterFormWithVerification({ onSwitchToLogin }: RegisterFormWi
               placeholder="请输入6位验证码"
               value={formData.verificationCode}
               onChange={handleChange}
-              className="text-center text-lg font-mono tracking-widest"
+              className="text-center text-lg font-mono tracking-widest input-modern"
               maxLength={6}
               required
             />
@@ -370,9 +358,9 @@ export function RegisterFormWithVerification({ onSwitchToLogin }: RegisterFormWi
 
           {error && <div className="text-red-500 text-sm bg-red-50 p-3 rounded-lg">{error}</div>}
 
-          <Button 
-            onClick={verifyCode} 
-            className="w-full bg-blue-500 hover:bg-blue-600" 
+          <Button
+            onClick={verifyCode}
+            className="w-full bg-blue-500 hover:bg-blue-600"
             disabled={loading || formData.verificationCode.length !== 6}
           >
             {loading ? "验证中..." : "验证"}
@@ -381,24 +369,18 @@ export function RegisterFormWithVerification({ onSwitchToLogin }: RegisterFormWi
           <div className="text-center text-sm text-gray-600">
             没收到验证码？
             {countdown > 0 ? (
-              <span className="text-gray-400 ml-1">
-                {countdown}秒后可重新发送
-              </span>
+              <span className="text-gray-400 ml-1">{countdown}秒后可重新发送</span>
             ) : (
-              <button 
-                onClick={resendCode} 
-                className="text-blue-500 hover:text-blue-600 ml-1"
-                disabled={loading}
-              >
+              <button onClick={resendCode} className="text-blue-500 hover:text-blue-600 ml-1" disabled={loading}>
                 重新发送
               </button>
             )}
           </div>
 
           <div className="text-center">
-            <button 
-              type="button" 
-              onClick={() => setCurrentStep("email")} 
+            <button
+              type="button"
+              onClick={() => setCurrentStep("email")}
               className="text-gray-500 hover:text-gray-700 text-sm"
             >
               ← 修改邮箱
@@ -411,7 +393,7 @@ export function RegisterFormWithVerification({ onSwitchToLogin }: RegisterFormWi
 
   // 渲染个人信息填写步骤
   const renderProfileStep = () => (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full max-w-md mx-auto card-modern">
       <CardHeader className="text-center">
         <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
           <CheckCircle className="text-white w-8 h-8" />
@@ -432,7 +414,7 @@ export function RegisterFormWithVerification({ onSwitchToLogin }: RegisterFormWi
                 placeholder="请输入您的姓名"
                 value={formData.name}
                 onChange={handleChange}
-                className="pl-10"
+                className="pl-10 input-modern"
                 required
               />
             </div>
@@ -450,7 +432,7 @@ export function RegisterFormWithVerification({ onSwitchToLogin }: RegisterFormWi
                   placeholder="孩子姓名"
                   value={formData.childName}
                   onChange={handleChange}
-                  className="pl-10"
+                  className="pl-10 input-modern"
                   required
                 />
               </div>
@@ -467,6 +449,7 @@ export function RegisterFormWithVerification({ onSwitchToLogin }: RegisterFormWi
                 onChange={handleChange}
                 min="1"
                 max="18"
+                className="input-modern"
                 required
               />
             </div>
@@ -483,7 +466,7 @@ export function RegisterFormWithVerification({ onSwitchToLogin }: RegisterFormWi
                 placeholder="请输入密码（至少6位）"
                 value={formData.password}
                 onChange={handleChange}
-                className="pl-10 pr-10"
+                className="pl-10 pr-10 input-modern"
                 required
               />
               <button
@@ -507,7 +490,7 @@ export function RegisterFormWithVerification({ onSwitchToLogin }: RegisterFormWi
                 placeholder="请再次输入密码"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className="pl-10"
+                className="pl-10 input-modern"
                 required
               />
             </div>
@@ -515,11 +498,7 @@ export function RegisterFormWithVerification({ onSwitchToLogin }: RegisterFormWi
 
           {error && <div className="text-red-500 text-sm bg-red-50 p-3 rounded-lg">{error}</div>}
 
-          <Button 
-            onClick={completeRegistration} 
-            className="w-full bg-green-500 hover:bg-green-600" 
-            disabled={loading}
-          >
+          <Button onClick={completeRegistration} className="w-full bg-green-500 hover:bg-green-600" disabled={loading}>
             {loading ? "注册中..." : "完成注册"}
           </Button>
         </div>
@@ -529,15 +508,13 @@ export function RegisterFormWithVerification({ onSwitchToLogin }: RegisterFormWi
 
   // 渲染成功步骤
   const renderSuccessStep = () => (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full max-w-md mx-auto card-modern">
       <CardContent className="text-center py-8">
         <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
           <span className="text-green-600 text-2xl">✓</span>
         </div>
         <h3 className="text-xl font-bold text-gray-800 mb-2">注册成功！</h3>
-        <p className="text-gray-600 mb-4">
-          欢迎加入星航成长营！您的账户已成功创建
-        </p>
+        <p className="text-gray-600 mb-4">欢迎加入星航成长营！您的账户已成功创建</p>
         <Button onClick={onSwitchToLogin} className="bg-blue-500 hover:bg-blue-600">
           立即登录
         </Button>

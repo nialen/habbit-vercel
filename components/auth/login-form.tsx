@@ -60,7 +60,7 @@ export function LoginForm({ onSwitchToRegister }: LoginFormProps) {
   }
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full max-w-md mx-auto card-modern">
       <CardHeader className="text-center">
         <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
           <span className="text-white text-2xl">🌟</span>
@@ -80,7 +80,7 @@ export function LoginForm({ onSwitchToRegister }: LoginFormProps) {
                 placeholder="请输入您的邮箱"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="pl-10"
+                className="pl-10 input-modern"
                 required
               />
             </div>
@@ -96,7 +96,7 @@ export function LoginForm({ onSwitchToRegister }: LoginFormProps) {
                 placeholder="请输入您的密码"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="pl-10 pr-10"
+                className="pl-10 pr-10 input-modern"
                 required
               />
               <button
@@ -111,7 +111,7 @@ export function LoginForm({ onSwitchToRegister }: LoginFormProps) {
 
           {error && <div className="text-red-500 text-sm bg-red-50 p-3 rounded-lg">{error}</div>}
 
-          <Button type="submit" className="w-full bg-blue-500 hover:bg-blue-600" disabled={loading}>
+          <Button type="submit" className="w-full btn-primary" disabled={loading}>
             {loading ? "登录中..." : "登录"}
           </Button>
 
@@ -130,7 +130,7 @@ export function LoginForm({ onSwitchToRegister }: LoginFormProps) {
               variant="outline"
               onClick={handleGithubLogin}
               disabled={loading}
-              className="w-full"
+              className="w-full btn-secondary"
             >
               <Github className="w-4 h-4 mr-2" />
               GitHub
@@ -140,7 +140,7 @@ export function LoginForm({ onSwitchToRegister }: LoginFormProps) {
               variant="outline"
               onClick={handleGoogleLogin}
               disabled={loading}
-              className="w-full"
+              className="w-full btn-secondary"
             >
               <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24">
                 <path
@@ -157,7 +157,7 @@ export function LoginForm({ onSwitchToRegister }: LoginFormProps) {
                 />
                 <path
                   fill="currentColor"
-                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                  d="M12 5.38c1.62 0 3.কিন্তe.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                 />
               </svg>
               Google

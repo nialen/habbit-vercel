@@ -92,188 +92,188 @@ export default function AdvisorPage() {
   }
 
   return (
-    <div className="min-h-screen bg-blue-50">
+    <div className="bg-primary-gradient min-h-screen">
       <SimpleNavigation />
       <main className="pb-20 md:pb-0 md:ml-64">
-        <div className="p-4 md:p-8 pt-20 md:pt-8 max-w-4xl mx-auto">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-sky-900 mb-2">AI 烦恼顾问</h1>
-        <p className="text-sky-700 text-lg">专业的育儿建议，温暖的陪伴支持 💝</p>
-        {userProfile?.child_name && userProfile?.child_age && (
-          <div className="mt-3 inline-flex items-center gap-2 px-4 py-2 bg-blue-100 rounded-full">
-            <span className="text-blue-600 text-sm">
-              👶 为 {userProfile.child_name}（{userProfile.child_age}岁）提供专业建议
-            </span>
-          </div>
-        )}
-      </div>
-
-      {/* 快速提问 */}
-      {chatHistory.length === 0 && (
-        <Card className="card-hover mb-6 bg-gradient-to-r from-sky-50 to-blue-50 border-sky-200">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-sky-500" />
-              常见问题
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {quickQuestions.map((question, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleQuickQuestion(question)}
-                  className="p-3 text-left bg-white rounded-xl border border-sky-200 hover:border-sky-400 hover:bg-sky-50 transition-all"
-                >
-                  <span className="text-sm text-gray-700">{question}</span>
-                </button>
-              ))}
+        <div className="container mx-auto px-4 py-8 pt-24 max-w-4xl">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 bg-glass px-4 py-2 rounded-full mb-4">
+              <Sparkles className="w-5 h-5 text-purple-400" />
+              <span className="text-purple-100 text-sm font-medium">AI助手</span>
             </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* 咨询输入区 */}
-      <Card className="card-hover mb-6">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <MessageCircle className="w-5 h-5 text-sky-500" />
-            描述您的困惑
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <Textarea
-              placeholder="请描述您在育儿过程中遇到的困惑或挑战，比如：孩子不愿意刷牙、总是发脾气、不爱收拾玩具等..."
-              value={concern}
-              onChange={(e) => setConcern(e.target.value)}
-              className="min-h-[120px] resize-none border border-gray-200 focus:border-sky-400 focus-visible:ring-0 rounded-2xl"
-              maxLength={300}
-              disabled={isLoading}
-            />
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-500">{concern.length}/300 字</span>
-              <Button
-                onClick={handleSubmit}
-                disabled={!concern.trim() || isLoading}
-                className="bg-blue-500 hover:bg-blue-600 text-white disabled:bg-gray-300 disabled:hover:bg-gray-300"
-              >
-                {isLoading ? (
-                  <>
-                    <LoadingSpinner size="sm" className="mr-2" />
-                    AI正在思考...
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-4 h-4 mr-2" />
-                    获取建议
-                  </>
-                )}
-              </Button>
-            </div>
+            <h1 className="text-gradient text-4xl md:text-5xl font-bold mb-4">AI 烦恼顾问</h1>
+            <p className="text-white/80 text-lg max-w-2xl mx-auto">专业的育儿建议，温暖的陪伴支持 💝</p>
+            {userProfile?.child_name && userProfile?.child_age && (
+              <div className="mt-6 inline-flex items-center gap-2 bg-glass px-6 py-3 rounded-full">
+                <span className="text-white/90">
+                  👶 为 {userProfile.child_name}（{userProfile.child_age}岁）提供专业建议
+                </span>
+              </div>
+            )}
           </div>
-        </CardContent>
-      </Card>
 
-      {/* AI回复区域 */}
-      {response && (
-        <div className="space-y-6">
-          <Card className="card-hover bg-gradient-to-br from-blue-50 to-sky-50 border-blue-200">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Lightbulb className="w-5 h-5 text-blue-500" />
-                原因分析
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-700 leading-relaxed">{response.analysis}</p>
-            </CardContent>
-          </Card>
-
-          <Card className="card-hover bg-gradient-to-br from-green-50 to-blue-50 border-green-200">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Zap className="w-5 h-5 text-green-500" />
-                分龄建议
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {response.suggestions.map((suggestion, index) => (
-                  <div key={index} className="flex items-start gap-3 p-3 bg-white rounded-xl">
-                    <Badge className="bg-green-100 text-green-700 hover:bg-green-100">{index + 1}</Badge>
-                    <p className="text-gray-700 flex-1">{suggestion}</p>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="card-hover bg-gradient-to-br from-orange-50 to-yellow-50 border-orange-200">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <CheckSquare className="w-5 h-5 text-orange-500" />
-                可操作清单
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {response.actionItems.map((item, index) => (
-                  <div key={index} className="flex items-start gap-3 p-3 bg-white rounded-xl">
-                    <div className="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-orange-600 text-sm font-bold">{index + 1}</span>
-                    </div>
-                    <p className="text-gray-700 flex-1">{item}</p>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
-
-      {/* 聊天历史 */}
-      {chatHistory.length > 0 && (
-        <Card className="card-hover mt-8">
-          <CardHeader>
-            <CardTitle>咨询历史</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4 max-h-96 overflow-y-auto">
-              {chatHistory.map((message, index) => (
-                <div key={index} className={`flex ${message.type === "user" ? "justify-end" : "justify-start"}`}>
-                  <div
-                    className={`max-w-[80%] p-3 rounded-2xl ${
-                      message.type === "user" ? "bg-sky-500 text-white" : "bg-gray-100 text-gray-800"
-                    }`}
-                  >
-                    <p className="whitespace-pre-wrap">{message.content}</p>
-                    <p className="text-xs opacity-70 mt-1">{message.timestamp.toLocaleTimeString()}</p>
-                  </div>
+          {/* 快速提问 */}
+          {chatHistory.length === 0 && (
+            <Card className="card-modern mb-6">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-sky-500" />
+                  常见问题
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {quickQuestions.map((question, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleQuickQuestion(question)}
+                      className="p-3 text-left bg-white rounded-xl border border-sky-200 hover:border-sky-400 hover:bg-sky-50 transition-all"
+                    >
+                      <span className="text-sm text-gray-700">{question}</span>
+                    </button>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
+              </CardContent>
+            </Card>
+          )}
 
-      {/* 温馨提示 */}
-      <Card className="card-hover mt-6 bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-200">
-        <CardContent className="p-6">
-          <div className="flex items-start gap-3">
-            <span className="text-2xl">💡</span>
-            <div>
-              <h3 className="font-semibold text-yellow-800 mb-2">温馨提示</h3>
-              <ul className="text-yellow-700 text-sm space-y-1">
-                <li>• AI建议仅供参考，每个孩子都是独特的</li>
-                <li>• 建议结合孩子的具体情况灵活调整</li>
-                <li>• 如有严重问题，建议咨询专业儿童心理医生</li>
-                <li>• 耐心和爱是最好的教育方式</li>
-              </ul>
+          {/* 咨询输入区 */}
+          <Card className="card-modern mb-6">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <MessageCircle className="w-5 h-5 text-sky-500" />
+                描述您的困惑
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <Textarea
+                  placeholder="请描述您在育儿过程中遇到的困惑或挑战，比如：孩子不愿意刷牙、总是发脾气、不爱收拾玩具等..."
+                  value={concern}
+                  onChange={(e) => setConcern(e.target.value)}
+                  className="input-modern min-h-[120px] resize-none border border-gray-200 focus:border-sky-400 focus-visible:ring-0 rounded-2xl"
+                  maxLength={300}
+                  disabled={isLoading}
+                />
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-500">{concern.length}/300 字</span>
+                  <Button onClick={handleSubmit} disabled={!concern.trim() || isLoading} className="button-modern">
+                    {isLoading ? (
+                      <>
+                        <LoadingSpinner size="sm" className="mr-2" />
+                        AI正在思考...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4 mr-2" />
+                        获取建议
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* AI回复区域 */}
+          {response && (
+            <div className="space-y-6">
+              <Card className="card-modern">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Lightbulb className="w-5 h-5 text-blue-500" />
+                    原因分析
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-700 leading-relaxed">{response.analysis}</p>
+                </CardContent>
+              </Card>
+
+              <Card className="card-modern">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Zap className="w-5 h-5 text-green-500" />
+                    分龄建议
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {response.suggestions.map((suggestion, index) => (
+                      <div key={index} className="flex items-start gap-3 p-3 bg-white rounded-xl">
+                        <Badge className="bg-green-100 text-green-700 hover:bg-green-100">{index + 1}</Badge>
+                        <p className="text-gray-700 flex-1">{suggestion}</p>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="card-modern">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <CheckSquare className="w-5 h-5 text-orange-500" />
+                    可操作清单
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {response.actionItems.map((item, index) => (
+                      <div key={index} className="flex items-start gap-3 p-3 bg-white rounded-xl">
+                        <div className="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
+                          <span className="text-orange-600 text-sm font-bold">{index + 1}</span>
+                        </div>
+                        <p className="text-gray-700 flex-1">{item}</p>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          )}
+
+          {/* 聊天历史 */}
+          {chatHistory.length > 0 && (
+            <Card className="card-modern mt-8">
+              <CardHeader>
+                <CardTitle>咨询历史</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4 max-h-96 overflow-y-auto">
+                  {chatHistory.map((message, index) => (
+                    <div key={index} className={`flex ${message.type === "user" ? "justify-end" : "justify-start"}`}>
+                      <div
+                        className={`max-w-[80%] p-3 rounded-2xl ${
+                          message.type === "user" ? "bg-sky-500 text-white" : "bg-gray-100 text-gray-800"
+                        }`}
+                      >
+                        <p className="whitespace-pre-wrap">{message.content}</p>
+                        <p className="text-xs opacity-70 mt-1">{message.timestamp.toLocaleTimeString()}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* 温馨提示 */}
+          <Card className="card-modern mt-6">
+            <CardContent className="p-6">
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">💡</span>
+                <div>
+                  <h3 className="font-semibold text-yellow-800 mb-2">温馨提示</h3>
+                  <ul className="text-yellow-700 text-sm space-y-1">
+                    <li>• AI建议仅供参考，每个孩子都是独特的</li>
+                    <li>• 建议结合孩子的具体情况灵活调整</li>
+                    <li>• 如有严重问题，建议咨询专业儿童心理医生</li>
+                    <li>• 耐心和爱是最好的教育方式</li>
+                  </ul>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </main>
     </div>

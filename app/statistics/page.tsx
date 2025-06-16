@@ -53,10 +53,12 @@ export default function StatisticsPage() {
   ]
 
   return (
-    <PageLayout>
+    <PageLayout className="bg-zinc-100">
       {/* 页面标题 */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">数据统计</h1>
+        <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500 mb-2">
+          数据统计
+        </h1>
         <p className="text-gray-600">记录成长足迹，见证每一步进步 📊</p>
       </div>
 
@@ -73,8 +75,8 @@ export default function StatisticsPage() {
             onClick={() => setTimeRange(range.key as any)}
             className={
               timeRange === range.key
-                ? "bg-blue-500 hover:bg-blue-600 text-white"
-                : "border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400"
+                ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md hover:shadow-lg"
+                : "border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400"
             }
           >
             {range.label}
@@ -84,7 +86,7 @@ export default function StatisticsPage() {
 
       {/* 核心数据概览 */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+        <Card className="card-modern">
           <CardContent className="p-6 text-center">
             <span className="material-icons text-3xl text-blue-500 mb-2">star</span>
             <p className="text-2xl font-bold text-blue-800">{stats.totalStars}</p>
@@ -92,7 +94,7 @@ export default function StatisticsPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200">
+        <Card className="card-modern">
           <CardContent className="p-6 text-center">
             <span className="material-icons text-3xl text-green-500 mb-2">local_fire_department</span>
             <p className="text-2xl font-bold text-green-800">{stats.longestStreak}</p>
@@ -100,7 +102,7 @@ export default function StatisticsPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
+        <Card className="card-modern">
           <CardContent className="p-6 text-center">
             <span className="material-icons text-3xl text-purple-500 mb-2">calendar_today</span>
             <p className="text-2xl font-bold text-purple-800">{stats.totalDays}</p>
@@ -108,7 +110,7 @@ export default function StatisticsPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200">
+        <Card className="card-modern">
           <CardContent className="p-6 text-center">
             <span className="material-icons text-3xl text-orange-500 mb-2">emoji_events</span>
             <p className="text-2xl font-bold text-orange-800">{stats.achievements}</p>
@@ -119,7 +121,7 @@ export default function StatisticsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* 每日完成情况 */}
-        <Card>
+        <Card className="card-modern">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <span className="material-icons text-blue-500">bar_chart</span>
@@ -147,7 +149,7 @@ export default function StatisticsPage() {
         </Card>
 
         {/* 习惯分类分析 */}
-        <Card>
+        <Card className="card-modern">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <span className="material-icons text-green-500">pie_chart</span>
@@ -179,7 +181,7 @@ export default function StatisticsPage() {
       </div>
 
       {/* 成长里程碑 */}
-      <Card className="mb-8">
+      <Card className="card-modern mb-8">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <span className="material-icons text-purple-500">timeline</span>
@@ -203,9 +205,7 @@ export default function StatisticsPage() {
                   </h3>
                   <p className="text-sm text-gray-500">{milestone.date}</p>
                 </div>
-                {milestone.achieved && (
-                  <Badge className="bg-green-100 text-green-800">已达成</Badge>
-                )}
+                {milestone.achieved && <Badge className="bg-green-100 text-green-800">已达成</Badge>}
               </div>
             ))}
           </div>
@@ -213,7 +213,7 @@ export default function StatisticsPage() {
       </Card>
 
       {/* 习惯详细统计 */}
-      <Card>
+      <Card className="card-modern">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <span className="material-icons text-orange-500">assessment</span>

@@ -1,5 +1,7 @@
 "use client"
 
+import type React from "react"
+
 import { useState, useEffect } from "react"
 import { useAuth } from "@/components/auth-provider"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -12,17 +14,7 @@ import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { PageLayout } from "@/components/page-layout"
 import { useFirstLogin } from "@/hooks/use-first-login"
-import { 
-  Baby, 
-  Mail, 
-  Calendar, 
-  Save, 
-  Settings as SettingsIcon,
-  Shield,
-  Palette,
-  Bell,
-  RefreshCw
-} from "lucide-react"
+import { Baby, Calendar, Save, SettingsIcon, RefreshCw } from "lucide-react"
 
 interface ProfileFormData {
   child_name: string
@@ -53,24 +45,23 @@ export default function SettingsPage() {
   // 检测表单变化
   useEffect(() => {
     if (!userProfile) return
-    
-    const hasDataChanged = 
-      formData.child_name !== (userProfile.child_name || "") ||
-      formData.child_age !== (userProfile.child_age || 5)
-    
+
+    const hasDataChanged =
+      formData.child_name !== (userProfile.child_name || "") || formData.child_age !== (userProfile.child_age || 5)
+
     setHasChanges(hasDataChanged)
   }, [formData, userProfile])
 
   const handleInputChange = (field: keyof ProfileFormData, value: string | number) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!user) {
       toast({
         title: "错误",
@@ -84,16 +75,16 @@ export default function SettingsPage() {
 
     try {
       // 保留原有的家长姓名，只更新孩子信息
-      const parentName = userProfile?.name || user.user_metadata?.name || user.email?.split('@')[0] || "家长"
-      
+      const parentName = userProfile?.name || user.user_metadata?.name || user.email?.split("@")[0] || "家长"
+
       const updateData = {
         name: parentName,
         child_name: formData.child_name.trim(),
         child_age: formData.child_age,
       }
-      
+
       const { error } = await updateProfile(updateData)
-      
+
       if (error) {
         toast({
           title: "更新失败",
@@ -144,46 +135,44 @@ export default function SettingsPage() {
   }
 
   return (
-    <PageLayout>
-      <div className="max-w-4xl mx-auto space-y-6">
+    <PageLayout variant="modern">
+      <div className="container py-6">
         {/* 页面标题 */}
-        <div className="flex items-center gap-3 mb-8">
-          <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-            <SettingsIcon className="w-5 h-5 text-blue-600" />
+        <div className="flex items-center gap-4">
+          <div className="rounded-full bg-secondary p-3">
+            <SettingsIcon className="w-6 h-6" />
           </div>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">个人设置</h1>
-            <p className="text-gray-600">管理孩子的个人信息</p>
+          <div className="space-y-1">
+            <h1 className="font-semibold text-2xl">个人设置</h1>
+            <p className="text-sm text-muted-foreground">管理孩子的个人信息</p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
           {/* 主要设置内容 */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-4">
             {/* 孩子信息卡片 */}
-            <Card>
+            <Card className="card-modern">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Baby className="w-5 h-5 text-indigo-500" />
+                  <Baby className="w-4 h-4 text-indigo-500" />
                   孩子信息
                 </CardTitle>
-                <p className="text-sm text-gray-600">
-                  更新孩子的基本信息
-                </p>
+                <p className="text-sm text-muted-foreground">更新孩子的基本信息</p>
               </CardHeader>
-              
+
               <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-4">
                   {/* 头像显示 */}
-                  <div className="flex items-center gap-6">
-                    <Avatar className="w-20 h-20">
+                  <div className="flex items-center gap-4">
+                    <Avatar className="w-16 h-16">
                       <AvatarFallback className="text-lg font-semibold bg-indigo-100 text-indigo-600">
                         {getUserInitial()}
                       </AvatarFallback>
                     </Avatar>
                     <div>
                       <h3 className="font-semibold text-gray-800">{formData.child_name || "未设置昵称"}</h3>
-                      <p className="text-sm text-gray-500">{formData.child_age}岁</p>
+                      <p className="text-sm text-muted-foreground">{formData.child_age}岁</p>
                     </div>
                   </div>
 
@@ -202,6 +191,7 @@ export default function SettingsPage() {
                         onChange={(e) => handleInputChange("child_name", e.target.value)}
                         placeholder="请输入孩子的昵称"
                         required
+                        className="input-modern"
                       />
                     </div>
 
@@ -216,35 +206,25 @@ export default function SettingsPage() {
                         min="1"
                         max="18"
                         value={formData.child_age}
-                        onChange={(e) => handleInputChange("child_age", parseInt(e.target.value) || 5)}
+                        onChange={(e) => handleInputChange("child_age", Number.parseInt(e.target.value) || 5)}
                         placeholder="请输入孩子的年龄"
                         required
+                        className="input-modern"
                       />
-                      <p className="text-xs text-gray-500">
-                        请输入1-18岁之间的年龄
-                      </p>
+                      <p className="text-xs text-muted-foreground">请输入1-18岁之间的年龄</p>
                     </div>
                   </div>
 
                   {/* 提交按钮 */}
                   <div className="flex gap-3">
-                    <Button 
-                      type="submit" 
-                      disabled={!hasChanges || isSubmitting}
-                      className="gap-2"
-                    >
+                    <Button type="submit" disabled={!hasChanges || isSubmitting} className="gap-2 btn-primary">
                       <Save className="w-4 h-4" />
                       {isSubmitting ? "更新中..." : "保存更改"}
                     </Button>
-                    
+
                     {/* 开发工具 */}
-                    {process.env.NODE_ENV === 'development' && (
-                      <Button 
-                        type="button"
-                        variant="outline"
-                        onClick={handleResetFirstLogin}
-                        className="gap-2"
-                      >
+                    {process.env.NODE_ENV === "development" && (
+                      <Button type="button" variant="outline" onClick={handleResetFirstLogin} className="gap-2">
                         <RefreshCw className="w-4 h-4" />
                         重置首次设置
                       </Button>
@@ -256,33 +236,27 @@ export default function SettingsPage() {
           </div>
 
           {/* 侧边栏信息 */}
-          <div className="space-y-6">
+          <div className="space-y-4">
             {/* 账户状态 */}
-            <Card>
+            <Card className="card-modern">
               <CardHeader>
                 <CardTitle className="text-lg">账户状态</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">会员状态</span>
+                  <span className="text-sm text-muted-foreground">会员状态</span>
                   <Badge variant="secondary">免费用户</Badge>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">注册时间</span>
+                  <span className="text-sm text-muted-foreground">注册时间</span>
                   <span className="text-sm">
-                    {userProfile?.created_at ? 
-                      new Date(userProfile.created_at).toLocaleDateString() : 
-                      "未知"
-                    }
+                    {userProfile?.created_at ? new Date(userProfile.created_at).toLocaleDateString() : "未知"}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">最后更新</span>
+                  <span className="text-sm text-muted-foreground">最后更新</span>
                   <span className="text-sm">
-                    {userProfile?.updated_at ? 
-                      new Date(userProfile.updated_at).toLocaleDateString() : 
-                      "未知"
-                    }
+                    {userProfile?.updated_at ? new Date(userProfile.updated_at).toLocaleDateString() : "未知"}
                   </span>
                 </div>
               </CardContent>

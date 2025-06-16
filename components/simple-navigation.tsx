@@ -7,17 +7,7 @@ import { Button } from "@/components/ui/button"
 import { LogoutConfirmDialog } from "@/components/auth/logout-confirm-dialog"
 import { memo, useMemo, useState } from "react"
 import { LogOut, Sparkles } from "lucide-react"
-import { 
-  FaHome,
-  FaStar,
-  FaRocket,
-  FaHeart,
-  FaChartBar,
-  FaGift,
-  FaUsers,
-  FaBell,
-  FaCog
-} from "react-icons/fa"
+import { FaHome, FaStar, FaRocket, FaHeart, FaChartBar, FaGift, FaUsers, FaBell, FaCog } from "react-icons/fa"
 
 // 定义导航项 - 使用更可爱的FontAwesome实心图标
 const navigationItems = [
@@ -40,21 +30,21 @@ export const SimpleNavigation = memo(function SimpleNavigation() {
   // 使用 useMemo 优化用户显示信息的计算
   const userDisplayInfo = useMemo(() => {
     if (!userProfile) return null
-    
+
     return {
       initial: userProfile.child_name?.charAt(0) || "用",
       name: userProfile.child_name || "小朋友",
-      age: userProfile.child_age || 6
+      age: userProfile.child_age || 6,
     }
   }, [userProfile])
 
   const handleLogoutClick = () => {
-    console.log('🔍 退出登录按钮被点击')
+    console.log("🔍 退出登录按钮被点击")
     setShowLogoutDialog(true)
   }
 
   const handleLogoutConfirm = () => {
-    console.log('🔍 用户确认退出登录')
+    console.log("🔍 用户确认退出登录")
     signOut()
   }
 
@@ -70,12 +60,12 @@ export const SimpleNavigation = memo(function SimpleNavigation() {
 
   return (
     <>
-      <aside className="hidden md:flex md:flex-col md:fixed md:inset-y-0 md:left-0 md:w-64 md:bg-blue-100 md:border-r md:border-blue-200 z-10">
+      <aside className="hidden md:flex md:flex-col md:fixed md:inset-y-0 md:left-0 md:w-64 bg-glass backdrop-blur-xl border-r border-white/20 z-10">
         <div className="flex flex-col flex-1">
           {/* Logo */}
-          <div className="flex items-center gap-3 px-6 h-20 border-b border-blue-200">
-            <div className="flex items-center justify-center w-10 h-10 bg-blue-500 rounded-xl">
-              <Sparkles className="text-white w-5 h-5" />
+          <div className="flex items-center gap-3 px-6 h-20 border-b border-white/20">
+            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-blue-500 text-white">
+              <Sparkles className="w-5 h-5" />
             </div>
             <div>
               <h1 className="font-bold text-lg text-slate-800">星航成长营</h1>
@@ -94,37 +84,27 @@ export const SimpleNavigation = memo(function SimpleNavigation() {
                   href={item.href}
                   className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                     isActive
-                      ? "bg-blue-500 text-white shadow-md"
+                      ? "bg-gradient-to-br from-purple-600 to-blue-500 text-white shadow-md"
                       : "text-slate-600 hover:bg-blue-50 hover:text-blue-700"
                   }`}
                 >
-                  <Icon 
-                    className={`w-5 h-5 ${isActive ? "text-white" : item.color}`} 
-                  />
+                  <Icon className={`w-5 h-5 ${isActive ? "text-white" : item.color}`} />
                   <span>{item.name}</span>
-                  {isActive && (
-                    <span className="ml-auto w-2 h-2 bg-white rounded-full"></span>
-                  )}
+                  {isActive && <span className="ml-auto w-2 h-2 bg-white rounded-full"></span>}
                 </Link>
               )
             })}
           </nav>
 
           {/* 用户信息和退出 */}
-          <div className="px-4 py-4 mt-auto border-t border-blue-200">
-            <div className="p-3 bg-blue-50/80 rounded-lg flex items-center gap-3 mb-2">
+          <div className="px-4 py-4 mt-auto border-t border-white/20">
+            <div className="p-3 rounded-lg flex items-center gap-3 mb-2 bg-white/5 backdrop-blur-sm">
               <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                <span className="text-blue-500 font-bold text-sm">
-                  {userDisplayInfo?.initial}
-                </span>
+                <span className="text-blue-500 font-bold text-sm">{userDisplayInfo?.initial}</span>
               </div>
               <div>
-                <p className="font-semibold text-sm text-slate-800">
-                  {userDisplayInfo?.name}
-                </p>
-                <p className="text-xs text-slate-500">
-                  {userDisplayInfo?.age}岁 · 已坚持15天
-                </p>
+                <p className="font-semibold text-sm text-slate-800">{userDisplayInfo?.name}</p>
+                <p className="text-xs text-slate-500">{userDisplayInfo?.age}岁 · 已坚持15天</p>
               </div>
             </div>
             <Button
@@ -140,11 +120,7 @@ export const SimpleNavigation = memo(function SimpleNavigation() {
       </aside>
 
       {/* 退出登录确认对话框 */}
-      <LogoutConfirmDialog
-        open={showLogoutDialog}
-        onOpenChange={setShowLogoutDialog}
-        onConfirm={handleLogoutConfirm}
-      />
+      <LogoutConfirmDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog} onConfirm={handleLogoutConfirm} />
     </>
   )
 })

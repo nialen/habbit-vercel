@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
 import { PageLayout } from "@/components/page-layout"
-import { Bell, Target, MessageCircle, Calendar, Settings, Check, X } from "lucide-react"
+import { Bell, Target, MessageCircle, Calendar } from "lucide-react"
 
 interface Notification {
   id: string
@@ -102,10 +102,12 @@ export default function NotificationsPage() {
   const unreadCount = notifications.filter((n) => !n.isRead).length
 
   return (
-    <PageLayout>
+    <PageLayout className="bg-zinc-50">
       {/* 页面标题 */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">通知中心</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-2 bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text">
+          通知中心
+        </h1>
         <p className="text-gray-600">及时了解孩子的成长动态 🔔</p>
       </div>
 
@@ -144,7 +146,7 @@ export default function NotificationsPage() {
             variant="outline"
             onClick={markAllAsRead}
             disabled={unreadCount === 0}
-            className="border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400 disabled:hover:bg-white disabled:hover:border-gray-300"
+            className="border-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white disabled:hover:bg-transparent disabled:text-gray-500 disabled:border-gray-300"
           >
             <span className="material-icons mr-2 text-sm">done_all</span>
             全部已读
@@ -161,7 +163,7 @@ export default function NotificationsPage() {
           return (
             <Card
               key={notification.id}
-              className={`hover:shadow-lg transition-shadow duration-200 ${!notification.isRead ? "border-l-4 border-l-indigo-500" : ""}`}
+              className={`card-modern hover:shadow-lg transition-shadow duration-200 ${!notification.isRead ? "border-l-4 border-l-indigo-500" : ""}`}
             >
               <CardContent className="p-6">
                 <div className="flex items-start gap-4">
@@ -225,7 +227,7 @@ export default function NotificationsPage() {
       )}
 
       {/* 通知设置 */}
-      <Card className="mt-8">
+      <Card className="mt-8 card-modern">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <span className="material-icons text-blue-500">settings</span>
@@ -236,7 +238,7 @@ export default function NotificationsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <h3 className="font-semibold text-gray-800 mb-3">消息类型</h3>
-              
+
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <span className="material-icons text-indigo-500">assignment</span>
@@ -284,7 +286,7 @@ export default function NotificationsPage() {
 
             <div className="space-y-4">
               <h3 className="font-semibold text-gray-800 mb-3">推送方式</h3>
-              
+
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <span className="material-icons text-orange-500">email</span>

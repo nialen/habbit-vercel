@@ -3,13 +3,7 @@
 import type React from "react"
 
 import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Textarea } from "@/components/ui/textarea"
-import { Input } from "@/components/ui/input"
 import { useToast } from "@/components/ui/use-toast"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { PageLayout } from "@/components/page-layout"
 import { useAuth } from "@/components/auth-provider"
 import Link from "next/link"
@@ -56,15 +50,15 @@ export default function CommunityPage() {
     try {
       const categoryParam = selectedCategory === "all" ? "" : `?category=${selectedCategory}`
       const response = await fetch(`/api/community/posts${categoryParam}`)
-      
+
       if (response.ok) {
         const data = await response.json()
         setPosts(data.posts || [])
       } else {
-        throw new Error('获取帖子失败')
+        throw new Error("获取帖子失败")
       }
     } catch (error) {
-      console.error('加载帖子失败:', error)
+      console.error("加载帖子失败:", error)
       toast({
         title: "加载失败",
         description: "无法加载社区帖子，请稍后重试",
@@ -86,7 +80,7 @@ export default function CommunityPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!user?.id) {
       toast({
         title: "请先登录",
@@ -95,7 +89,7 @@ export default function CommunityPage() {
       })
       return
     }
-    
+
     if (!newPost.title.trim() || !newPost.content.trim()) {
       toast({
         title: "请填写完整信息",
@@ -108,10 +102,10 @@ export default function CommunityPage() {
     setIsLoading(true)
 
     try {
-      const response = await fetch('/api/community/posts', {
-        method: 'POST',
+      const response = await fetch("/api/community/posts", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           title: newPost.title,
@@ -130,17 +124,17 @@ export default function CommunityPage() {
           title: "发布成功！",
           description: "您的帖子已成功发布到社区",
         })
-        
+
         setNewPost({ title: "", content: "", category: "habits", tags: "" })
         setShowNewPostForm(false)
-        
+
         // 重新加载帖子列表
         await loadPosts()
       } else {
-        throw new Error('发布失败')
+        throw new Error("发布失败")
       }
     } catch (error) {
-      console.error('发布帖子失败:', error)
+      console.error("发布帖子失败:", error)
       toast({
         title: "发布失败",
         description: "请稍后重试",
@@ -167,19 +161,21 @@ export default function CommunityPage() {
   }
 
   return (
-    <PageLayout>
+    <PageLayout bg="bg-kidsSecond-100/50">
       <div className="space-y-6">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-kidsPrimary-700 mb-4 flex items-center justify-center gap-3">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-kidsPrimary-500 to-kidsPrimary-700 text-transparent bg-clip-text mb-4 flex items-center justify-center gap-3">
             <span className="text-5xl">🌟</span>
             家长社区
             <span className="text-5xl">🌟</span>
           </h1>
-          <p className="text-lg text-kidsPrimary-600 font-medium">分享育儿心得，交流成长经验，一起陪伴孩子快乐成长 💝</p>
+          <p className="text-lg text-kidsPrimary-600 font-medium">
+            分享育儿心得，交流成长经验，一起陪伴孩子快乐成长 💝
+          </p>
         </div>
 
         {/* 搜索栏 */}
-        <div className="kids-card p-6">
+        <div className="card-modern p-6">
           <div className="relative">
             <span className="material-icons absolute left-4 top-1/2 transform -translate-y-1/2 text-kidsPrimary-500 text-xl">
               search
@@ -188,13 +184,13 @@ export default function CommunityPage() {
               placeholder="🔍 搜索帖子标题、内容或标签..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="kids-search w-full pl-12 text-lg"
+              className="input-modern w-full pl-12 text-lg"
             />
           </div>
         </div>
 
         {/* 分类导航 */}
-        <div className="kids-card p-6">
+        <div className="card-modern p-6">
           <h3 className="text-lg font-bold text-kidsPrimary-700 mb-4 flex items-center gap-2">
             <span className="text-xl">📚</span>
             选择话题分类
@@ -204,7 +200,7 @@ export default function CommunityPage() {
               <button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
-                className={`kids-category-button flex items-center gap-2 ${
+                className={`button-modern-category flex items-center gap-2 ${
                   selectedCategory === category.id ? "active" : ""
                 }`}
               >
@@ -219,17 +215,23 @@ export default function CommunityPage() {
         <div className="flex justify-between items-center">
           <h2 className="text-2xl font-bold text-kidsPrimary-700 flex items-center gap-2">
             <span className="text-2xl">
-              {selectedCategory === "all" ? "🌈" : 
-               selectedCategory === "habits" ? "📖" :
-               selectedCategory === "health" ? "💪" :
-               selectedCategory === "education" ? "🎓" :
-               selectedCategory === "activities" ? "🎨" : "💬"}
+              {selectedCategory === "all"
+                ? "🌈"
+                : selectedCategory === "habits"
+                  ? "📖"
+                  : selectedCategory === "health"
+                    ? "💪"
+                    : selectedCategory === "education"
+                      ? "🎓"
+                      : selectedCategory === "activities"
+                        ? "🎨"
+                        : "💬"}
             </span>
             {getCategoryInfo(selectedCategory).name}
           </h2>
           <button
             onClick={() => setShowNewPostForm(!showNewPostForm)}
-            className="kids-button flex items-center gap-2"
+            className="button-modern flex items-center gap-2"
           >
             <span className="material-icons">add</span>
             发布帖子
@@ -238,7 +240,7 @@ export default function CommunityPage() {
 
         {/* 发布帖子表单 */}
         {showNewPostForm && (
-          <div className="kids-card p-8 border-kidsPrimary-300">
+          <div className="card-modern p-8 border-kidsPrimary-300">
             <h3 className="text-2xl font-bold text-kidsPrimary-700 mb-6 flex items-center gap-3">
               <span className="text-3xl">✏️</span>
               发布新帖子
@@ -255,7 +257,7 @@ export default function CommunityPage() {
                   onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
                   placeholder="请输入一个吸引人的标题..."
                   required
-                  className="kids-input w-full"
+                  className="input-modern w-full"
                 />
               </div>
 
@@ -270,7 +272,7 @@ export default function CommunityPage() {
                   placeholder="分享您的育儿经验、困惑或建议吧..."
                   rows={6}
                   required
-                  className="kids-input w-full resize-none"
+                  className="input-modern w-full resize-none"
                 />
               </div>
 
@@ -283,7 +285,7 @@ export default function CommunityPage() {
                   <select
                     value={newPost.category}
                     onChange={(e) => setNewPost({ ...newPost, category: e.target.value })}
-                    className="kids-input w-full"
+                    className="input-modern w-full"
                   >
                     {categories.slice(1).map((category) => (
                       <option key={category.id} value={category.id}>
@@ -302,16 +304,16 @@ export default function CommunityPage() {
                     value={newPost.tags}
                     onChange={(e) => setNewPost({ ...newPost, tags: e.target.value })}
                     placeholder="例如：阅读, 习惯培养, 健康"
-                    className="kids-input w-full"
+                    className="input-modern w-full"
                   />
                 </div>
               </div>
 
               <div className="flex gap-4 justify-center">
-                <button 
-                  type="submit" 
-                  disabled={isLoading} 
-                  className="kids-button disabled:opacity-50 disabled:cursor-not-allowed"
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="button-modern disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isLoading ? (
                     <>
@@ -328,7 +330,7 @@ export default function CommunityPage() {
                 <button
                   type="button"
                   onClick={() => setShowNewPostForm(false)}
-                  className="kids-category-button px-6 py-3"
+                  className="button-modern-category px-6 py-3"
                 >
                   取消
                 </button>
@@ -354,12 +356,18 @@ export default function CommunityPage() {
           <div className="space-y-6">
             {filteredPosts.map((post) => {
               const categoryInfo = getCategoryInfo(post.category)
-              const categoryEmoji = post.category === "habits" ? "📖" :
-                                 post.category === "health" ? "💪" :
-                                 post.category === "education" ? "🎓" :
-                                 post.category === "activities" ? "🎨" : "💬"
+              const categoryEmoji =
+                post.category === "habits"
+                  ? "📖"
+                  : post.category === "health"
+                    ? "💪"
+                    : post.category === "education"
+                      ? "🎓"
+                      : post.category === "activities"
+                        ? "🎨"
+                        : "💬"
               return (
-                <div key={post.id} className="kids-card p-6">
+                <div key={post.id} className="card-modern p-6">
                   <div className="flex items-start gap-4">
                     <div className="kids-avatar w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold text-kidsPrimary-600">
                       {post.author_name?.[0] || "👤"}
@@ -367,9 +375,7 @@ export default function CommunityPage() {
 
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-3">
-                        <span className="font-bold text-kidsPrimary-700 text-lg">
-                          {post.author_name || "匿名用户"}
-                        </span>
+                        <span className="font-bold text-kidsPrimary-700 text-lg">{post.author_name || "匿名用户"}</span>
                         <span className="kids-badge flex items-center gap-1">
                           <span>{categoryEmoji}</span>
                           {categoryInfo.name}
@@ -385,9 +391,7 @@ export default function CommunityPage() {
                         </h3>
                       </Link>
 
-                      <p className="text-kidsPrimary-700 mb-4 line-clamp-3 text-base leading-relaxed">
-                        {post.body}
-                      </p>
+                      <p className="text-kidsPrimary-700 mb-4 line-clamp-3 text-base leading-relaxed">{post.body}</p>
 
                       {post.tags && post.tags.length > 0 && (
                         <div className="flex flex-wrap gap-2 mb-4">
@@ -403,19 +407,19 @@ export default function CommunityPage() {
                       )}
 
                       <div className="flex items-center gap-6">
-                        <button className="flex items-center gap-2 text-kidsPrimary-600 hover:text-kidsPrimary-500 transition-colors duration-200 bg-kidsPrimary-50 px-3 py-2 rounded-full">
+                        <button className="button-modern-icon flex items-center gap-2  transition-colors duration-200  px-3 py-2 rounded-full">
                           <span className="text-lg">👍</span>
                           <span className="font-medium">{post.likes_count || 0}</span>
                         </button>
 
                         <Link href={`/community/${post.id}`}>
-                          <button className="flex items-center gap-2 text-kidsPrimary-600 hover:text-kidsPrimary-500 transition-colors duration-200 bg-kidsPrimary-50 px-3 py-2 rounded-full">
+                          <button className="button-modern-icon flex items-center gap-2  transition-colors duration-200  px-3 py-2 rounded-full">
                             <span className="text-lg">💬</span>
                             <span className="font-medium">查看详情</span>
                           </button>
                         </Link>
 
-                        <button className="flex items-center gap-2 text-kidsPrimary-600 hover:text-kidsPrimary-500 transition-colors duration-200 bg-kidsPrimary-50 px-3 py-2 rounded-full">
+                        <button className="button-modern-icon flex items-center gap-2  transition-colors duration-200  px-3 py-2 rounded-full">
                           <span className="text-lg">🔗</span>
                           <span className="font-medium">分享</span>
                         </button>
@@ -445,25 +449,18 @@ export default function CommunityPage() {
                   )}
                 </h3>
                 <p className="text-lg text-kidsPrimary-600 mb-8 leading-relaxed">
-                  {searchQuery ? 
-                    "试试调整搜索条件或换个关键词，也许会有意外收获哦 ✨" : 
-                    "还没有人分享内容，快来当第一个分享者，让这里热闹起来吧 🎉"
-                  }
+                  {searchQuery
+                    ? "试试调整搜索条件或换个关键词，也许会有意外收获哦 ✨"
+                    : "还没有人分享内容，快来当第一个分享者，让这里热闹起来吧 🎉"}
                 </p>
                 <div className="flex flex-col sm:flex-row justify-center gap-4">
                   {searchQuery && (
-                    <button 
-                      onClick={() => setSearchQuery("")}
-                      className="kids-category-button px-8 py-4 text-lg"
-                    >
+                    <button onClick={() => setSearchQuery("")} className="button-modern-category px-8 py-4 text-lg">
                       <span className="mr-2">🔄</span>
                       清除搜索，查看全部
                     </button>
                   )}
-                  <button 
-                    onClick={() => setShowNewPostForm(true)}
-                    className="kids-button text-lg px-8 py-4"
-                  >
+                  <button onClick={() => setShowNewPostForm(true)} className="button-modern text-lg px-8 py-4">
                     <span className="mr-2">✨</span>
                     {searchQuery ? "分享新内容" : "发布第一篇帖子"}
                   </button>

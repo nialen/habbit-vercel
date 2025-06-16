@@ -2,9 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 导入字体 */
+/* @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"); */
+
 @layer base {
   :root {
-    /* 儿童友好的绿色主题 */
+    /* 设计系统颜色变量 */
+    --gradient-primary: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+    --gradient-primary-hover: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);
+    --gradient-background: linear-gradient(135deg, #312e81 0%, #7c3aed 50%, #3b82f6 100%);
+    --gradient-background-light: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+
+    /* 原有的CSS变量保持不变 */
     --background: 120 50% 98%;
     --foreground: 120 10% 15%;
     --card: 0 0% 100%;
@@ -66,19 +75,147 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-nunito), sans-serif;
-    font-feature-settings:
-      "rlig" 1,
-      "calt" 1;
+    font-family: "var(--font-nunito)", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
-  
-  .font-comic-neue {
-    font-family: var(--font-comic-neue), sans-serif;
-    font-weight: 700; /* Ensure bold */
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "var(--font-comic-neue)", "var(--font-nunito)", sans-serif;
   }
 }
 
-/* 自定义滚动条样式 */
+/* 设计系统组件样式 */
+@layer components {
+  /* 按钮样式 */
+  .btn-primary {
+    @apply bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 border-none shadow-lg;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+  }
+
+  .btn-primary:hover {
+    @apply from-purple-700 to-blue-700 transform -translate-y-0.5;
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+  }
+
+  .btn-secondary {
+    @apply bg-white/10 text-white border border-white/20 px-8 py-3 rounded-xl font-semibold transition-all duration-300 backdrop-blur-md;
+  }
+
+  .btn-secondary:hover {
+    @apply bg-white/20 transform -translate-y-0.5;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent text-gray-600 border border-gray-200 px-8 py-3 rounded-xl font-semibold transition-all duration-300;
+  }
+
+  .btn-ghost:hover {
+    @apply bg-gray-50 text-gray-800 transform -translate-y-0.5;
+  }
+
+  /* 卡片样式 */
+  .card-modern {
+    @apply bg-white/95 backdrop-blur-xl border border-white/20 rounded-2xl p-6 shadow-xl transition-all duration-300;
+  }
+
+  .card-modern:hover {
+    @apply transform -translate-y-1 shadow-2xl;
+  }
+
+  .card-dark {
+    @apply bg-slate-800/95 text-white border border-white/10 rounded-2xl p-6 shadow-xl transition-all duration-300 backdrop-blur-xl;
+  }
+
+  /* 输入框样式 */
+  .input-modern {
+    @apply bg-white/90 border border-slate-200/50 rounded-xl px-4 py-3 text-base transition-all duration-300 backdrop-blur-md;
+  }
+
+  .input-modern:focus {
+    @apply outline-none border-purple-500 shadow-lg bg-white;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+  }
+
+  /* 背景样式 */
+  .bg-primary-gradient {
+    background: linear-gradient(135deg, #312e81 0%, #7c3aed 50%, #3b82f6 100%);
+  }
+
+  .bg-light-gradient {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  }
+
+  .bg-glass {
+    @apply bg-white/95 backdrop-blur-xl border border-white/20;
+  }
+
+  /* 装饰元素 */
+  .decoration-circle {
+    @apply absolute rounded-full bg-white/10 backdrop-blur-md;
+  }
+
+  /* 文字样式 */
+  .text-gradient {
+    background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* 动画类 */
+  .animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.4s ease-out;
+  }
+
+  .animate-slide-in-right {
+    animation: slideInRight 0.5s ease-out;
+  }
+}
+
+/* 动画定义 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* 保留原有的自定义样式 */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -96,7 +233,6 @@
   background: hsl(var(--accent-foreground));
 }
 
-/* 移动端适配 */
 @media (max-width: 768px) {
   .container {
     padding-left: 1rem;
@@ -104,7 +240,6 @@
   }
 }
 
-/* 动画优化 */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -115,236 +250,8 @@
   }
 }
 
-/* 打印样式 */
 @media print {
   .no-print {
     display: none;
-  }
-}
-
-/* 自定义样式 */
-.card-hover {
-  transition: all 0.2s ease;
-  background: hsl(var(--card));
-  border: 1px solid hsl(var(--border));
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
-.card-hover:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-.gradient-text {
-  background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.sidebar-gradient {
-  background: hsl(var(--secondary));
-}
-
-.stat-card {
-  background: hsl(var(--card));
-  border-radius: 0.75rem;
-  border: 1px solid hsl(var(--border));
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  transition: all 0.2s ease;
-}
-
-.stat-card:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-.nav-item {
-  transition: all 0.2s ease;
-  border-radius: 0.5rem;
-}
-
-.nav-item:hover {
-  background: hsl(var(--accent));
-}
-
-.nav-item.active {
-  background-color: hsl(var(--primary));
-  color: hsl(var(--primary-foreground));
-}
-
-.nav-item.active .material-icons {
-  color: hsl(var(--primary-foreground));
-}
-
-.habit-icon {
-  background: hsl(var(--secondary));
-  border: 1px solid hsl(var(--border));
-}
-
-/* Switch组件样式 */
-[data-state="checked"] {
-  background-color: hsl(var(--primary)) !important;
-}
-
-/* 儿童友好的样式 */
-.kids-card {
-  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-  border: 2px solid #bbf7d0;
-  border-radius: 1.5rem;
-  box-shadow: 0 8px 25px -5px rgba(34, 197, 94, 0.1), 0 8px 10px -6px rgba(34, 197, 94, 0.1);
-  transition: all 0.3s ease;
-}
-
-.kids-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px -12px rgba(34, 197, 94, 0.25);
-  border-color: #86efac;
-}
-
-.kids-button {
-  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-  border: none;
-  border-radius: 2rem;
-  padding: 1rem 2rem;
-  color: white;
-  font-weight: 600;
-  font-size: 1rem;
-  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.kids-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(34, 197, 94, 0.6);
-}
-
-.kids-button:active {
-  transform: translateY(0);
-}
-
-.kids-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
-}
-
-.kids-button:hover::before {
-  left: 100%;
-}
-
-.kids-badge {
-  background: linear-gradient(135deg, #fef08a 0%, #facc15 100%);
-  color: #854d0e;
-  border: 2px solid #fde047;
-  border-radius: 1.5rem;
-  padding: 0.5rem 1rem;
-  font-weight: 600;
-  font-size: 0.875rem;
-  box-shadow: 0 2px 8px rgba(250, 204, 21, 0.3);
-}
-
-.kids-input {
-  border: 2px solid #bbf7d0;
-  border-radius: 1rem;
-  padding: 1rem;
-  font-size: 1rem;
-  background: #f0fdf4;
-  transition: all 0.3s ease;
-}
-
-.kids-input:focus {
-  outline: none;
-  border-color: #22c55e;
-  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
-  background: white;
-}
-
-.kids-search {
-  background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
-  border: 2px solid #bbf7d0;
-  border-radius: 2rem;
-  padding: 1rem 1.5rem;
-  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.1);
-}
-
-.kids-category-button {
-  background: white;
-  border: 2px solid #bbf7d0;
-  border-radius: 2rem;
-  padding: 0.75rem 1.5rem;
-  transition: all 0.3s ease;
-  font-weight: 600;
-}
-
-.kids-category-button:hover {
-  background: #f0fdf4;
-  border-color: #86efac;
-  transform: translateY(-2px);
-}
-
-.kids-category-button.active {
-  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-  border-color: #22c55e;
-  color: white;
-  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
-}
-
-.kids-avatar {
-  border: 3px solid #bbf7d0;
-  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-}
-
-.floating-elements {
-  position: absolute;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.floating-star {
-  position: absolute;
-  color: #facc15;
-  animation: float 6s ease-in-out infinite;
-}
-
-.floating-cloud {
-  position: absolute;
-  color: #e2e8f0;
-  animation: float 8s ease-in-out infinite reverse;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
-}
-
-.gradient-background {
-  background: linear-gradient(135deg, 
-    #f0fdf4 0%,     /* 淡绿色 */
-    #dcfce7 25%,    /* 中绿色 */
-    #fefce8 50%,    /* 淡黄色 */
-    #faf5ff 75%,    /* 淡紫色 */
-    #fff7ed 100%    /* 淡橙色 */
-  );
-  min-height: 100vh;
-  position: relative;
-  animation: gradientShift 10s ease-in-out infinite;
-}
-
-@keyframes gradientShift {
-  0%, 100% {
-    background: linear-gradient(135deg, 
-      #f0fdf4 0%, #dcfce7 25%, #fefce8 50%, #faf5ff 75%, #fff7ed 100%);
-  }
-  50% {
-    background: linear-gradient(135deg, 
-      #fff7ed 0%, #faf5ff 25%, #fefce8 50%, #dcfce7 75%, #f0fdf4 100%);
   }
 }

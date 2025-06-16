@@ -2,24 +2,13 @@
 
 import { useState, useEffect } from "react"
 import { useAuth } from "@/components/auth-provider"
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { 
-  Baby, 
-  Calendar, 
-  Save,
-  Sparkles
-} from "lucide-react"
+import { Baby, Calendar, Save } from "lucide-react"
 
 interface ProfileFormData {
   child_name: string
@@ -52,9 +41,9 @@ export function ProfileSetupModal({ open, onOpenChange, onSetupComplete }: Profi
   }, [userProfile])
 
   const handleInputChange = (field: keyof ProfileFormData, value: string | number) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }))
   }
 
@@ -91,16 +80,16 @@ export function ProfileSetupModal({ open, onOpenChange, onSetupComplete }: Profi
 
     try {
       // 使用当前用户的name或email作为默认家长姓名
-      const parentName = userProfile?.name || user.user_metadata?.name || user.email?.split('@')[0] || "家长"
-      
+      const parentName = userProfile?.name || user.user_metadata?.name || user.email?.split("@")[0] || "家长"
+
       const updateData = {
         name: parentName,
         child_name: formData.child_name.trim(),
         child_age: formData.child_age,
       }
-      
+
       const { error } = await updateProfile(updateData)
-      
+
       if (error) {
         toast({
           title: "设置失败",
@@ -112,7 +101,7 @@ export function ProfileSetupModal({ open, onOpenChange, onSetupComplete }: Profi
           title: "设置成功",
           description: `欢迎 ${formData.child_name} 加入星航成长营！让我们一起开始美好的成长之旅吧！`,
         })
-        
+
         // 调用设置完成回调
         onSetupComplete?.()
         onOpenChange(false)
@@ -136,7 +125,7 @@ export function ProfileSetupModal({ open, onOpenChange, onSetupComplete }: Profi
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md" onInteractOutside={(e) => e.preventDefault()}>
+      <DialogContent className="card-modern sm:max-w-md border-0" onInteractOutside={(e) => e.preventDefault()}>
         <DialogHeader className="text-center">
           <div className="flex justify-center">
             <Avatar className="w-20 h-20">
@@ -145,9 +134,7 @@ export function ProfileSetupModal({ open, onOpenChange, onSetupComplete }: Profi
               </AvatarFallback>
             </Avatar>
           </div>
-          <DialogTitle className="text-2xl font-bold text-gray-800">
-            欢迎加入星航成长营！
-          </DialogTitle>
+          <DialogTitle className="text-2xl font-bold text-gray-800">欢迎加入星航成长营！</DialogTitle>
           <DialogDescription className="text-gray-600">
             请告诉我们孩子的昵称和年龄，开始美好的成长之旅
           </DialogDescription>
@@ -176,6 +163,7 @@ export function ProfileSetupModal({ open, onOpenChange, onSetupComplete }: Profi
                 onChange={(e) => handleInputChange("child_name", e.target.value)}
                 placeholder="请输入孩子的昵称，如：小明、豆豆、宝贝..."
                 required
+                className="input-modern"
               />
             </div>
 
@@ -190,22 +178,21 @@ export function ProfileSetupModal({ open, onOpenChange, onSetupComplete }: Profi
                 min="1"
                 max="18"
                 value={formData.child_age}
-                onChange={(e) => handleInputChange("child_age", parseInt(e.target.value) || 5)}
+                onChange={(e) => handleInputChange("child_age", Number.parseInt(e.target.value) || 5)}
                 placeholder="请输入孩子的年龄"
                 required
+                className="input-modern"
               />
-              <p className="text-xs text-gray-500">
-                请输入1-18岁之间的年龄
-              </p>
+              <p className="text-xs text-gray-500">请输入1-18岁之间的年龄</p>
             </div>
           </div>
 
           {/* 提交按钮 */}
           <div className="flex justify-center">
-            <Button 
+            <Button
               onClick={handleSubmit}
               disabled={!isFormValid || isSubmitting}
-              className="w-full gap-2"
+              className="w-full gap-2 btn-primary"
               size="lg"
             >
               <Save className="w-4 h-4" />
@@ -216,9 +203,7 @@ export function ProfileSetupModal({ open, onOpenChange, onSetupComplete }: Profi
 
         {/* 温馨提示 */}
         <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-          <p className="text-sm text-blue-800 text-center">
-            💡 这些信息将帮助我们为孩子提供个性化的成长计划
-          </p>
+          <p className="text-sm text-blue-800 text-center">💡 这些信息将帮助我们为孩子提供个性化的成长计划</p>
         </div>
       </DialogContent>
     </Dialog>
