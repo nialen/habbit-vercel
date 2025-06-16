@@ -12,14 +12,14 @@
 - 如果你使用不同的域名，需要更新配置
 
 **修复方法:**
-```bash
+\`\`\`bash
 # 方法1: 更新环境变量
 # 在Vercel项目设置中添加:
 NEXT_PUBLIC_PLAUSIBLE_DOMAIN=你的实际域名.com
 
 # 方法2: 直接修改layout.tsx
 # 将 "habitkids.online" 改为你的域名
-```
+\`\`\`
 
 ### 2. 检查部署环境
 
@@ -44,13 +44,13 @@ NEXT_PUBLIC_PLAUSIBLE_DOMAIN=你的实际域名.com
 5. **应该看到**: `script.file-downloads.hash.outbound-links.pageview-props.revenue.tagged-events.js`
 
 **如果没有看到脚本加载:**
-```bash
+\`\`\`bash
 # 检查构建是否成功
 npm run build
 
 # 检查生产环境变量
 echo $NODE_ENV  # 应该是 "production"
-```
+\`\`\`
 
 ### 4. 常见解决方案
 
@@ -61,37 +61,37 @@ echo $NODE_ENV  # 应该是 "production"
    - Vercel域名: `你的项目名.vercel.app`
    - 自定义域名: `你的域名.com`
 3. **更新代码**:
-   ```bash
+   \`\`\`bash
    # 更新环境变量
    NEXT_PUBLIC_PLAUSIBLE_DOMAIN=你的新域名
-   ```
+   \`\`\`
 
 #### 方案B: 使用测试域名
 
 如果想立即测试，可以暂时使用一个测试域名：
 
-```typescript
+\`\`\`typescript
 // 在 app/layout.tsx 中临时修改
 const PLAUSIBLE_DOMAIN = "你的vercel域名.vercel.app"
-```
+\`\`\`
 
 #### 方案C: 强制加载脚本（仅用于测试）
 
-```typescript
+\`\`\`typescript
 // 临时解决方案 - 在开发环境也加载脚本
 const IS_PRODUCTION = true // 临时设为true进行测试
-```
+\`\`\`
 
 ⚠️ **注意**: 测试完成后记得改回 `process.env.NODE_ENV === "production"`
 
 ### 5. 部署后验证步骤
 
 1. **部署到Vercel**:
-   ```bash
+   \`\`\`bash
    git add .
    git commit -m "fix: 更新Plausible配置"
    git push origin main
-   ```
+   \`\`\`
 
 2. **等待部署完成** (~2-3分钟)
 
@@ -107,9 +107,9 @@ const IS_PRODUCTION = true // 临时设为true进行测试
 ### 6. 测试页面使用
 
 访问测试页面验证分析功能：
-```
+\`\`\`
 https://你的域名/test-analytics
-```
+\`\`\`
 
 **在测试页面中:**
 - 检查 "分析状态" 显示
@@ -119,15 +119,15 @@ https://你的域名/test-analytics
 ### 7. 高级调试
 
 **检查脚本内容:**
-```javascript
+\`\`\`javascript
 // 在浏览器控制台执行
 console.log('Plausible loaded:', !!window.plausible)
 console.log('Environment:', process.env.NODE_ENV)
 console.log('Domain:', document.querySelector('[data-domain]')?.getAttribute('data-domain'))
-```
+\`\`\`
 
 **手动触发事件:**
-```javascript
+\`\`\`javascript
 // 在生产环境的浏览器控制台测试
 if (window.plausible) {
   window.plausible('Test Event', { props: { source: 'manual' } })
@@ -135,7 +135,7 @@ if (window.plausible) {
 } else {
   console.log('❌ Plausible未加载')
 }
-```
+\`\`\`
 
 ## 📋 检查清单
 
@@ -164,4 +164,4 @@ if (window.plausible) {
    - 部署URL
    - 浏览器控制台截图
    - Network标签页截图
-   - 环境变量配置（隐藏敏感信息） 
+   - 环境变量配置（隐藏敏感信息）

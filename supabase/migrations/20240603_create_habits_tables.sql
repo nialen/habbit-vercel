@@ -128,4 +128,4 @@ INSERT INTO public.rewards (name, description, points_required, category, icon) 
 ('周末晚睡30分钟', '周末可以比平时晚睡30分钟的特殊权限', 60, 'privilege', '🌙'),
 ('儿童绘本', '精选优质儿童绘本，培养阅读兴趣', 120, 'item', '📚'),
 ('游乐园一日游', '和家人一起去游乐园玩一整天', 300, 'experience', '🎡')
-ON CONFLICT DO NOTHING; 
+ON CONFLICT DO NOTHING;

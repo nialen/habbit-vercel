@@ -67,4 +67,4 @@ export async function DELETE(request: NextRequest) {
     console.error("删除习惯记录失败:", error)
     return NextResponse.json({ error: "删除习惯记录失败" }, { status: 500 })
   }
-} 
+}

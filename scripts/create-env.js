@@ -110,4 +110,4 @@ function createEnvTemplates() {
   }
 }
 
-createEnvTemplates(); 
+createEnvTemplates();

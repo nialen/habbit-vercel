@@ -21,12 +21,12 @@
 ## 🚀 Windows快速开始
 
 ### 1. 安装依赖
-```bash
+\`\`\`bash
 npm install --legacy-peer-deps
-```
+\`\`\`
 
 ### 2. 创建环境配置
-```bash
+\`\`\`bash
 # 创建环境配置模板
 npm run create-env-templates
 
@@ -35,16 +35,16 @@ npm run setup-env:dev
 
 # 设置生产环境
 npm run setup-env:prod
-```
+\`\`\`
 
 ### 3. 启动开发
-```bash
+\`\`\`bash
 # 开发环境
 npm run dev
 
 # 生产模式
 npm run dev:prod
-```
+\`\`\`
 
 ## 🔧 Windows专用命令
 
@@ -57,51 +57,51 @@ npm run dev:prod
 
 ## ✅ 已安装的Windows兼容包
 
-```json
+\`\`\`json
 {
   "devDependencies": {
     "cross-env": "^7.0.3",
     "rimraf": "^6.0.1"
   }
 }
-```
+\`\`\`
 
 ## 🚨 Windows常见问题解决
 
 ### 问题1: `'NODE_ENV' 不是内部或外部命令`
 **解决**: 使用npm脚本而不是直接设置环境变量
-```bash
+\`\`\`bash
 # ❌ 错误方式
 NODE_ENV=development npm run dev
 
 # ✅ 正确方式  
 npm run dev
-```
+\`\`\`
 
 ### 问题2: `bash: rm: command not found`
 **解决**: 使用npm脚本清理文件
-```bash
+\`\`\`bash
 # ❌ 错误方式
 rm -rf .next
 
 # ✅ 正确方式
 npm run clean
-```
+\`\`\`
 
 ### 问题3: 批处理文件无法执行
 **解决**: 所有脚本已更新为Node.js版本
-```bash
+\`\`\`bash
 # ✅ 所有这些命令在Windows下都能正常工作
 npm run create-env-templates
 npm run setup-env:dev
 npm run setup-env:prod
-```
+\`\`\`
 
 ## 🎯 验证配置
 
 运行以下命令验证配置是否正确：
 
-```bash
+\`\`\`bash
 # 检查环境状态
 npm run check-env
 
@@ -113,7 +113,7 @@ npm run lint
 
 # 清理并重新构建
 npm run clean && npm run build:dev
-```
+\`\`\`
 
 ## 🔗 下一步
 
@@ -124,4 +124,4 @@ npm run clean && npm run build:dev
 
 ---
 
-🎉 **恭喜！你的Windows开发环境已配置完成！** 
+🎉 **恭喜！你的Windows开发环境已配置完成！**

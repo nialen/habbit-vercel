@@ -147,4 +147,4 @@ export const SimpleNavigation = memo(function SimpleNavigation() {
       />
     </>
   )
-}) 
+})

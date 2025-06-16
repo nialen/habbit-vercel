@@ -30,13 +30,13 @@
 
 4. **设置环境变量**
    在项目设置中添加以下环境变量：
-   ```
+   \`\`\`
    NEXT_PUBLIC_SUPABASE_URL=你的Supabase项目URL
    NEXT_PUBLIC_SUPABASE_ANON_KEY=你的Supabase匿名密钥
    SUPABASE_SERVICE_ROLE_KEY=你的Supabase服务密钥
    NEXT_PUBLIC_APP_URL=https://你的应用域名.vercel.app
    NEXT_PUBLIC_PLAUSIBLE_DOMAIN=habitkids.online
-   ```
+   \`\`\`
 
 5. **部署**
    - 点击 "Deploy"
@@ -45,36 +45,36 @@
 #### 方法二：通过Vercel CLI
 
 1. **安装Vercel CLI**
-   ```bash
+   \`\`\`bash
    npm i -g vercel
-   ```
+   \`\`\`
 
 2. **登录并部署**
-   ```bash
+   \`\`\`bash
    vercel login
    vercel --prod
-   ```
+   \`\`\`
 
 ## 🔄 自动部署流程
 
 一旦设置完成，以下操作会自动触发部署：
 
 ### 生产部署
-```bash
+\`\`\`bash
 git add .
 git commit -m "feat: 添加新功能"
 git push origin main
-```
+\`\`\`
 → 自动部署到生产环境
 
 ### 预览部署
-```bash
+\`\`\`bash
 git checkout -b feature/new-feature
 git add .
 git commit -m "feat: 开发新功能"
 git push origin feature/new-feature
 # 创建Pull Request
-```
+\`\`\`
 → 自动创建预览部署
 
 ## 🌐 域名配置
@@ -118,7 +118,7 @@ git push origin feature/new-feature
 
 ## 📝 更新流程
 
-```bash
+\`\`\`bash
 # 1. 开发新功能
 git checkout -b feature/your-feature
 # ... 进行开发 ...
@@ -133,7 +133,7 @@ git push origin feature/your-feature
 
 # 4. 合并到主分支（自动部署生产环境）
 # PR被合并后，Vercel自动部署到生产环境
-```
+\`\`\`
 
 ## 🎉 完成！
 
@@ -142,4 +142,4 @@ git push origin feature/your-feature
 访问你的应用：`https://your-project.vercel.app`
 
 ---
-📧 如有问题，请检查Vercel控制台的构建日志或联系技术支持。 
+📧 如有问题，请检查Vercel控制台的构建日志或联系技术支持。

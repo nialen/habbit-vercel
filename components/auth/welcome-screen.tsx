@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
-import { ArrowRight, Star, Target, Award } from "lucide-react"
+import { ArrowRight, Star, Users, TrendingUp } from "lucide-react"
 
 export function WelcomeScreen() {
   const router = useRouter()
@@ -12,134 +12,242 @@ export function WelcomeScreen() {
   }
 
   return (
-    <div className="gradient-background relative overflow-hidden">
-      {/* Hero Section */}
-      <div className="max-w-6xl mx-auto px-4 py-12">
-        {/* 装饰性浮动元素 */}
-        <div className="floating-elements">
-          <div className="floating-star" style={{ top: '8%', left: '10%', fontSize: '2rem' }}>⭐</div>
-          <div className="floating-cloud" style={{ top: '12%', right: '12%', fontSize: '2.5rem' }}>☁️</div>
-          <div className="floating-star" style={{ top: '20%', right: '25%', fontSize: '1.5rem' }}>✨</div>
-          <div className="floating-cloud" style={{ bottom: '25%', left: '8%', fontSize: '2rem' }}>☁️</div>
-          <div className="floating-star" style={{ bottom: '12%', right: '18%', fontSize: '1.8rem' }}>⭐</div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white flex items-center justify-center p-4 relative overflow-hidden">
+      {/* 可爱的装饰元素 */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* 使用项目中的可爱sprite图标 */}
+
+        {/* 左上角 - 可爱的兔子 */}
+        <div
+          className="absolute top-8 left-8 w-16 h-16 animate-bounce opacity-80"
+          style={{ animationDelay: "0s", animationDuration: "3s" }}
+        >
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <use href="/sprites/badge-bunny.svg#badge-bunny" />
+          </svg>
         </div>
 
-        <div className="text-center mb-16 relative z-10">
-          <div className="kids-badge inline-flex items-center gap-2 mb-8 text-lg font-bold">
-            <Star className="w-5 h-5" />
-            儿童成长专家推荐 ⭐⭐⭐⭐⭐
-          </div>
-          
-          <h1 className="font-comic-neue text-5xl md:text-7xl font-bold text-kidsPrimary-700 mb-8 leading-tight">
-            <span className="text-6xl md:text-8xl">🌟</span>
-            <br />
-            星航成长营
-            <span className="block text-transparent bg-gradient-to-r from-kidsPurple-500 to-kidsAccent-500 bg-clip-text text-4xl md:text-6xl mt-2">StarVoyage</span>
-          </h1>
-          
-          <p className="text-2xl text-kidsPrimary-600 mb-10 max-w-3xl mx-auto leading-relaxed font-medium">
-            帮助孩子养成好习惯，让每一天都充满成长的力量 ✨
-          </p>
-          
-          <button 
+        {/* 右上角 - 考拉 */}
+        <div className="absolute top-12 right-12 w-14 h-14 animate-pulse opacity-80" style={{ animationDelay: "1s" }}>
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <use href="/sprites/chart-koala.svg#chart-koala" />
+          </svg>
+        </div>
+
+        {/* 左侧中间 - 火箭 */}
+        <div
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 animate-bounce opacity-80"
+          style={{ animationDelay: "2s", animationDuration: "4s" }}
+        >
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <use href="/sprites/rocket.svg#rocket" />
+          </svg>
+        </div>
+
+        {/* 右侧中间 - 奔跑的熊猫 */}
+        <div
+          className="absolute right-8 top-1/2 transform -translate-y-1/2 w-16 h-16 animate-pulse opacity-80"
+          style={{ animationDelay: "1.5s" }}
+        >
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <use href="/sprites/panda-run.svg#panda-run" />
+          </svg>
+        </div>
+
+        {/* 底部左侧 - 太空猫 */}
+        <div
+          className="absolute bottom-20 left-16 w-14 h-14 animate-bounce opacity-80"
+          style={{ animationDelay: "0.5s", animationDuration: "3.5s" }}
+        >
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <use href="/sprites/gift-astrocat.svg#gift-astrocat" />
+          </svg>
+        </div>
+
+        {/* 自定义可爱的CSS装饰 */}
+
+        {/* 彩色圆点装饰 */}
+        <div
+          className="absolute top-20 left-32 w-4 h-4 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full animate-pulse opacity-70"
+          style={{ animationDelay: "2.5s" }}
+        ></div>
+        <div
+          className="absolute top-32 right-28 w-3 h-3 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full animate-bounce opacity-70"
+          style={{ animationDelay: "1.8s", animationDuration: "2.5s" }}
+        ></div>
+        <div
+          className="absolute bottom-32 right-20 w-5 h-5 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full animate-pulse opacity-70"
+          style={{ animationDelay: "3s" }}
+        ></div>
+
+        {/* 可爱的星星形状 */}
+        <div className="absolute top-1/4 left-1/4 animate-pulse opacity-60" style={{ animationDelay: "4s" }}>
+          <svg width="24" height="24" viewBox="0 0 24 24" className="text-yellow-400 fill-current">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+          </svg>
+        </div>
+
+        <div
+          className="absolute top-1/3 right-1/4 animate-bounce opacity-60"
+          style={{ animationDelay: "1.2s", animationDuration: "2.8s" }}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" className="text-pink-400 fill-current">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+          </svg>
+        </div>
+
+        {/* 可爱的心形 */}
+        <div className="absolute top-1/2 left-1/3 animate-pulse opacity-60" style={{ animationDelay: "2.8s" }}>
+          <svg width="20" height="20" viewBox="0 0 24 24" className="text-red-400 fill-current">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </svg>
+        </div>
+
+        {/* 可爱的云朵形状 */}
+        <div
+          className="absolute top-16 right-40 animate-bounce opacity-50"
+          style={{ animationDelay: "0.8s", animationDuration: "4s" }}
+        >
+          <svg width="32" height="24" viewBox="0 0 32 24" className="text-blue-300 fill-current">
+            <path d="M24 12c0-4.4-3.6-8-8-8-2.7 0-5.1 1.3-6.6 3.3C8.6 7.1 8 7 7.3 7 4.4 7 2 9.4 2 12.3c0 2.9 2.4 5.3 5.3 5.3h16.4c3.3 0 6-2.7 6-6 0-3.3-2.7-6-6-6h-.7z" />
+          </svg>
+        </div>
+
+        <div className="absolute bottom-28 left-40 animate-pulse opacity-50" style={{ animationDelay: "3.5s" }}>
+          <svg width="28" height="20" viewBox="0 0 32 24" className="text-purple-300 fill-current">
+            <path d="M24 12c0-4.4-3.6-8-8-8-2.7 0-5.1 1.3-6.6 3.3C8.6 7.1 8 7 7.3 7 4.4 7 2 9.4 2 12.3c0 2.9 2.4 5.3 5.3 5.3h16.4c3.3 0 6-2.7 6-6 0-3.3-2.7-6-6-6h-.7z" />
+          </svg>
+        </div>
+
+        {/* 可爱的花朵 */}
+        <div
+          className="absolute bottom-16 right-44 animate-bounce opacity-60"
+          style={{ animationDelay: "1.5s", animationDuration: "3s" }}
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" className="text-pink-400 fill-current">
+            <circle cx="12" cy="12" r="3" />
+            <circle cx="12" cy="6" r="3" />
+            <circle cx="18" cy="12" r="3" />
+            <circle cx="12" cy="18" r="3" />
+            <circle cx="6" cy="12" r="3" />
+          </svg>
+        </div>
+
+        {/* 闪烁的小点点 */}
+        <div
+          className="absolute top-1/4 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-yellow-400 rounded-full animate-ping opacity-60"
+          style={{ animationDelay: "5s" }}
+        ></div>
+        <div
+          className="absolute top-3/4 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-purple-400 rounded-full animate-ping opacity-60"
+          style={{ animationDelay: "1.8s" }}
+        ></div>
+        <div
+          className="absolute top-1/2 left-1/5 w-2 h-2 bg-blue-400 rounded-full animate-ping opacity-60"
+          style={{ animationDelay: "3.2s" }}
+        ></div>
+        <div
+          className="absolute top-1/2 right-1/5 w-2 h-2 bg-green-400 rounded-full animate-ping opacity-60"
+          style={{ animationDelay: "4.5s" }}
+        ></div>
+      </div>
+
+      <div className="max-w-4xl mx-auto text-center relative z-10">
+        {/* 主标题 */}
+        <h1
+          className="text-5xl md:text-7xl font-bold text-gray-900 mb-8 leading-tight"
+          style={{ fontFamily: "__Grandstander_7c07ce, __Grandstander_Fallback_7c07ce, sans-serif" }}
+        >
+          让孩子的好习惯
+          <span className="block text-transparent bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600 bg-clip-text">
+            成为现实
+          </span>
+        </h1>
+
+        {/* 副标题 */}
+        <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed font-medium">
+          看着您孩子的习惯一天天养成！星航成长营通过AI智能陪伴和科学方法，
+          <br />
+          让每个小习惯都闪闪发光，充满成长的魔力！
+        </p>
+
+        {/* CTA按钮 */}
+        <div className="mb-16">
+          <Button
             onClick={handleLogin}
-            className="kids-button text-xl px-12 py-6 shadow-2xl font-comic-neue"
+            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-12 py-6 text-xl font-semibold rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
           >
-            🌟 开始成长之旅 <ArrowRight className="ml-3 w-6 h-6" />
-          </button>
+            立即开始
+            <ArrowRight className="ml-3 w-6 h-6" />
+          </Button>
         </div>
 
-        {/* Features Grid */}
-        <div className="grid md:grid-cols-3 gap-8 mb-16 relative z-10">
-          <div className="kids-card p-8 text-center">
-            <div className="w-20 h-20 bg-gradient-to-br from-kidsPrimary-100 to-kidsPrimary-200 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-              <Target className="w-10 h-10 text-kidsPrimary-600" />
+        {/* 社会证明 */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-center gap-2 text-lg font-semibold text-gray-700">
+            <div className="w-6 h-6">
+              <svg viewBox="0 0 100 100" className="w-full h-full">
+                <use href="/sprites/badge-bunny.svg#badge-bunny" />
+              </svg>
             </div>
-            <h3 className="font-comic-neue text-2xl font-bold text-kidsPrimary-700 mb-4 flex items-center justify-center gap-2">
-              <span>📚</span>
-              习惯养成
-            </h3>
-            <p className="text-kidsPrimary-600 text-lg leading-relaxed">科学的习惯培养体系，让好习惯自然而然养成</p>
+            <span className="text-purple-600 font-bold">#1</span>
+            儿童习惯养成平台
           </div>
-          
-          <div className="kids-card p-8 text-center">
-            <div className="w-20 h-20 bg-gradient-to-br from-kidsPurple-100 to-kidsPurple-200 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-              <Star className="w-10 h-10 text-kidsPurple-600" />
-            </div>
-            <h3 className="font-comic-neue text-2xl font-bold text-kidsPrimary-700 mb-4 flex items-center justify-center gap-2">
-              <span>🤖</span>
-              AI 智能顾问
-            </h3>
-            <p className="text-kidsPrimary-600 text-lg leading-relaxed">专业的育儿建议，智能陪伴您的教育之路</p>
-          </div>
-          
-          <div className="kids-card p-8 text-center">
-            <div className="w-20 h-20 bg-gradient-to-br from-kidsAccent-100 to-kidsAccent-200 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-              <Award className="w-10 h-10 text-kidsAccent-600" />
-            </div>
-            <h3 className="font-comic-neue text-2xl font-bold text-kidsPrimary-700 mb-4 flex items-center justify-center gap-2">
-              <span>🎨</span>
-              亲子互动
-            </h3>
-            <p className="text-kidsPrimary-600 text-lg leading-relaxed">丰富的亲子活动，增进家庭温馨感情</p>
+
+          <div className="flex items-center justify-center gap-2 text-lg text-gray-600">
+            <svg width="24" height="24" viewBox="0 0 24 24" className="text-yellow-400 fill-current">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+            已被 <span className="font-bold text-purple-600">1,000+</span> 家长和孩子喜爱！
           </div>
         </div>
 
-        {/* Stats Section */}
-        <div className="kids-card p-10 mb-16 relative z-10">
-          <h2 className="font-comic-neue text-3xl font-bold text-kidsPrimary-700 text-center mb-8 flex items-center justify-center gap-3">
-            <span className="text-4xl">📊</span>
-            成长数据大揭秘
-            <span className="text-4xl">🎯</span>
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div className="text-center p-4 rounded-2xl bg-kidsPrimary-50 border-2 border-kidsPrimary-200">
-              <div className="font-comic-neue text-4xl font-bold text-kidsPrimary-600 mb-3 flex items-center justify-center gap-2">
-                <span>📚</span>
-                1000+
-              </div>
-              <div className="text-kidsPrimary-700 font-semibold">已培养好习惯</div>
+        {/* 核心功能亮点 */}
+        <div className="mt-20 grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+          <div className="p-6 relative">
+            <div className="w-16 h-16 bg-gradient-to-br from-purple-100 to-purple-200 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <TrendingUp className="w-8 h-8 text-purple-600" />
             </div>
-            <div className="text-center p-4 rounded-2xl bg-kidsPurple-50 border-2 border-kidsPurple-200">
-              <div className="font-comic-neue text-4xl font-bold text-kidsPurple-600 mb-3 flex items-center justify-center gap-2">
-                <span>👦👧</span>
-                500+
-              </div>
-              <div className="text-kidsPrimary-700 font-semibold">活跃小用户</div>
-            </div>
-            <div className="text-center p-4 rounded-2xl bg-kidsSecondary-50 border-2 border-kidsSecondary-200">
-              <div className="font-comic-neue text-4xl font-bold text-kidsSecondary-600 mb-3 flex items-center justify-center gap-2">
-                <span>💖</span>
-                95%
-              </div>
-              <div className="text-kidsPrimary-700 font-semibold">家长满意度</div>
-            </div>
-            <div className="text-center p-4 rounded-2xl bg-kidsAccent-50 border-2 border-kidsAccent-200">
-              <div className="font-comic-neue text-4xl font-bold text-kidsAccent-600 mb-3 flex items-center justify-center gap-2">
-                <span>🤖</span>
-                24/7
-              </div>
-              <div className="text-kidsPrimary-700 font-semibold">智能陪伴</div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">智能追踪</h3>
+            <p className="text-gray-600">科学记录孩子的成长轨迹</p>
+            {/* 卡片装饰 */}
+            <div className="absolute -top-2 -right-2 w-8 h-8 animate-pulse" style={{ animationDelay: "6s" }}>
+              <svg viewBox="0 0 100 100" className="w-full h-full">
+                <use href="/sprites/chart-koala.svg#chart-koala" />
+              </svg>
             </div>
           </div>
-        </div>
 
-        {/* CTA Section */}
-        <div className="text-center kids-card p-12 relative z-10 bg-gradient-to-r from-kidsPrimary-100 to-kidsPurple-100 border-4 border-kidsPrimary-300">
-          <div className="text-6xl mb-6">🌈</div>
-          <h2 className="font-comic-neue text-3xl md:text-4xl font-bold mb-6 text-kidsPrimary-700 leading-tight">
-            让孩子在快乐中成长
-            <span className="block text-2xl md:text-3xl mt-2 text-transparent bg-gradient-to-r from-kidsPurple-500 to-kidsAccent-500 bg-clip-text">每一天都是新的开始 ✨</span>
-          </h2>
-          <p className="text-kidsPrimary-600 mb-8 text-xl leading-relaxed font-medium max-w-2xl mx-auto">
-            现在就开始，为孩子的未来播下好习惯的种子 🌱
-          </p>
-          <button 
-            onClick={handleLogin}
-            className="kids-button text-xl px-12 py-6 shadow-2xl font-comic-neue"
-          >
-            🚀 立即开始冒险 <ArrowRight className="ml-3 w-6 h-6" />
-          </button>
+          <div className="p-6 relative">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <Star className="w-8 h-8 text-blue-600" />
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">AI陪伴</h3>
+            <p className="text-gray-600">专业的育儿建议和智能提醒</p>
+            {/* 卡片装饰 */}
+            <div
+              className="absolute -top-2 -right-2 w-8 h-8 animate-bounce"
+              style={{ animationDelay: "7s", animationDuration: "3s" }}
+            >
+              <svg viewBox="0 0 100 100" className="w-full h-full">
+                <use href="/sprites/ai-orb.svg#ai-orb" />
+              </svg>
+            </div>
+          </div>
+
+          <div className="p-6 relative">
+            <div className="w-16 h-16 bg-gradient-to-br from-cyan-100 to-cyan-200 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <Users className="w-8 h-8 text-cyan-600" />
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">亲子互动</h3>
+            <p className="text-gray-600">丰富的家庭活动和奖励机制</p>
+            {/* 卡片装饰 */}
+            <div className="absolute -top-2 -right-2 w-8 h-8 animate-pulse" style={{ animationDelay: "8s" }}>
+              <svg viewBox="0 0 100 100" className="w-full h-full">
+                <use href="/sprites/salon-group.svg#salon-group" />
+              </svg>
+            </div>
+          </div>
         </div>
       </div>
     </div>

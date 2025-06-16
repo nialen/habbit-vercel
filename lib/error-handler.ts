@@ -55,4 +55,4 @@ function isStorageError(error: any): boolean {
   return storageErrorPatterns.some(pattern => 
     errorMessage.includes(pattern) || errorStack.includes(pattern)
   )
-} 
+}

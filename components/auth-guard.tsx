@@ -51,4 +51,4 @@ export function AuthGuard({ children }: AuthGuardProps) {
 
   // 显示内容（首页会根据认证状态显示 WelcomeScreen 或主应用）
   return <>{children}</>
-} 
+}

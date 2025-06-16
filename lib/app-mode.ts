@@ -118,4 +118,4 @@ export function getModeDescription(): string {
   return isDemoMode() 
     ? '使用模拟数据，无需登录，适合体验功能'
     : '使用真实数据库，需要登录，数据持久化保存'
-} 
+}

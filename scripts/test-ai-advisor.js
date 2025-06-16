@@ -1,80 +1,70 @@
-#!/usr/bin/env node
-
 /**
  * AI顾问API测试脚本
  * 用于测试和调试OpenRouter API调用
  */
 
-require('dotenv').config({ path: '.env.local' })
-const OpenAI = require('openai').default
+require("dotenv").config({ path: ".env.local" })
 
 async function testAIAdvisor() {
-  console.log('🧪 开始测试AI顾问API...\n')
+  console.log("🤖 测试AI顾问API...")
 
-  // 检查环境变量
-  const apiKey = process.env.HABIT_WORDS_KEY
+  const apiKey = process.env.OPENROUTER_API_KEY
   if (!apiKey) {
-    console.error('❌ 错误: HABIT_WORDS_KEY 环境变量未设置')
-    console.log('请在 .env.local 文件中设置 HABIT_WORDS_KEY=sk-or-v1-your-api-key')
-    process.exit(1)
+    console.error("❌ 缺少 OPENROUTER_API_KEY 环境变量")
+    return
   }
 
-  console.log(`✅ API密钥: ${apiKey.substring(0, 10)}...${apiKey.substring(apiKey.length - 4)}`)
-  console.log(`📝 API密钥长度: ${apiKey.length} 字符\n`)
+  const testPrompt = "我的5岁孩子不愿意刷牙，有什么好的方法让他养成刷牙的习惯？"
 
-  // 初始化客户端
-  const client = new OpenAI({
-    baseURL: "https://openrouter.ai/api/v1",
-    apiKey,
-  })
-
-  // 测试简单的文本生成
-  console.log('🔄 测试简单的文本生成...')
-  
   try {
-    const completion = await client.chat.completions.create({
-      model: "google/gemini-2.5-pro-preview-06-05",
-      messages: [
-        {
-          role: "user",
-          content: "请简单回答：你好"
-        }
-      ],
-      max_tokens: 100
-    }, {
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
       headers: {
-        "HTTP-Referer": process.env.NEXT_PUBLIC_SITE_URL || "https://habitkids.online",
-        "X-Title": "StarVoyage Habit Kids"
-      }
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+        "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+        "X-Title": "儿童习惯养成平台",
+      },
+      body: JSON.stringify({
+        model: "anthropic/claude-3-haiku",
+        messages: [
+          {
+            role: "system",
+            content:
+              "你是一个专业的儿童教育顾问，专门帮助家长培养孩子的良好习惯。请提供实用、温和且适合儿童年龄的建议。",
+          },
+          {
+            role: "user",
+            content: testPrompt,
+          },
+        ],
+        max_tokens: 500,
+        temperature: 0.7,
+      }),
     })
 
-    const response = completion.choices[0]?.message?.content
-    if (response) {
-      console.log('✅ 测试成功!')
-      console.log('📝 AI响应:', response)
-    } else {
-      console.log('⚠️  警告: 收到空响应')
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
     }
 
+    const data = await response.json()
+
+    console.log("✅ API调用成功！")
+    console.log("📝 问题:", testPrompt)
+    console.log("💡 回答:", data.choices[0].message.content)
+    console.log("📊 使用统计:", {
+      prompt_tokens: data.usage?.prompt_tokens,
+      completion_tokens: data.usage?.completion_tokens,
+      total_tokens: data.usage?.total_tokens,
+    })
   } catch (error) {
-    console.error('❌ API调用失败:')
-    console.error('错误类型:', error.constructor.name)
-    console.error('错误消息:', error.message)
-    
+    console.error("❌ API调用失败:", error.message)
     if (error.response) {
-      console.error('HTTP状态码:', error.response.status)
-      console.error('响应数据:', error.response.data)
+      console.error("响应状态:", error.response.status)
+      console.error("响应数据:", await error.response.text())
     }
-    
-    if (error.code) {
-      console.error('错误代码:', error.code)
-    }
-    
-    process.exit(1)
   }
-
-  console.log('\n🧪 测试完成!')
 }
 
-// 运行测试
-testAIAdvisor().catch(console.error) 
+// 执行测试
+testAIAdvisor().catch(console.error)

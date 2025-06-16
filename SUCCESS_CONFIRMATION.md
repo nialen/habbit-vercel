@@ -24,15 +24,15 @@
 ## 🚀 验证结果
 
 ### 服务器状态检查
-```bash
+\`\`\`bash
 $ netstat -an | findstr :3000
   TCP    0.0.0.0:3000           0.0.0.0:0              LISTENING
   TCP    [::]:3000              [::]:0                 LISTENING
-```
+\`\`\`
 ✅ **开发服务器正在端口3000上正常运行**
 
 ### 环境配置检查
-```bash
+\`\`\`bash
 $ npm run dev
 > cross-env NODE_ENV=development next dev
    ▲ Next.js 15.2.4
@@ -40,33 +40,33 @@ $ npm run dev
    - Network:      http://192.168.61.144:3000
    - Environments: .env.development
  ✓ Starting...
-```
+\`\`\`
 ✅ **Next.js正在使用.env.development环境配置**
 
 ## 🎯 当前可用功能
 
 ### 开发命令
-```bash
+\`\`\`bash
 npm run dev                 # ✅ 启动开发服务器 (http://localhost:3000)
 npm run dev:prod           # ✅ 启动生产模式开发服务器
 npm run build:dev          # ✅ 构建开发版本
 npm run build:prod         # ✅ 构建生产版本
-```
+\`\`\`
 
 ### 环境管理
-```bash
+\`\`\`bash
 npm run create-env-templates # ✅ 创建环境配置模板
 npm run setup-env:dev       # ✅ 设置开发环境
 npm run setup-env:prod      # ✅ 设置生产环境
 npm run check-env           # ✅ 检查环境状态
-```
+\`\`\`
 
 ### 项目维护
-```bash
+\`\`\`bash
 npm run clean               # ✅ 清理构建文件
 npm run type-check          # ✅ TypeScript类型检查
 npm run lint                # ✅ 代码规范检查
-```
+\`\`\`
 
 ## 🌟 项目特性
 
@@ -134,4 +134,4 @@ npm run lint                # ✅ 代码规范检查
 - ✅ 自动化的部署流程
 - ✅ 完整的分析追踪系统
 
-**立即开始开发吧！** 🚀 
+**立即开始开发吧！** 🚀

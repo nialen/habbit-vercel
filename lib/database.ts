@@ -390,4 +390,4 @@ export async function getUserStats(userId: string) {
     totalPoints: (allLogs?.length || 0) * 10, // 每次完成10分
     totalCompletions: allLogs?.length || 0
   }
-} 
+}

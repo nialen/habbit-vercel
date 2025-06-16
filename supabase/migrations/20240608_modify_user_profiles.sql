@@ -22,4 +22,4 @@ CREATE POLICY "Allow all operations for service role" ON public.user_profiles
 -- CREATE POLICY "Allow read access" ON public.user_profiles FOR SELECT USING (true);
 -- CREATE POLICY "Allow insert access" ON public.user_profiles FOR INSERT WITH CHECK (true);
 -- CREATE POLICY "Allow update access" ON public.user_profiles FOR UPDATE USING (true);
--- CREATE POLICY "Allow delete access" ON public.user_profiles FOR DELETE USING (true); 
+-- CREATE POLICY "Allow delete access" ON public.user_profiles FOR DELETE USING (true);

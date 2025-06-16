@@ -31,4 +31,4 @@ export async function POST(request: NextRequest) {
     console.error("兑换奖励失败:", error)
     return NextResponse.json({ error: "兑换奖励失败" }, { status: 500 })
   }
-} 
+}

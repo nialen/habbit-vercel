@@ -7,9 +7,9 @@
 ### 1. 📊 环境变量检查
 
 #### 在本地运行诊断脚本：
-```bash
+\`\`\`bash
 npm run check-vercel-env
-```
+\`\`\`
 
 #### 在Vercel项目中配置环境变量：
 
@@ -69,9 +69,9 @@ npm run check-vercel-env
 
 #### 启用生产环境调试：
 在Vercel中添加环境变量：
-```
+\`\`\`
 NEXT_PUBLIC_ENABLE_DEBUG=true
-```
+\`\`\`
 
 这将在生产环境中显示调试面板，帮助您诊断问题。
 
@@ -96,11 +96,11 @@ NEXT_PUBLIC_ENABLE_DEBUG=true
 ### 5. 🚀 推荐的部署流程
 
 1. **本地验证**:
-   ```bash
+   \`\`\`bash
    npm run check-vercel-env  # 检查环境变量
    npm run build             # 构建生产版本
    npm run start             # 本地测试生产版本
-   ```
+   \`\`\`
 
 2. **Vercel配置**:
    - 配置所有必需的环境变量
@@ -136,4 +136,4 @@ NEXT_PUBLIC_ENABLE_DEBUG=true
 
 ---
 
-**💡 提示**: 使用调试面板（右下角的🔧按钮）可以实时查看环境配置，这是诊断问题最快的方法！ 
+**💡 提示**: 使用调试面板（右下角的🔧按钮）可以实时查看环境配置，这是诊断问题最快的方法！

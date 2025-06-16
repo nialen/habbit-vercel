@@ -223,4 +223,4 @@ export function ProfileSetupModal({ open, onOpenChange, onSetupComplete }: Profi
       </DialogContent>
     </Dialog>
   )
-} 
+}

@@ -55,4 +55,4 @@ echo "🚀 如需配置真实邮箱服务，请参考文档："
 echo "   - README.md"
 echo "   - EMAIL_VERIFICATION_IMPLEMENTATION.md"
 echo
-echo "准备就绪！🎉" 
+echo "准备就绪！🎉"

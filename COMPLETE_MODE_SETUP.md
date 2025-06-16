@@ -33,7 +33,7 @@
 
 编辑项目根目录的 `env.local` 文件，将示例值替换为你的实际值：
 
-```bash
+\`\`\`bash
 # 你的 OpenAI 和 Replicate API Keys (已配置)
 HABIT_WORDS_KEY=sk-or-v1-xxx...
 HABIT_IMAGE_TOKEN=r8_xxx...
@@ -49,22 +49,22 @@ NEXT_PUBLIC_APP_ENV=development
 
 # Plausible Analytics
 NEXT_PUBLIC_PLAUSIBLE_DOMAIN=habitkids.online
-```
+\`\`\`
 
 ### 2. 运行数据库迁移
 
 安装 Supabase CLI（如果还没有）：
 
-```bash
+\`\`\`bash
 # 使用 npm
 npm install -g supabase
 
 # 或使用其他方式，参考: https://supabase.com/docs/guides/cli
-```
+\`\`\`
 
 然后运行迁移：
 
-```bash
+\`\`\`bash
 # 1. 初始化 Supabase
 supabase init
 
@@ -73,7 +73,7 @@ supabase link --project-ref your-project-id
 
 # 3. 推送数据库迁移
 supabase db push
-```
+\`\`\`
 
 **或者手动运行 SQL：**
 
@@ -87,9 +87,9 @@ supabase db push
 
 ### 3. 重启开发服务器
 
-```bash
+\`\`\`bash
 npm run dev
-```
+\`\`\`
 
 ## ✅ 验证设置
 
@@ -134,21 +134,21 @@ npm run dev
 
 在 Vercel 项目设置中添加：
 
-```
+\`\`\`
 NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIs...
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIs...
 NEXT_PUBLIC_APP_URL=https://your-domain.vercel.app
 NEXT_PUBLIC_APP_ENV=production
-```
+\`\`\`
 
 ### 2. 推送代码并部署
 
-```bash
+\`\`\`bash
 git add .
 git commit -m "feat: 切换到完整模式，连接 Supabase 数据库"
 git push origin main
-```
+\`\`\`
 
 ## 🎊 功能对比
 
@@ -184,10 +184,10 @@ git push origin main
 
 **A:** 只需在 `env.local` 中注释掉 Supabase 配置：
 
-```bash
+\`\`\`bash
 # NEXT_PUBLIC_SUPABASE_URL=...
 # NEXT_PUBLIC_SUPABASE_ANON_KEY=...
-```
+\`\`\`
 
 然后重启开发服务器即可。
 
@@ -208,4 +208,4 @@ git push origin main
 4. **性能优化** - 监控和优化数据库查询
 5. **添加通知** - 配置邮件和推送通知
 
-🎉 **恭喜！你现在拥有一个完全功能的儿童习惯养成应用！** 
+🎉 **恭喜！你现在拥有一个完全功能的儿童习惯养成应用！**

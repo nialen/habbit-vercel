@@ -7,9 +7,9 @@
 ## 🏗️ 实现架构
 
 ### 1. 多步骤注册流程
-```
+\`\`\`
 步骤 1: 邮箱输入 → 步骤 2: 验证码验证 → 步骤 3: 个人信息填写 → 步骤 4: 注册成功
-```
+\`\`\`
 
 ### 2. 核心组件
 
@@ -53,7 +53,7 @@
 ## 🔧 技术实现
 
 ### Supabase OTP 集成
-```typescript
+\`\`\`typescript
 // 发送验证码
 const { error } = await supabase.auth.signInWithOtp({
   email: formData.email,
@@ -71,7 +71,7 @@ const { error } = await supabase.auth.verifyOtp({
   token: formData.verificationCode,
   type: 'email'
 })
-```
+\`\`\`
 
 ### 状态管理
 - **当前步骤**: `currentStep` (email | verification | profile | success)
@@ -124,21 +124,21 @@ const { error } = await supabase.auth.verifyOtp({
 ## 📝 配置要求
 
 ### Supabase 配置
-```toml
+\`\`\`toml
 # supabase/config.toml
 [auth.email]
 enable_signup = true
 otp_length = 6
 otp_expiry = 3600
 max_frequency = "1s"
-```
+\`\`\`
 
 ### 环境变量
-```env
+\`\`\`env
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 NEXT_PUBLIC_APP_MODE=complete
-```
+\`\`\`
 
 ## 🧪 测试
 
@@ -158,9 +158,9 @@ NEXT_PUBLIC_APP_MODE=complete
 ## 🚀 使用说明
 
 ### 启动应用
-```bash
+\`\`\`bash
 npm run dev
-```
+\`\`\`
 
 ### 访问注册页面
 1. 访问 `http://localhost:3000`
@@ -196,4 +196,4 @@ npm run dev
 用户现在可以通过以下流程完成注册：
 **邮箱输入** → **验证码验证** → **信息完善** → **注册成功**
 
-该实现遵循了现代 Web 应用的最佳实践，具有良好的安全性、可用性和可维护性。 
+该实现遵循了现代 Web 应用的最佳实践，具有良好的安全性、可用性和可维护性。

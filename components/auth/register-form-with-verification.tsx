@@ -558,4 +558,4 @@ export function RegisterFormWithVerification({ onSwitchToLogin }: RegisterFormWi
     default:
       return renderEmailStep()
   }
-} 
+}

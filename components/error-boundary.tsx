@@ -88,4 +88,4 @@ function DefaultErrorFallback({ error, resetError }: { error: Error; resetError:
       </div>
     </div>
   )
-} 
+}

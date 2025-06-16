@@ -42,4 +42,4 @@ export async function POST(request: NextRequest) {
     console.error("创建评论失败:", error)
     return NextResponse.json({ error: "创建评论失败" }, { status: 500 })
   }
-} 
+}

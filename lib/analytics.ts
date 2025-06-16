@@ -117,4 +117,4 @@ export const analytics = {
   }
 }
 
-export default analytics 
+export default analytics

@@ -87,4 +87,4 @@ echo ✅ 环境配置模板文件已创建完成！
 echo.
 echo 📝 请复制并编辑这些文件：
 echo - copy .env.development.example .env.development
-echo - copy .env.production.example .env.production 
+echo - copy .env.production.example .env.production

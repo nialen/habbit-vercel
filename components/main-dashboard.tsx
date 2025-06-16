@@ -267,4 +267,4 @@ export default function MainDashboard({ user, userProfile }: MainDashboardProps)
       </main>
     </div>
   )
-} 
+}

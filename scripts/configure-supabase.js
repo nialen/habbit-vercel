@@ -78,4 +78,4 @@ function configureSupabase() {
   console.log('4. 应用现在会要求登录认证');
 }
 
-configureSupabase(); 
+configureSupabase();

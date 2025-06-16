@@ -16,4 +16,4 @@ export async function GET(request: NextRequest) {
     console.error("获取兑换记录失败:", error)
     return NextResponse.json({ error: "获取兑换记录失败" }, { status: 500 })
   }
-} 
+}

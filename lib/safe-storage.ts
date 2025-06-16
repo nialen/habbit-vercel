@@ -92,4 +92,4 @@ export const safeSessionStorage = {
       console.warn(`Error clearing sessionStorage: ${error}`);
     }
   }
-}; 
+};

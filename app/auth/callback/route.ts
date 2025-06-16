@@ -107,4 +107,4 @@ export async function GET(request: Request) {
   console.log('No valid auth code, redirecting to auth page')
   // return the user to auth page with error
   return NextResponse.redirect(`${origin}/auth?error=${encodeURIComponent('认证失败，请重新登录')}`)
-} 
+}

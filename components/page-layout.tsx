@@ -31,4 +31,4 @@ export function PageLayout({ children }: PageLayoutProps) {
       </main>
     </div>
   )
-} 
+}

@@ -21,4 +21,4 @@ export default function AuthPage() {
       <AuthPageContent />
     </Suspense>
   )
-} 
+}

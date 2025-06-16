@@ -37,17 +37,17 @@
 ## 🔧 当前配置状态
 
 ### Vercel配置 (`vercel.json`)
-```json
+\`\`\`json
 {
   "framework": "nextjs",
   "regions": ["hkg1"],
   "installCommand": "npm install --legacy-peer-deps",
   "build": { "env": { "NPM_CONFIG_LEGACY_PEER_DEPS": "true" } }
 }
-```
+\`\`\`
 
 ### 环境配置系统
-```bash
+\`\`\`bash
 # 开发环境
 npm run dev                 # 启动开发服务器
 npm run build:dev          # 构建开发版本
@@ -61,7 +61,7 @@ npm run setup-env:prod     # 设置生产环境
 # 环境管理
 npm run check-env          # 检查环境状态
 npm run create-env-templates # 创建环境模板
-```
+\`\`\`
 
 ### 部署环境变量需要设置：
 1. **Vercel项目设置**:
@@ -118,4 +118,4 @@ npm run create-env-templates # 创建环境模板
 2. **测试阶段**: 使用 `npm run dev:prod` 测试生产配置
 3. **部署阶段**: 推送代码自动触发部署
 
-**环境配置指南**: 详见 `ENVIRONMENT_SETUP.md` 
+**环境配置指南**: 详见 `ENVIRONMENT_SETUP.md`

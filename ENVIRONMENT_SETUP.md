@@ -6,40 +6,40 @@
 
 ## 📁 环境文件结构
 
-```
+\`\`\`
 ├── .env.development           # 开发环境实际配置 (不进入版本控制)
 ├── .env.production            # 生产环境实际配置 (不进入版本控制)
 └── .env.example               # 通用配置模板
-```
+\`\`\`
 
 ## 🚀 快速开始
 
 ### 1. 创建环境配置模板
 
-```bash
+\`\`\`bash
 # 生成环境配置模板文件
 npm run create-env-templates
-```
+\`\`\`
 
 ### 2. 设置开发环境
 
-```bash
+\`\`\`bash
 # 自动设置开发环境
 npm run setup-env:dev
 
 # 或手动复制
 cp .env.development.example .env.development
-```
+\`\`\`
 
 ### 3. 设置生产环境
 
-```bash
+\`\`\`bash
 # 自动设置生产环境
 npm run setup-env:prod
 
 # 或手动复制
 cp .env.production.example .env.production
-```
+\`\`\`
 
 ### 4. 编辑配置文件
 
@@ -60,7 +60,7 @@ cp .env.production.example .env.production
 ## 🛠️ 开发命令
 
 ### 开发环境
-```bash
+\`\`\`bash
 # 启动开发服务器 (自动使用 .env.development)
 npm run dev
 
@@ -69,10 +69,10 @@ npm run build:dev
 
 # 启动开发版本
 npm run start:dev
-```
+\`\`\`
 
 ### 生产环境
-```bash
+\`\`\`bash
 # 启动生产模式开发服务器
 npm run dev:prod
 
@@ -81,10 +81,10 @@ npm run build:prod
 
 # 启动生产版本
 npm run start:prod
-```
+\`\`\`
 
 ### 环境管理
-```bash
+\`\`\`bash
 # 检查当前环境配置
 npm run check-env
 
@@ -93,7 +93,7 @@ npm run clean
 
 # 预览构建结果
 npm run preview
-```
+\`\`\`
 
 ## 🔧 环境变量说明
 
@@ -138,7 +138,7 @@ npm run preview
 
 代码中可以使用环境管理工具：
 
-```typescript
+\`\`\`typescript
 import { isDevelopment, isProduction, ENV_CONFIG, debugLog } from '@/lib/env'
 
 // 检查环境
@@ -151,7 +151,7 @@ const { supabase, app } = ENV_CONFIG
 
 // 调试日志（仅在开发环境输出）
 debugLog('用户操作', { userId: 123, action: 'login' })
-```
+\`\`\`
 
 ## 🔐 安全注意事项
 
@@ -205,4 +205,4 @@ debugLog('用户操作', { userId: 123, action: 'login' })
 
 ---
 
-🎉 **配置完成后，你就可以享受完全隔离的开发和生产环境了！** 
+🎉 **配置完成后，你就可以享受完全隔离的开发和生产环境了！**

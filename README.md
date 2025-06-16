@@ -26,15 +26,15 @@
 ### 方法一：一键部署（推荐）
 
 1. **Fork或Clone项目**
-   ```bash
+   \`\`\`bash
    git clone https://github.com/你的用户名/habbit-vercel.git
    cd habbit-vercel
-   ```
+   \`\`\`
 
 2. **安装依赖**
-   ```bash
+   \`\`\`bash
    npm install --legacy-peer-deps
-   ```
+   \`\`\`
 
 3. **连接Vercel**
    - 访问 [vercel.com](https://vercel.com)
@@ -43,41 +43,41 @@
    - Vercel会自动检测Next.js项目配置
 
 4. **设置环境变量**（可选）
-   ```
+   \`\`\`
    NEXT_PUBLIC_SUPABASE_URL=你的Supabase项目URL
    NEXT_PUBLIC_SUPABASE_ANON_KEY=你的Supabase匿名密钥
    NEXT_PUBLIC_PLAUSIBLE_DOMAIN=你的域名
-   ```
+   \`\`\`
 
 5. **部署完成！**
    项目会自动构建并生成访问链接
 
 ### 方法二：使用快速部署脚本
 
-```bash
+\`\`\`bash
 # Linux/Mac用户
 ./deploy.sh "首次部署"
 
 # Windows用户
 deploy.bat "首次部署"
-```
+\`\`\`
 
 ## 🔄 自动部署流程
 
 一旦项目连接到Vercel，以下操作会自动触发部署：
 
-```bash
+\`\`\`bash
 # 日常更新
 git add .
 git commit -m "feat: 添加新功能"
 git push origin main
-```
+\`\`\`
 
 → **自动部署到生产环境**
 
 ## 📁 项目结构
 
-```
+\`\`\`
 habbit-vercel/
 ├── app/                    # Next.js App Router页面
 │   ├── globals.css        # 全局样式
@@ -100,7 +100,7 @@ habbit-vercel/
 ├── deploy.sh             # Linux/Mac部署脚本
 ├── deploy.bat            # Windows部署脚本
 └── DEPLOYMENT.md         # 详细部署指南
-```
+\`\`\`
 
 ## 📊 分析和监控
 
@@ -125,7 +125,7 @@ habbit-vercel/
 
 ## 🔧 开发环境
 
-```bash
+\`\`\`bash
 # 安装依赖
 npm install --legacy-peer-deps
 
@@ -137,17 +137,17 @@ npm run build
 
 # 启动生产服务器
 npm run start
-```
+\`\`\`
 
 ## 📝 提交规范
 
-```bash
+\`\`\`bash
 git commit -m "feat: 添加新功能"
 git commit -m "fix: 修复bug"
 git commit -m "docs: 更新文档"
 git commit -m "style: 样式调整"
 git commit -m "refactor: 代码重构"
-```
+\`\`\`
 
 ## 🤝 贡献指南
 

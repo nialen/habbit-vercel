@@ -37,18 +37,18 @@
 ### 1. Supabase Anon Key
 您需要在 Supabase 控制台获取并配置 API 密钥：
 
-```bash
+\`\`\`bash
 # 使用配置脚本 (推荐)
 npm run configure-supabase 02d21ec1-752f-48ad-892d-3845df331a7b YOUR_ANON_KEY
 
 # 或手动编辑 .env.development
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_real_anon_key_here
-```
+\`\`\`
 
 ### 2. 数据库表结构
 在 Supabase SQL Editor 中创建用户表：
 
-```sql
+\`\`\`sql
 -- 用户资料表
 CREATE TABLE user_profiles (
   id UUID REFERENCES auth.users(id) PRIMARY KEY,
@@ -73,19 +73,19 @@ CREATE POLICY "Users can update own profile" ON user_profiles
 
 CREATE POLICY "Users can insert own profile" ON user_profiles
   FOR INSERT WITH CHECK (auth.uid() = id);
-```
+\`\`\`
 
 ## 🚀 启动测试
 
 1. **检查配置状态**
-   ```bash
+   \`\`\`bash
    npm run check-env
-   ```
+   \`\`\`
 
 2. **启动开发服务器**
-   ```bash
+   \`\`\`bash
    npm run dev
-   ```
+   \`\`\`
 
 3. **测试流程**
    - 访问 http://localhost:3000
@@ -120,4 +120,4 @@ CREATE POLICY "Users can insert own profile" ON user_profiles
 
 您的应用已成功迁移到生产级认证系统！现在用户必须通过真实的登录流程才能访问应用，所有数据都将存储在 Supabase 数据库中。
 
-**下一步**: 配置 Supabase Anon Key 并创建数据库表结构，然后开始享受您的全功能应用！ 
+**下一步**: 配置 Supabase Anon Key 并创建数据库表结构，然后开始享受您的全功能应用！

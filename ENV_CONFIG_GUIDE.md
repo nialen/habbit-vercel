@@ -2,10 +2,10 @@
 
 ## 📋 环境文件结构
 
-```
+\`\`\`
 ├── .env.development    # 开发/测试环境配置（本地）
 └── .env.production     # 生产环境配置（部署时使用）
-```
+\`\`\`
 
 ## 🔒 重要说明
 
@@ -16,26 +16,26 @@
 ## 🧪 开发环境配置 (.env.development)
 
 ### 基础配置
-```bash
+\`\`\`bash
 NODE_ENV=development
 NEXT_PUBLIC_APP_MODE=complete
 NEXT_PUBLIC_APP_URL=http://localhost:3000
-```
+\`\`\`
 
 ### Supabase 配置
-```bash
+\`\`\`bash
 NEXT_PUBLIC_SUPABASE_URL=你的测试环境URL
 NEXT_PUBLIC_SUPABASE_ANON_KEY=你的测试环境anon_key
-```
+\`\`\`
 
 ### 分析工具配置
-```bash
+\`\`\`bash
 # 测试环境禁用分析
 NEXT_PUBLIC_ENABLE_ANALYTICS=false
 
 # 如果需要测试 Plausible 分析功能：
 # NEXT_PUBLIC_PLAUSIBLE_DOMAIN=localhost:3000
-```
+\`\`\`
 
 ## 📊 关于 Plausible Analytics
 
@@ -84,4 +84,4 @@ NEXT_PUBLIC_ENABLE_ANALYTICS=false
 - [ ] Supabase URL 和 anon key 已填入
 - [ ] 分析工具根据需要配置
 - [ ] 文件已添加到 `.gitignore`
-- [ ] 应用可以正常连接 Supabase 
+- [ ] 应用可以正常连接 Supabase

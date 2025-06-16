@@ -113,4 +113,4 @@ export function errorLog(message: string, error?: any): void {
 export const ENV_CONFIG = getEnvironmentConfig()
 export const IS_DEV = isDevelopment()
 export const IS_PROD = isProduction()
-export const DATABASE_ENV = getDatabaseEnvironment() 
+export const DATABASE_ENV = getDatabaseEnvironment()
