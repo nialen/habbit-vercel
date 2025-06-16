@@ -1,6 +1,7 @@
 "use client"
 
 import { createContext, useContext, useEffect, useState, useMemo, useCallback, type ReactNode } from "react"
+import { useRouter } from "next/navigation"
 import type { User } from "@supabase/supabase-js"
 import { createClient } from "@/lib/supabase/client"
 import { isSupabaseConfigured } from "@/lib/supabase"
@@ -143,16 +144,126 @@ const shouldSkipAuthCheck = (): boolean => {
   return shouldSkip
 }
 
+// 清除所有认证相关的 cookies
+const clearAuthCookies = () => {
+  if (typeof window === 'undefined') return
+  
+  try {
+    console.log('🍪 清除所有认证相关的 cookies...')
+    
+    // 定义需要清除的 cookie 名称
+    const cookiesToClear = [
+      'sb-access-token',
+      'sb-refresh-token',
+      'sb-auth-token',
+      'supabase-auth-token',
+      'supabase.auth.token',
+      // Supabase 默认的 cookie 名称格式
+      `sb-${process.env.NEXT_PUBLIC_SUPABASE_PROJECT_REF || 'localhost'}-auth-token`,
+      `sb-${process.env.NEXT_PUBLIC_SUPABASE_PROJECT_REF || 'localhost'}-auth-token.0`,
+      `sb-${process.env.NEXT_PUBLIC_SUPABASE_PROJECT_REF || 'localhost'}-auth-token.1`,
+    ]
+    
+    // 获取所有现有的 cookies
+    const allCookies = document.cookie.split(';')
+    
+    // 清除预定义的 cookies
+    cookiesToClear.forEach(cookieName => {
+      clearCookie(cookieName)
+    })
+    
+    // 清除所有以认证相关前缀开头的 cookies
+    allCookies.forEach(cookie => {
+      const cookieName = cookie.trim().split('=')[0]
+      if (cookieName.startsWith('sb-') || 
+          cookieName.includes('auth') || 
+          cookieName.includes('supabase') ||
+          cookieName.includes('session')) {
+        clearCookie(cookieName)
+      }
+    })
+    
+    console.log('✅ 已清除所有认证相关的 cookies')
+  } catch (error) {
+    console.warn('清除 cookies 时出错:', error)
+  }
+}
+
+// 清除指定名称的 cookie（多种路径和域名）
+const clearCookie = (cookieName: string) => {
+  if (typeof window === 'undefined') return
+  
+  try {
+    // 清除当前域名和路径的 cookie
+    document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`
+    document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
+    
+    // 清除根域名的 cookie
+    if (window.location.hostname.includes('.')) {
+      const rootDomain = '.' + window.location.hostname.split('.').slice(-2).join('.')
+      document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${rootDomain};`
+    }
+    
+    // 清除不同路径的 cookie
+    const paths = ['/', '/auth', '/api']
+    paths.forEach(path => {
+      document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${path};`
+      document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${path}; domain=${window.location.hostname};`
+      if (window.location.hostname.includes('.')) {
+        const rootDomain = '.' + window.location.hostname.split('.').slice(-2).join('.')
+        document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${path}; domain=${rootDomain};`
+      }
+    })
+  } catch (error) {
+    console.warn(`清除 cookie ${cookieName} 时出错:`, error)
+  }
+}
+
 const clearUserProfileCache = () => {
+  console.log('🧹 清除所有认证相关缓存...')
   safeLocalStorage.removeItem(CACHE_KEY)
   safeLocalStorage.removeItem(CACHE_EXPIRY_KEY)
   safeLocalStorage.removeItem(TOKEN_EXPIRY_KEY)
   safeLocalStorage.removeItem(LAST_AUTH_CHECK_KEY)
   safeLocalStorage.removeItem(INIT_FLAG_KEY)
+  
+  // 清除所有可能的认证相关存储项
+  const keysToRemove = [
+    'supabase.auth.token',
+    'sb-',
+    'auth_user_profile',
+    'auth_user_profile_expiry',
+    'auth_token_expiry',
+    'auth_last_check',
+    'auth_initialized'
+  ]
+  
+  keysToRemove.forEach(key => {
+    if (key.endsWith('-')) {
+      // 清除以特定前缀开头的所有键
+      try {
+        if (typeof window !== 'undefined' && window.localStorage) {
+          Object.keys(localStorage).forEach(storageKey => {
+            if (storageKey.startsWith(key)) {
+              safeLocalStorage.removeItem(storageKey)
+            }
+          })
+        }
+      } catch (error) {
+        console.warn('清除前缀缓存时出错:', error)
+      }
+    } else {
+      safeLocalStorage.removeItem(key)
+    }
+  })
+  
+  // 同时清除 cookies
+  clearAuthCookies()
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const completeMode = useMemo(() => isCompleteMode(), [])
+  const router = useRouter()
   
   // 优化：首先尝试从缓存加载用户资料
   const [userProfile, setUserProfile] = useState<UserProfile | null>(() => {
@@ -321,6 +432,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setLoading(false)
         setInitialized(true)
         return
+      } else {
+        // 如果没有缓存但token被认为有效，可能是刚刚退出登录，需要重新检查
+        console.log('⚠️ Token有效但无缓存用户资料，继续完整认证检查')
       }
     }
     
@@ -429,6 +543,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log('Auth state changed:', event, !!session?.user, session?.user?.email)
       
+      // 如果是退出登录事件，确保彻底清除状态
+      if (event === 'SIGNED_OUT') {
+        console.log('User signed out, clearing all state...')
+        setUser(null)
+        setUserProfile(null)
+        clearUserProfileCache()
+        setLoading(false)
+        return
+      }
+      
       // 🚀 新增：更新token过期时间缓存
       if (session?.expires_at) {
         cacheTokenExpiry(session.expires_at)
@@ -443,10 +567,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
         await fetchUserProfile(session.user.id, session.user)
       } else {
-        // 用户退出登录
-        console.log('User signed out, clearing profile...')
+        // 其他情况下的无会话状态
+        console.log('No session, clearing profile...')
         setUserProfile(null)
-        clearUserProfileCache()
         setLoading(false)
       }
     })
@@ -567,72 +690,79 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const signOut = async () => {
-    console.log('🔄 开始退出登录流程...')
+    console.log('🚀 步骤1: 开始退出登录流程')
+    const startTime = Date.now()
     
     try {
-      // 立即清除所有本地状态，确保UI立即响应
+      // 1. 立即清除所有本地状态
+      console.log('🚀 步骤2: 清除React状态')
       setUser(null)
       setUserProfile(null)
       setError(null)
       setLoading(false)
-      setInitialized(false)
+      console.log('✅ 步骤2完成: React状态已清除')
       
-      // 清除用户资料缓存
-      clearUserProfileCache()
-      
-      // 清除所有浏览器存储
+      // 2. 清除所有缓存和存储
       if (typeof window !== 'undefined') {
-        try {
-          localStorage.clear()
-          sessionStorage.clear()
-          console.log('🧹 已清除所有浏览器存储')
-        } catch (error) {
-          console.warn('清除浏览器存储时出错:', error)
-        }
-      }
-      
-      if (isSupabaseConfigured && supabase) {
-        // 执行Supabase退出登录（异步，但不等待结果）
-        supabase.auth.signOut().then(({ error }) => {
-          if (error) {
-            console.error('❌ Supabase退出登录时发生错误:', error)
-          } else {
-            console.log('✅ Supabase退出登录成功')
-          }
-        }).catch((error) => {
-          console.error('❌ Supabase退出登录异常:', error)
-        })
-      }
-      
-      console.log('🏁 退出登录流程结束，重定向到欢迎页面')
-      
-      // 确保在下一个事件循环中重定向，让状态更新完成
-      setTimeout(() => {
-        if (typeof window !== 'undefined') {
-          window.location.href = '/'
-        }
-      }, 100)
-      
-    } catch (error) {
-      console.error('退出登录过程中发生未知错误:', error)
-      
-      // 确保无论如何都清除状态并重定向
-      setUser(null)
-      setUserProfile(null)
-      setError(null)
-      setLoading(false)
-      setInitialized(false)
-      
-      if (typeof window !== 'undefined') {
+        console.log('🚀 步骤3: 开始清除浏览器存储')
+        
+        // 清除 localStorage 和 sessionStorage
+        console.log('🚀 步骤3a: 清除localStorage和sessionStorage')
         localStorage.clear()
         sessionStorage.clear()
+        console.log('✅ 步骤3a完成: localStorage和sessionStorage已清除')
+        
+        // 清除所有 cookies
+        console.log('🚀 步骤3b: 清除cookies')
+        const cookiesBefore = document.cookie.split(";").length
+        document.cookie.split(";").forEach(cookie => {
+          const eqPos = cookie.indexOf("=")
+          const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim()
+          if (name) {
+            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`
+            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${window.location.hostname}`
+            if (window.location.hostname.includes('.')) {
+              const domain = '.' + window.location.hostname.split('.').slice(-2).join('.')
+              document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${domain}`
+            }
+          }
+        })
+        const cookiesAfter = document.cookie.split(";").length
+        console.log(`✅ 步骤3b完成: cookies已清除 (${cookiesBefore} -> ${cookiesAfter})`)
+        console.log('✅ 步骤3完成: 所有浏览器存储已清除')
       }
       
-      setTimeout(() => {
-        if (typeof window !== 'undefined') {
-          window.location.href = '/'
-        }
-      }, 100)
+      // 3. 调用 Supabase 退出登录（不等待结果）
+      console.log('🚀 步骤4: 调用Supabase退出登录（异步）')
+      if (isSupabaseConfigured && supabase) {
+        supabase.auth.signOut()
+          .then(() => console.log('✅ Supabase退出登录成功'))
+          .catch(err => console.log('❌ Supabase退出登录错误:', err))
+      } else {
+        console.log('⚠️ Supabase未配置，跳过')
+      }
+      console.log('✅ 步骤4完成: Supabase退出登录已启动')
+      
+      const endTime = Date.now()
+      console.log(`⏱️ 退出登录准备完成，耗时: ${endTime - startTime}ms`)
+      
+      // 4. 使用 Next.js 路由跳转到首页（无刷新）
+      console.log('🚀 步骤5: 开始页面跳转（无刷新）')
+      console.log('当前路径:', window.location.pathname)
+      console.log('目标路径: /')
+      
+      router.push('/')
+      
+      // 这行代码通常不会执行，因为页面已经跳转
+      console.log('✅ 步骤5完成: 页面跳转命令已执行')
+      
+    } catch (error) {
+      console.error('❌ 退出登录过程中发生错误:', error)
+      console.error('错误堆栈:', error instanceof Error ? error.stack : '未知错误')
+      
+      // 即使出错也要强制跳转
+      console.log('🚀 错误处理: 强制跳转到首页（无刷新）')
+      router.push('/')
     }
   }
 

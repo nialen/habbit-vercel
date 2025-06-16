@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
-import { useApp } from "@/components/providers"
+import { useAuth } from "@/components/auth-provider"
 import { LoadingSpinner } from "@/components/loading-spinner"
 import { SimpleNavigation } from "@/components/simple-navigation"
 import { Sparkles, MessageCircle, Send, Lightbulb, CheckSquare, Zap } from "lucide-react"
@@ -17,7 +17,7 @@ interface AdvisorResponse {
 }
 
 export default function AdvisorPage() {
-  const { } = useApp() // userProfile 在需要时可以从 useAuth 获取
+  const { userProfile } = useAuth() // 使用useAuth获取用户资料
   const [concern, setConcern] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [response, setResponse] = useState<AdvisorResponse | null>(null)
@@ -43,6 +43,9 @@ export default function AdvisorPage() {
   const handleSubmit = async () => {
     if (!concern.trim() || isLoading) return
 
+    // 获取孩子的实际年龄，如果没有则使用默认值
+    const childAge = userProfile?.child_age || 6
+
     setIsLoading(true)
 
     // 添加用户消息到聊天历史
@@ -61,7 +64,7 @@ export default function AdvisorPage() {
         },
         body: JSON.stringify({
           concern,
-          childAge: 6, // 默认年龄，可以从 userProfile 获取
+          childAge, // 使用实际年龄
         }),
       })
 
@@ -96,6 +99,13 @@ export default function AdvisorPage() {
       <div className="text-center mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-sky-900 mb-2">AI 烦恼顾问</h1>
         <p className="text-sky-700 text-lg">专业的育儿建议，温暖的陪伴支持 💝</p>
+        {userProfile?.child_name && userProfile?.child_age && (
+          <div className="mt-3 inline-flex items-center gap-2 px-4 py-2 bg-blue-100 rounded-full">
+            <span className="text-blue-600 text-sm">
+              👶 为 {userProfile.child_name}（{userProfile.child_age}岁）提供专业建议
+            </span>
+          </div>
+        )}
       </div>
 
       {/* 快速提问 */}

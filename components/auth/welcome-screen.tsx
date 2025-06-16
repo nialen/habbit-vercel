@@ -12,98 +12,134 @@ export function WelcomeScreen() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="gradient-background relative overflow-hidden">
       {/* Hero Section */}
       <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
-            <Star className="w-4 h-4" />
-            儿童成长专家推荐
+        {/* 装饰性浮动元素 */}
+        <div className="floating-elements">
+          <div className="floating-star" style={{ top: '8%', left: '10%', fontSize: '2rem' }}>⭐</div>
+          <div className="floating-cloud" style={{ top: '12%', right: '12%', fontSize: '2.5rem' }}>☁️</div>
+          <div className="floating-star" style={{ top: '20%', right: '25%', fontSize: '1.5rem' }}>✨</div>
+          <div className="floating-cloud" style={{ bottom: '25%', left: '8%', fontSize: '2rem' }}>☁️</div>
+          <div className="floating-star" style={{ bottom: '12%', right: '18%', fontSize: '1.8rem' }}>⭐</div>
+        </div>
+
+        <div className="text-center mb-16 relative z-10">
+          <div className="kids-badge inline-flex items-center gap-2 mb-8 text-lg font-bold">
+            <Star className="w-5 h-5" />
+            儿童成长专家推荐 ⭐⭐⭐⭐⭐
           </div>
           
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+          <h1 className="font-comic-neue text-5xl md:text-7xl font-bold text-kidsPrimary-700 mb-8 leading-tight">
+            <span className="text-6xl md:text-8xl">🌟</span>
+            <br />
             星航成长营
-            <span className="block text-blue-600">StarVoyage</span>
+            <span className="block text-transparent bg-gradient-to-r from-kidsPurple-500 to-kidsAccent-500 bg-clip-text text-4xl md:text-6xl mt-2">StarVoyage</span>
           </h1>
           
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            帮助孩子养成好习惯，让每一天都充满成长的力量
+          <p className="text-2xl text-kidsPrimary-600 mb-10 max-w-3xl mx-auto leading-relaxed font-medium">
+            帮助孩子养成好习惯，让每一天都充满成长的力量 ✨
           </p>
           
-          <Button 
+          <button 
             onClick={handleLogin}
-            size="lg" 
-            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl text-lg font-semibold shadow-lg hover:shadow-xl transition-all"
+            className="kids-button text-xl px-12 py-6 shadow-2xl font-comic-neue"
           >
-            开始成长之旅 <ArrowRight className="ml-2 w-5 h-5" />
-          </Button>
+            🌟 开始成长之旅 <ArrowRight className="ml-3 w-6 h-6" />
+          </button>
         </div>
 
         {/* Features Grid */}
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
-          <div className="text-center p-6">
-            <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <Target className="w-8 h-8 text-blue-600" />
+        <div className="grid md:grid-cols-3 gap-8 mb-16 relative z-10">
+          <div className="kids-card p-8 text-center">
+            <div className="w-20 h-20 bg-gradient-to-br from-kidsPrimary-100 to-kidsPrimary-200 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+              <Target className="w-10 h-10 text-kidsPrimary-600" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">习惯养成</h3>
-            <p className="text-gray-600">科学的习惯培养体系，让好习惯自然而然</p>
+            <h3 className="font-comic-neue text-2xl font-bold text-kidsPrimary-700 mb-4 flex items-center justify-center gap-2">
+              <span>📚</span>
+              习惯养成
+            </h3>
+            <p className="text-kidsPrimary-600 text-lg leading-relaxed">科学的习惯培养体系，让好习惯自然而然养成</p>
           </div>
           
-          <div className="text-center p-6">
-            <div className="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <Star className="w-8 h-8 text-purple-600" />
+          <div className="kids-card p-8 text-center">
+            <div className="w-20 h-20 bg-gradient-to-br from-kidsPurple-100 to-kidsPurple-200 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+              <Star className="w-10 h-10 text-kidsPurple-600" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">AI 智能顾问</h3>
-            <p className="text-gray-600">专业的育儿建议，陪伴您的教育之路</p>
+            <h3 className="font-comic-neue text-2xl font-bold text-kidsPrimary-700 mb-4 flex items-center justify-center gap-2">
+              <span>🤖</span>
+              AI 智能顾问
+            </h3>
+            <p className="text-kidsPrimary-600 text-lg leading-relaxed">专业的育儿建议，智能陪伴您的教育之路</p>
           </div>
           
-          <div className="text-center p-6">
-            <div className="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <Award className="w-8 h-8 text-green-600" />
+          <div className="kids-card p-8 text-center">
+            <div className="w-20 h-20 bg-gradient-to-br from-kidsAccent-100 to-kidsAccent-200 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+              <Award className="w-10 h-10 text-kidsAccent-600" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">亲子互动</h3>
-            <p className="text-gray-600">丰富的亲子活动，增进家庭感情</p>
+            <h3 className="font-comic-neue text-2xl font-bold text-kidsPrimary-700 mb-4 flex items-center justify-center gap-2">
+              <span>🎨</span>
+              亲子互动
+            </h3>
+            <p className="text-kidsPrimary-600 text-lg leading-relaxed">丰富的亲子活动，增进家庭温馨感情</p>
           </div>
         </div>
 
         {/* Stats Section */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 mb-16">
+        <div className="kids-card p-10 mb-16 relative z-10">
+          <h2 className="font-comic-neue text-3xl font-bold text-kidsPrimary-700 text-center mb-8 flex items-center justify-center gap-3">
+            <span className="text-4xl">📊</span>
+            成长数据大揭秘
+            <span className="text-4xl">🎯</span>
+          </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-blue-600 mb-2">1000+</div>
-              <div className="text-gray-600">已培养好习惯</div>
+            <div className="text-center p-4 rounded-2xl bg-kidsPrimary-50 border-2 border-kidsPrimary-200">
+              <div className="font-comic-neue text-4xl font-bold text-kidsPrimary-600 mb-3 flex items-center justify-center gap-2">
+                <span>📚</span>
+                1000+
+              </div>
+              <div className="text-kidsPrimary-700 font-semibold">已培养好习惯</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-purple-600 mb-2">500+</div>
-              <div className="text-gray-600">活跃小用户</div>
+            <div className="text-center p-4 rounded-2xl bg-kidsPurple-50 border-2 border-kidsPurple-200">
+              <div className="font-comic-neue text-4xl font-bold text-kidsPurple-600 mb-3 flex items-center justify-center gap-2">
+                <span>👦👧</span>
+                500+
+              </div>
+              <div className="text-kidsPrimary-700 font-semibold">活跃小用户</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-green-600 mb-2">95%</div>
-              <div className="text-gray-600">家长满意度</div>
+            <div className="text-center p-4 rounded-2xl bg-kidsSecondary-50 border-2 border-kidsSecondary-200">
+              <div className="font-comic-neue text-4xl font-bold text-kidsSecondary-600 mb-3 flex items-center justify-center gap-2">
+                <span>💖</span>
+                95%
+              </div>
+              <div className="text-kidsPrimary-700 font-semibold">家长满意度</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-orange-600 mb-2">24/7</div>
-              <div className="text-gray-600">智能陪伴</div>
+            <div className="text-center p-4 rounded-2xl bg-kidsAccent-50 border-2 border-kidsAccent-200">
+              <div className="font-comic-neue text-4xl font-bold text-kidsAccent-600 mb-3 flex items-center justify-center gap-2">
+                <span>🤖</span>
+                24/7
+              </div>
+              <div className="text-kidsPrimary-700 font-semibold">智能陪伴</div>
             </div>
           </div>
         </div>
 
         {/* CTA Section */}
-        <div className="text-center bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">
+        <div className="text-center kids-card p-12 relative z-10 bg-gradient-to-r from-kidsPrimary-100 to-kidsPurple-100 border-4 border-kidsPrimary-300">
+          <div className="text-6xl mb-6">🌈</div>
+          <h2 className="font-comic-neue text-3xl md:text-4xl font-bold mb-6 text-kidsPrimary-700 leading-tight">
             让孩子在快乐中成长
+            <span className="block text-2xl md:text-3xl mt-2 text-transparent bg-gradient-to-r from-kidsPurple-500 to-kidsAccent-500 bg-clip-text">每一天都是新的开始 ✨</span>
           </h2>
-          <p className="text-blue-100 mb-6 text-lg">
-            现在就开始，为孩子的未来播下好习惯的种子
+          <p className="text-kidsPrimary-600 mb-8 text-xl leading-relaxed font-medium max-w-2xl mx-auto">
+            现在就开始，为孩子的未来播下好习惯的种子 🌱
           </p>
-          <Button 
+          <button 
             onClick={handleLogin}
-            size="lg"
-            variant="secondary"
-            className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-3 rounded-xl text-lg font-semibold"
+            className="kids-button text-xl px-12 py-6 shadow-2xl font-comic-neue"
           >
-            立即开始 <ArrowRight className="ml-2 w-5 h-5" />
-          </Button>
+            🚀 立即开始冒险 <ArrowRight className="ml-3 w-6 h-6" />
+          </button>
         </div>
       </div>
     </div>

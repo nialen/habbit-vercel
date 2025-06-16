@@ -24,9 +24,11 @@
     "check-vercel-env": "node scripts/check-vercel-env.js",
     "configure-supabase": "node scripts/configure-supabase.js",
     "test-ai": "node scripts/test-ai-advisor.js",
-    "test-ai-full": "node scripts/test-full-advisor.js"
+    "test-ai-full": "node scripts/test-full-advisor.js",
+    "test-parenting": "node scripts/test-parenting-advice.js"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-accordion": "1.2.2",
     "@radix-ui/react-alert-dialog": "1.1.4",

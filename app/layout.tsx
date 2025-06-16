@@ -1,7 +1,7 @@
 import type React from "react"
 import "./globals.css"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Nunito, Comic_Neue } from "next/font/google"
 import { Providers } from "@/components/providers"
 import { AuthProvider } from "@/components/auth-provider"
 import { AuthGuard } from "@/components/auth-guard"
@@ -10,11 +10,18 @@ import { FirstLoginHandler } from "@/components/first-login-handler"
 import { StagewiseToolbar } from "@stagewise/toolbar-next"
 import { ReactPlugin } from "@stagewise-plugins/react"
 
-
-const inter = Inter({
+const nunito = Nunito({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
+  variable: "--font-nunito",
+})
+
+const comicNeue = Comic_Neue({
+  subsets: ["latin"], 
+  weight: ["700"], // Bold weight
+  display: "swap",
+  variable: "--font-comic-neue",
 })
 
 export const metadata: Metadata = {
@@ -36,7 +43,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className={inter.className}>
+      <body className={`${nunito.variable} ${comicNeue.variable} ${nunito.className}`}>
         <Providers>
           <AuthProvider>
             <AuthGuard>

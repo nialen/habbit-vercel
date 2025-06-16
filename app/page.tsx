@@ -33,8 +33,12 @@ export default function Dashboard() {
 
   if (!mounted) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      <div className="gradient-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-6xl animate-bounce mb-4">🚀</div>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-kidsPrimary-200 border-t-kidsPrimary-500 mx-auto mb-4"></div>
+          <p className="font-comic-neue text-xl text-kidsPrimary-600 font-semibold">正在启动成长之旅...</p>
+        </div>
       </div>
     )
   }
@@ -42,16 +46,17 @@ export default function Dashboard() {
   // 显示错误状态
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto p-6">
-          <div className="text-red-500 text-6xl mb-4">⚠️</div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">认证出现问题</h2>
-          <p className="text-gray-600 mb-4">{error.message}</p>
+      <div className="gradient-background flex items-center justify-center">
+        <div className="kids-card p-8 text-center max-w-md mx-auto">
+          <div className="text-6xl mb-6">😅</div>
+          <h2 className="text-2xl font-bold text-kidsPrimary-700 mb-4">哎呀，出了点小问题</h2>
+          <p className="text-kidsPrimary-600 mb-6 leading-relaxed">{error.message}</p>
           <button 
             onClick={() => window.location.reload()} 
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            className="kids-button"
           >
-            刷新页面
+            <span className="mr-2">🔄</span>
+            重新试试
           </button>
         </div>
       </div>
@@ -60,10 +65,12 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="gradient-background flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-lg text-gray-600">正在加载认证信息...</p>
+          <div className="text-6xl animate-bounce mb-4">🌟</div>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-kidsPrimary-200 border-t-kidsPrimary-500 mx-auto mb-4"></div>
+          <p className="font-comic-neue text-xl text-kidsPrimary-600 font-semibold">正在验证身份...</p>
+          <p className="text-kidsPrimary-500 mt-2">马上就好啦~ ✨</p>
         </div>
       </div>
     )
@@ -79,8 +86,12 @@ export default function Dashboard() {
   console.log('显示主应用 - 用户已认证')
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      <div className="gradient-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-6xl animate-bounce mb-4">🎉</div>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-kidsPrimary-200 border-t-kidsPrimary-500 mx-auto mb-4"></div>
+          <p className="font-comic-neue text-xl text-kidsPrimary-600 font-semibold">准备进入成长世界...</p>
+        </div>
       </div>
     }>
       <MainDashboard user={user} userProfile={userProfile} />

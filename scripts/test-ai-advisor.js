@@ -33,7 +33,7 @@ async function testAIAdvisor() {
   
   try {
     const completion = await client.chat.completions.create({
-      model: "google/gemini-2.5-flash-preview-05-20",
+      model: "google/gemini-2.5-pro-preview-06-05",
       messages: [
         {
           role: "user",
