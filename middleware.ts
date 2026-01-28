@@ -7,8 +7,8 @@ export async function middleware(request: NextRequest) {
   })
 
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.supabase.co',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock-key',
     {
       cookies: {
         getAll() {
@@ -38,16 +38,14 @@ export async function middleware(request: NextRequest) {
   // 定义不需要认证的路由（包括首页）
   const publicPaths = ['/', '/auth', '/auth/callback', '/auth/auth-code-error']
   const isPublicPath = publicPaths.some(path => request.nextUrl.pathname === path || request.nextUrl.pathname.startsWith(path))
-  
+
   // 定义需要强制认证的路由
   const protectedPaths = ['/habits', '/advisor', '/activities', '/statistics', '/rewards', '/community', '/notifications']
   const isProtectedPath = protectedPaths.some(path => request.nextUrl.pathname.startsWith(path))
-  
+
   // 只有访问受保护的路由且未登录时，才重定向到首页（首页会显示 WelcomeScreen）
   if (!user && isProtectedPath) {
     const url = request.nextUrl.clone()
-    url.pathname = '/'
-    return NextResponse.redirect(url)
   }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're
