@@ -2,8 +2,11 @@
   "version": 2,
   "name": "habbit-vercel",
   "framework": "nextjs",
-  "installCommand": "npm install --legacy-peer-deps",
-  "regions": ["hkg1"],
+  "installCommand": "pnpm install",
+  "buildCommand": "pnpm build",
+  "regions": [
+    "hkg1"
+  ],
   "functions": {
     "app/**": {
       "includeFiles": "public/**"
