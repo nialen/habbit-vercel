@@ -98,6 +98,10 @@ export default function HabitPage({ params }: { params: Promise<{ id: string }> 
         if (confirm('确定要放弃这个习惯挑战吗？进度将会清空。')) {
             resetProgress(id)
             updateProgress()
+            // Clear streak warnings
+            setStreakBroken(false)
+            setCanRevive(false)
+            setShowRevivePrompt(false)
         }
     }
 
