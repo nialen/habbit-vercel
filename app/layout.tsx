@@ -23,6 +23,9 @@ export const metadata: Metadata = {
   title: "HabitKids - 习惯养成助手",
   description: "帮助孩子养成好习惯，只需要21天",
   generator: "v0.dev",
+  verification: {
+    google: "l4n8BscWsQBcGBnJUgBkJWzdIlIRPfuVpytmc1vEJUw",
+  },
 }
 
 export default function RootLayout({
