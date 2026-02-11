@@ -3,6 +3,7 @@ import "./globals.css"
 import type { Metadata } from "next"
 import { Nunito, Comic_Neue } from "next/font/google"
 import { Providers } from "@/components/providers"
+import { AuthProvider } from "@/components/auth-provider"
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -39,9 +40,11 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
       </head>
       <body className={`${nunito.variable} ${comicNeue.variable} ${nunito.className}`}>
-        <Providers>
-          {children}
-        </Providers>
+        <AuthProvider>
+          <Providers>
+            {children}
+          </Providers>
+        </AuthProvider>
       </body>
     </html>
   )

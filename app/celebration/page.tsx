@@ -1,13 +1,12 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { Suspense, useEffect, useState } from "react"
+import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { getHabitById } from "@/lib/habits"
 import { getProgress } from "@/lib/progress"
 
-export default function CelebrationPage() {
-    const router = useRouter()
+function CelebrationContent() {
     const searchParams = useSearchParams()
     const habitId = searchParams.get('habit')
     const [mounted, setMounted] = useState(false)
@@ -187,5 +186,17 @@ export default function CelebrationPage() {
                 </div>
             </div>
         </div>
+    )
+}
+
+export default function CelebrationPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-kidsPrimary-50 via-kidsSecondary-50 to-kidsPurple-50">
+                <div className="text-6xl animate-bounce">⏳</div>
+            </div>
+        }>
+            <CelebrationContent />
+        </Suspense>
     )
 }
