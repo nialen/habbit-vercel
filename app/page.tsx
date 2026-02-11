@@ -76,6 +76,20 @@ export default function Dashboard() {
     )
   }
 
+  // 如果有用户但没有用户资料，显示加载状态（用户资料正在获取中）
+  if (user && !userProfile && !loading) {
+    return (
+      <div className="gradient-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-6xl animate-bounce mb-4">👤</div>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-kidsPrimary-200 border-t-kidsPrimary-500 mx-auto mb-4"></div>
+          <p className="font-comic-neue text-xl text-kidsPrimary-600 font-semibold">正在设置您的专属空间...</p>
+          <p className="text-kidsPrimary-500 mt-2">即将完成~ ✨</p>
+        </div>
+      </div>
+    )
+  }
+
   // 如果没有认证，显示欢迎页面让用户选择是否登录
   if (!isAuthenticated) {
     console.log('显示欢迎页面 - 用户未认证')

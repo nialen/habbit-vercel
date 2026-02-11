@@ -277,7 +277,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<Error | null>(null)
   const [initialized, setInitialized] = useState(false)
 
-  const isAuthenticated = !!user
+  // 修复：完整的认证状态应该同时检查用户和用户资料
+  const isAuthenticated = !!user && !!userProfile
   
   // 创建 Supabase 客户端实例
   const supabase = createClient()
@@ -412,31 +413,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     console.log('🔄 AuthProvider useEffect 启动，模式:', { completeMode })
 
-    // 🚀 新增：智能认证检查 - 在token有效期内直接跳过
-    if (shouldSkipAuthCheck()) {
-      console.log('✅ Token仍然有效且最近已检查过，跳过认证流程')
-      const cachedProfile = getCachedUserProfile()
-      if (cachedProfile) {
-        console.log('✅ 使用缓存的用户资料，快速完成加载')
-        setUserProfile(cachedProfile)
-        setUser(prev => prev || {
-          id: cachedProfile.id,
-          email: cachedProfile.email,
-          aud: 'authenticated',
-          role: 'authenticated',
-          created_at: cachedProfile.created_at,
-          updated_at: cachedProfile.updated_at,
-          app_metadata: {},
-          user_metadata: {},
-        } as User)
-        setLoading(false)
-        setInitialized(true)
-        return
-      } else {
-        // 如果没有缓存但token被认为有效，可能是刚刚退出登录，需要重新检查
-        console.log('⚠️ Token有效但无缓存用户资料，继续完整认证检查')
-      }
-    }
+    // 暂时禁用智能认证检查，确保始终通过正常的Supabase认证流程
+    // 这可以避免因为模拟User对象导致的认证状态不一致问题
     
     // 缩短超时时间到3秒，提升用户体验
     const timeoutId = setTimeout(() => {
